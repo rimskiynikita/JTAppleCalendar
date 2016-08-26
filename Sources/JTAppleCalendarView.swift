@@ -290,7 +290,8 @@ public class JTAppleCalendarView: UIView {
         }
     }
     
-    override init(frame: CGRect) {
+    /// Initializes and returns a newly allocated view object with the specified frame rectangle.
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         self.initialSetup()
     }
