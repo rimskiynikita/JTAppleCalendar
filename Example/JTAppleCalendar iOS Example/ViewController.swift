@@ -55,14 +55,20 @@ class ViewController: UIViewController {
         // The following default code can be removed since they are already the default.
         // They are only included here so that you can know what properties can be configured
         //_____________________________________________________________________________________________
-        calendarView.direction = .Horizontal                                 // default is horizontal
+        calendarView.direction = .Vertical                                 // default is horizontal
         calendarView.cellInset = CGPoint(x: 0, y: 0)                         // default is (3,3)
         calendarView.allowsMultipleSelection = false                         // default is false
         calendarView.firstDayOfWeek = .Sunday                                // default is Sunday
         calendarView.scrollEnabled = true                                    // default is true
-        calendarView.scrollingMode = .StopAtEachCalendarFrameWidth           // default is .StopAtEachCalendarFrameWidth
-        calendarView.itemSize = nil                                          // default is nil. Use a value here to change the size of your cells
+        calendarView.scrollingMode = .NonStopToCell(withResistance: 0.75)           // default is .StopAtEachCalendarFrameWidth
+        calendarView.itemSize = 25                                          // default is nil. Use a value here to change the size of your cells
         calendarView.rangeSelectionWillBeUsed = false                        // default is false
+        
+    
+        
+        
+        
+        
         //_____________________________________________________________________________________________
         
         // Reloading the data on viewDidLoad() is only necessary if you made LAYOUT changes eg. number of row per month change
@@ -70,10 +76,10 @@ class ViewController: UIViewController {
         calendarView.reloadData()
         
         // After reloading. Scroll to your selected date, and setup your calendar
-        calendarView.scrollToDate(NSDate(), triggerScrollToDateDelegate: false, animateScroll: false) {
+//        calendarView.scrollToDate(NSDate(), triggerScrollToDateDelegate: false, animateScroll: false) {
             let currentDate = self.calendarView.currentCalendarDateSegment()
             self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end)
-        }
+//        }
     }
     
     @IBAction func select11(sender: AnyObject?) {
@@ -122,12 +128,12 @@ class ViewController: UIViewController {
 
 // MARK : JTAppleCalendarDelegate
 extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDelegate {
-    func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar) {
+    func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {
         
-        let firstDate = formatter.dateFromString("2016 01 01")
-        let secondDate = NSDate()
+        let firstDate = formatter.dateFromString("2016 02 01")
+        let secondDate = formatter.dateFromString("2016 04 01")!
         let aCalendar = NSCalendar.currentCalendar() // Properly configure your calendar to your time zone here
-        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar)
+        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .off)
     }
     
     func calendar(calendar: JTAppleCalendarView, isAboutToDisplayCell cell: JTAppleDayCellView, date: NSDate, cellState: CellState) {

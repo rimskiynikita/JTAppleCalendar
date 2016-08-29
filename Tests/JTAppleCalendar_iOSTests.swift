@@ -107,7 +107,7 @@ class JTAppleCalendar_iOSTests: XCTestCase, JTAppleCalendarViewDataSource {
 ////        }
 //    }
     
-    func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar) {
+    func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {
         let aFirstDate = formatter.dateFromString(firstDate)
         let aSecondDate = formatter.dateFromString(secondDate)
         let aCalendar = NSCalendar.currentCalendar() // Properly configure your calendar to your time zone here

@@ -16,11 +16,8 @@ let MAX_NUMBER_OF_ROWS_PER_MONTH = 6                            // Should not be
 let MIN_NUMBER_OF_ROWS_PER_MONTH = 1                            // Should not be changed
 
 let FIRST_DAY_INDEX = 0
-let OFFSET_CALC = 2
 let NUMBER_OF_DAYS_INDEX = 1
-let DATE_SELECTED_INDEX = 2
-let TOTAL_DAYS_IN_MONTH = 3
-let DATE_BOUNDRY = 4
+let OFFSET_CALC = 2
 
 /// Describes which month the cell belongs to
 /// - ThisMonth: Cell belongs to the current month
@@ -72,6 +69,28 @@ public enum DaysOfWeek: Int {
 
 /// An instance of JTAppleCalendarView (or simply, a calendar view) is a means for displaying and interacting with a gridstyle layout of date-cells
 public class JTAppleCalendarView: UIView {
+    
+    var dateGenerator = JTAppleDateConfigGenerator()
+    
+    
+    /// Configures the behavior of the scrolling mode of the calendar
+    public enum ScrollingMode {
+        case StopAtEachCalendarFrameWidth,
+        StopAtEachSection,
+        StopAtEach(customInterval: CGFloat),
+        NonStopToSection(withResistance: CGFloat),
+        NonStopToCell(withResistance: CGFloat),
+        NonStopTo(customInterval: CGFloat, withResistance: CGFloat),
+        None
+        
+        func  pagingIsEnabled()->Bool {
+            switch self {
+            case .StopAtEachCalendarFrameWidth: return true
+            default: return false
+            }
+        }
+    }
+    
     /// Configures the size of your date cells
     public var itemSize: CGFloat?
     
@@ -145,15 +164,15 @@ public class JTAppleCalendarView: UIView {
         get { return cachedConfiguration.calendar }
     }
     
-    lazy var cachedConfiguration: (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar) = {
+    lazy var cachedConfiguration: (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) = {
         [weak self] in
         
         guard let  config = self!.dataSource?.configureCalendar(self!) else {
             assert(false, "DataSource is not set")
-            return (startDate: NSDate(), endDate: NSDate(), 0, NSCalendar(calendarIdentifier: "nil")!)
+            return (startDate: NSDate(), endDate: NSDate(), 0, NSCalendar(calendarIdentifier: "nil")!, false, .off)
         }
         
-        return (startDate: config.startDate, endDate: config.endDate, numberOfRows: config.numberOfRows, calendar: config.calendar)
+        return (startDate: config.startDate, endDate: config.endDate, numberOfRows: config.numberOfRows, calendar: config.calendar, config.generateInDates, config.generateOutDates)
         }()
     
     // Set the start of the month
@@ -474,6 +493,7 @@ public class JTAppleCalendarView: UIView {
         delayedExecutionClosure.removeAll()
     }
     
+    // Only reload the dates if the datasource information has changed
     private func reloadDelegateDataSource() {
         if let
             newDateBoundary = dataSource?.configureCalendar(self) {
@@ -483,11 +503,14 @@ public class JTAppleCalendarView: UIView {
             let oldStartOfMonth = NSDate.startOfMonthForDate(cachedConfiguration.startDate, usingCalendar: cachedConfiguration.calendar)
             let oldEndOfMonth = NSDate.endOfMonthForDate(cachedConfiguration.startDate, usingCalendar: cachedConfiguration.calendar)
             
+            
             if
                 newStartOfMonth != oldStartOfMonth ||
                 newEndOfMonth != oldEndOfMonth ||
                 newDateBoundary.calendar != cachedConfiguration.calendar ||
-                newDateBoundary.numberOfRows != cachedConfiguration.numberOfRows {
+                newDateBoundary.numberOfRows != cachedConfiguration.numberOfRows ||
+                newDateBoundary.generateInDates != cachedConfiguration.generateInDates ||
+                newDateBoundary.generateOutDates != cachedConfiguration.generateOutDates {
                     layoutNeedsUpdating = true
             }
         }
@@ -627,19 +650,11 @@ public class JTAppleCalendarView: UIView {
     
     func setupMonthInfoDataForStartAndEndDate()-> [[Int]] {
         var retval: [[Int]] = []
-        if var validConfig = dataSource?.configureCalendar(self) {
+        if let validConfig = dataSource?.configureCalendar(self) {
             // check if the dates are in correct order
             if validConfig.calendar.compareDate(validConfig.startDate, toDate: validConfig.endDate, toUnitGranularity: NSCalendarUnit.Nanosecond) == NSComparisonResult.OrderedDescending {
                 assert(false, "Error, your start date cannot be greater than your end date\n")
                 return retval
-            }
-            
-            // Check to see if we have a valid number of rows
-            switch validConfig.numberOfRows {
-            case 1, 2, 3:
-                break
-            default:
-                validConfig.numberOfRows = 6
             }
             
             // Set the new cache
@@ -650,80 +665,21 @@ public class JTAppleCalendarView: UIView {
                 endMonth = NSDate.endOfMonthForDate(validConfig.endDate, usingCalendar: validConfig.calendar) {
                 
                 startOfMonthCache = startMonth
-                endOfMonthCache = endMonth
+                endOfMonthCache   = endMonth
                 
-                let differenceComponents = validConfig.calendar.components(
-                    NSCalendarUnit.Month,
-                    fromDate: startOfMonthCache,
-                    toDate: endOfMonthCache,
-                    options: []
-                )
+                // Create the parameters for the date format generator
+                let parameters = DateConfigParameters(inCellGeneration: validConfig.generateInDates,
+                                                                outCellGeneration: validConfig.generateOutDates,
+                                                                numberOfRows: validConfig.numberOfRows,
+                                                                startOfMonthCache: startOfMonthCache,
+                                                                endOfMonthCache: endOfMonthCache,
+                                                                configuredCalendar: validConfig.calendar,
+                                                                firstDayOfWeek: firstDayOfWeek)
                 
-                // Create boundary date
-                let leftDate = validConfig.calendar.dateByAddingUnit(.Weekday, value: -1, toDate: startOfMonthCache, options: [])!
-                let leftDateInt = validConfig.calendar.component(.Day, fromDate: leftDate)
-                
-                // Number of months
-                numberOfMonths = differenceComponents.month + 1 // if we are for example on the same month and the difference is 0 we still need 1 to display it
-                
-                // Number of sections in each month
-                numberOfSectionsPerMonth = Int(ceil(Float(MAX_NUMBER_OF_ROWS_PER_MONTH)  / Float(cachedConfiguration.numberOfRows)))
-
-                // Section represents # of months. section is used as an offset to determine which month to calculate
-                for numberOfMonthsIndex in 0 ... numberOfMonths - 1 {
-                    if let correctMonthForSectionDate = validConfig.calendar.dateByAddingUnit(.Month, value: numberOfMonthsIndex, toDate: startOfMonthCache, options: []) {
-                        
-                        let numberOfDaysInMonth = validConfig.calendar.rangeOfUnit(NSCalendarUnit.Day, inUnit: NSCalendarUnit.Month, forDate: correctMonthForSectionDate).length
-                        
-                        var firstWeekdayOfMonthIndex = validConfig.calendar.component(.Weekday, fromDate: correctMonthForSectionDate)
-                        firstWeekdayOfMonthIndex -= 1 // firstWeekdayOfMonthIndex should be 0-Indexed
-                        
-
-                        var firstDayCalValue = 0
-                        switch firstDayOfWeek {
-                            case .Monday: firstDayCalValue = 6 case .Tuesday: firstDayCalValue = 5 case .Wednesday: firstDayCalValue = 4
-                            case .Thursday: firstDayCalValue = 10 case .Friday: firstDayCalValue = 9
-                            case .Saturday: firstDayCalValue = 8 default: firstDayCalValue = 7
-                        }
-                        
-                        firstWeekdayOfMonthIndex = (firstWeekdayOfMonthIndex + firstDayCalValue) % 7 // push it modularly so that we take it back one day so that the first day is Monday instead of Sunday which is the default
-                        
-                        
-                        // We have number of days in month, now lets see how these days will be allotted into the number of sections in the month
-                        // We will add the first segment manually to handle the fdIndex inset
-                        let aFullSection = (cachedConfiguration.numberOfRows * MAX_NUMBER_OF_DAYS_IN_WEEK)
-                        var numberOfDaysInFirstSection = aFullSection - firstWeekdayOfMonthIndex
-                        
-                        // If the number of days in first section is greater that the days of the month, then use days of month instead
-                        if numberOfDaysInFirstSection > numberOfDaysInMonth {
-                            numberOfDaysInFirstSection = numberOfDaysInMonth
-                        }
-                        
-                        let firstSectionDetail: [Int] = [firstWeekdayOfMonthIndex, numberOfDaysInFirstSection, 0, numberOfDaysInMonth] //fdIndex, numberofDaysInMonth, offset
-                        retval.append(firstSectionDetail)
-                        let numberOfSectionsLeft = numberOfSectionsPerMonth - 1
-                        
-                        // Continue adding other segment details in loop
-                        if numberOfSectionsLeft < 1 {continue} // Continue if there are no more sections
-                        
-                        var numberOfDaysLeft = numberOfDaysInMonth - numberOfDaysInFirstSection
-                        for _ in 0 ... numberOfSectionsLeft - 1 {
-                            switch numberOfDaysLeft {
-                            case _ where numberOfDaysLeft <= aFullSection: // Partial rows
-                                let midSectionDetail: [Int] = [0, numberOfDaysLeft, firstWeekdayOfMonthIndex]
-                                retval.append(midSectionDetail)
-                                numberOfDaysLeft = 0
-                            case _ where numberOfDaysLeft > aFullSection: // Full Rows
-                                let lastPopulatedSectionDetail: [Int] = [0, aFullSection, firstWeekdayOfMonthIndex]
-                                retval.append(lastPopulatedSectionDetail)
-                                numberOfDaysLeft -= aFullSection
-                            default:
-                                break
-                            }
-                        }
-                    }
-                }
-                retval[0].append(leftDateInt)
+                let generatedData        = dateGenerator.setupMonthInfoDataForStartAndEndDate(parameters)
+                numberOfMonths           = generatedData.numberOfMonths
+                numberOfSectionsPerMonth = generatedData.numberOfSectionsPerMonth
+                retval                   = generatedData.format
             }
         }
         return retval
@@ -873,6 +829,7 @@ extension JTAppleCalendarView {
 }
 
 extension JTAppleCalendarView: JTAppleCalendarDelegateProtocol {
+    func cachedDate() -> (start: NSDate, end: NSDate, calendar: NSCalendar) { return (start: cachedConfiguration.startDate, end: cachedConfiguration.endDate, calendar: cachedConfiguration.calendar) }
     func numberOfRows() -> Int {return cachedConfiguration.numberOfRows}
     func numberOfColumns() -> Int { return MAX_NUMBER_OF_DAYS_IN_WEEK }
     func numberOfsectionsPermonth() -> Int { return numberOfSectionsPerMonth }

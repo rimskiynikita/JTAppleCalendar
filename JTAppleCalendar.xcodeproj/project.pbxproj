@@ -64,6 +64,8 @@
 		6B60DF701D5C00BB009174A2 /* WhiteSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6B60DF6F1D5C00BB009174A2 /* WhiteSectionHeaderView.xib */; };
 		6B6162981D5C0E55002CF8E8 /* JTAppleCalendar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B60DEBC1D5BDA46009174A2 /* JTAppleCalendar.framework */; };
 		6B6162991D5C0E75002CF8E8 /* JTAppleCalendar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B60DECA1D5BDA74009174A2 /* JTAppleCalendar.framework */; };
+		6B74405E1D6ADE6A00DE2386 /* JTAppleDateConfigGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B74405D1D6ADE6A00DE2386 /* JTAppleDateConfigGenerator.swift */; };
+		6B74405F1D6ADE6A00DE2386 /* JTAppleDateConfigGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B74405D1D6ADE6A00DE2386 /* JTAppleDateConfigGenerator.swift */; };
 		6BF7B1FF1D606BA600D60900 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B60DF0F1D5BE834009174A2 /* ViewController.swift */; };
 		6BF7B2001D606C0F00D60900 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B60DF0D1D5BE834009174A2 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
@@ -172,6 +174,7 @@
 		6B60DF6B1D5C0079009174A2 /* CellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CellView.xib; sourceTree = "<group>"; };
 		6B60DF6D1D5C00A9009174A2 /* PinkSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PinkSectionHeaderView.xib; sourceTree = "<group>"; };
 		6B60DF6F1D5C00BB009174A2 /* WhiteSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WhiteSectionHeaderView.xib; sourceTree = "<group>"; };
+		6B74405D1D6ADE6A00DE2386 /* JTAppleDateConfigGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JTAppleDateConfigGenerator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -254,6 +257,7 @@
 			isa = PBXGroup;
 			children = (
 				6B60DED41D5BDD4D009174A2 /* GlobalFunctionsAndExtensions.swift */,
+				6B74405D1D6ADE6A00DE2386 /* JTAppleDateConfigGenerator.swift */,
 				6B60DED51D5BDD4D009174A2 /* JTAppleCalendarDelegates.swift */,
 				6B60DED61D5BDD4D009174A2 /* JTAppleCalendarLayout.swift */,
 				6B60DED71D5BDD4D009174A2 /* JTAppleCalendarView.swift */,
@@ -634,6 +638,7 @@
 				6B60DEE01D5BDD4D009174A2 /* JTAppleCalendarView.swift in Sources */,
 				6B60DEE31D5BDD4D009174A2 /* JTAppleViews.swift in Sources */,
 				6B60DEDF1D5BDD4D009174A2 /* JTAppleCalendarLayout.swift in Sources */,
+				6B74405E1D6ADE6A00DE2386 /* JTAppleDateConfigGenerator.swift in Sources */,
 				6B60DEE11D5BDD4D009174A2 /* JTAppleCollectionReusableView.swift in Sources */,
 				6B60DEDE1D5BDD4D009174A2 /* JTAppleCalendarDelegates.swift in Sources */,
 				6B60DEE21D5BDD4D009174A2 /* JTAppleDayCell.swift in Sources */,
@@ -650,6 +655,7 @@
 				6B60DEE91D5BDD58009174A2 /* JTAppleCalendarView.swift in Sources */,
 				6B60DEEC1D5BDD58009174A2 /* JTAppleViews.swift in Sources */,
 				6B60DEE81D5BDD58009174A2 /* JTAppleCalendarLayout.swift in Sources */,
+				6B74405F1D6ADE6A00DE2386 /* JTAppleDateConfigGenerator.swift in Sources */,
 				6B60DEEA1D5BDD58009174A2 /* JTAppleCollectionReusableView.swift in Sources */,
 				6B60DEE71D5BDD58009174A2 /* JTAppleCalendarDelegates.swift in Sources */,
 				6B60DEEB1D5BDD58009174A2 /* JTAppleDayCell.swift in Sources */,

@@ -12,22 +12,6 @@ enum JTAppleCalendarViewSource {
     case fromClassName(String)
 }
 
-public enum ScrollingMode {
-    case StopAtEachCalendarFrameWidth,
-    StopAtEachSection,
-    StopAtEach(customInterval: CGFloat),
-    NonStopToSection(withResistance: CGFloat),
-    NonStopToCell(withResistance: CGFloat),
-    NonStopTo(customInterval: CGFloat, withResistance: CGFloat),
-    None
-    
-    func  pagingIsEnabled()->Bool {
-        switch self {
-            case .StopAtEachCalendarFrameWidth: return true
-            default: return false
-        }
-    }
-}
 
 /// Default delegate functions
 public extension JTAppleCalendarViewDelegate {
@@ -53,7 +37,8 @@ public protocol JTAppleCalendarViewDataSource: class {
     ///     - endDate: The *end* boundary date for your calendarView.
     ///     - numberOfRows: The number of rows to be displayed per month
     ///     - calendar: The *calendar* to be used by the calendarView.
-    func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar)
+//    func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar)
+    func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration)
 }
 
 
@@ -147,6 +132,7 @@ protocol JTAppleCalendarDelegateProtocol: class {
     var registeredHeaderViews: [JTAppleCalendarViewSource] {get set}
     func numberOfRows() -> Int
     func numberOfColumns() -> Int
+    func cachedDate() -> (start: NSDate, end: NSDate, calendar: NSCalendar)
     func numberOfsectionsPermonth() -> Int
     func numberOfMonthsInCalendar() -> Int
     func numberOfDaysPerSection() -> Int
