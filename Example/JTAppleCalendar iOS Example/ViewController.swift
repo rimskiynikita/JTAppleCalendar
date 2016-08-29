@@ -151,7 +151,7 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
         setupViewsOfCalendar(startDate, endDate: endDate)
     }
     
-    func calendar(calendar : JTAppleCalendarView, sectionHeaderIdentifierForDate dateRange: (start: NSDate, end: NSDate), belongingTo month: Int) -> String? {
+    func calendar(calendar : JTAppleCalendarView, sectionHeaderIdentifierForDate dateRange: (start: NSDate, end: NSDate), belongingTo month: Int) -> String {
         if month % 2 > 0 {
             return "WhiteSectionHeaderView"
         }
