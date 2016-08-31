@@ -100,20 +100,33 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
                 
                 // Befoire adding the header, adjust the yOffSet in the event cells were added before. We do not want to start on the same line
                 if delegate.registeredHeaderViews.count > 0 {
-                    if let last = lastWrittenCellAttribute {
-                        yCellOffset += last.frame.height
+                    if scrollDirection == .Vertical {
+                        if let
+                            last = lastWrittenCellAttribute where
+                            last.frame.origin.x + last.frame.width <= self.collectionView!.bounds.width {
+                            
+                            contentHeight += last.frame.height
+                            yCellOffset += last.frame.height
+                        }
                     }
+                    
+//                    if let last = lastWrittenCellAttribute {
+//                        yCellOffset += last.frame.height
+//                        
+//                    }
                 }
                 
                 if let aHeaderAttr = layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader, atIndexPath: sectionIndexPath) {
                     headerCache.append(aHeaderAttr)
-                    if scrollDirection == .Vertical {
-                        contentHeight += aHeaderAttr.frame.height
-                    } else {
-                        contentWidth += aHeaderAttr.frame.width
-                    }
+
                     
                     if delegate.registeredHeaderViews.count > 0 { // If we have headers, lets adjust the yOffSet
+                        if scrollDirection == .Vertical {
+                            contentHeight += aHeaderAttr.frame.height
+                        } else {
+                            contentWidth += aHeaderAttr.frame.width
+                        }
+
                         yCellOffset += aHeaderAttr.frame.height
                         xCellOffset = 0
                     }
@@ -131,7 +144,9 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
                     if let attribute = layoutAttributesForItemAtIndexPath(indexPath) {
                         if cellCache[section] == nil {
                             cellCache[section] = []
-                            if scrollDirection == .Vertical { contentHeight += (attribute.frame.height * CGFloat(numberOfRowsForCurrentMonth)) }
+//                            if scrollDirection == .Vertical {
+//                                contentHeight += (attribute.frame.height * CGFloat(numberOfRowsForCurrentMonth))
+//                            }
                         }
                         cellCache[section]!.append(attribute)
                         lastWrittenCellAttribute = attribute
@@ -140,6 +155,11 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
                             print("end: \(attribute.indexPath)")
                             xCellOffset = 0
                             yCellOffset += attribute.frame.height
+                            
+                            if scrollDirection == .Vertical {
+                                contentHeight += attribute.frame.height
+                            }
+
                         } else {
                             print("start: \(attribute.indexPath)")
                             xCellOffset += attribute.frame.width
@@ -152,6 +172,8 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
 
             }
             
+            
+            
             // Generation of post dates
             
             
@@ -159,6 +181,16 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
 
             
         }
+        
+        if scrollDirection == .Vertical {
+            if let
+                last = lastWrittenCellAttribute where
+                last.frame.origin.x + last.frame.width <= self.collectionView!.bounds.width {
+                contentHeight += lastWrittenCellAttribute!.frame.height
+            }
+        }
+        
+        
         
 
         if delegate.registeredHeaderViews.count < 1 { headerCache.removeAll() } // Get rid of header data if dev didnt register headers. The were used for calculation but are not needed to be displayed
