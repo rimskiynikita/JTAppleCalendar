@@ -43,7 +43,7 @@ class ViewController: UIViewController {
         //_____________________________________________________________________________________________
         calendarView.registerCellViewXib(fileName: "CellView")
         // You also can register by class
-        // calendarView.registerCellViewClass(fileName: "JTAppleCalendar_Example.CodeCellView")
+//         calendarView.registerCellViewClass(fileName: "JTAppleCalendar_Example.CodeCellView")
         //_____________________________________________________________________________________________
         
 
@@ -131,7 +131,7 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
     func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {
         
         let firstDate = formatter.dateFromString("2016 02 01")
-        let secondDate = formatter.dateFromString("2016 04 01")!
+        let secondDate = formatter.dateFromString("2016 12 01")!
         let aCalendar = NSCalendar.currentCalendar() // Properly configure your calendar to your time zone here
         return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .off)
     }
@@ -146,7 +146,7 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
     
     func calendar(calendar: JTAppleCalendarView, didSelectDate date: NSDate, cell: JTAppleDayCellView?, cellState: CellState) {
         (cell as? CellView)?.cellSelectionChanged(cellState)
-        printSelectedDates()
+//        printSelectedDates()
     }
     
     func calendar(calendar: JTAppleCalendarView, isAboutToResetCell cell: JTAppleDayCellView) {

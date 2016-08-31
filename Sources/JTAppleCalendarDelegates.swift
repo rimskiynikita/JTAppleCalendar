@@ -151,6 +151,7 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
     }
     
     func internalCollectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath, indexPathsToReload: [NSIndexPath] = []) {
+        print(indexPath)
         if let
             delegate = self.delegate,
             dateSelectedByUser = dateFromPath(indexPath) {

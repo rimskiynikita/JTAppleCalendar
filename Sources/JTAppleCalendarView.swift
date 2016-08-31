@@ -70,7 +70,11 @@ public enum DaysOfWeek: Int {
 /// An instance of JTAppleCalendarView (or simply, a calendar view) is a means for displaying and interacting with a gridstyle layout of date-cells
 public class JTAppleCalendarView: UIView {
     
-    var dateGenerator = JTAppleDateConfigGenerator()
+    lazy var dateGenerator: JTAppleDateConfigGenerator = {
+        var configurator = JTAppleDateConfigGenerator()
+        configurator.delegate = self
+        return configurator
+    }()
     
     
     /// Configures the behavior of the scrolling mode of the calendar
@@ -410,6 +414,20 @@ public class JTAppleCalendarView: UIView {
         return retval
     }
     
+    func firstDayIndexForMonth(date: NSDate) -> Int {
+        let firstDayCalValue: Int
+        
+        switch firstDayOfWeek {
+        case .Monday: firstDayCalValue = 6 case .Tuesday: firstDayCalValue = 5 case .Wednesday: firstDayCalValue = 4
+        case .Thursday: firstDayCalValue = 10 case .Friday: firstDayCalValue = 9
+        case .Saturday: firstDayCalValue = 8 default: firstDayCalValue = 7
+        }
+        
+        var firstWeekdayOfMonthIndex = calendar.component(.Weekday, fromDate: date)
+        firstWeekdayOfMonthIndex -= 1 // firstWeekdayOfMonthIndex should be 0-Indexed
+        
+        return (firstWeekdayOfMonthIndex + firstDayCalValue) % 7 // push it modularly so that we take it back one day so that the first day is Monday instead of Sunday which is the default
+    }
     func scrollToHeaderInSection(section:Int, triggerScrollToDateDelegate: Bool = false, withAnimation animation: Bool = true, completionHandler: (()->Void)? = nil)  {
         if registeredHeaderViews.count < 1 { return }
         self.triggerScrollToDateDelegate = triggerScrollToDateDelegate
@@ -829,16 +847,22 @@ extension JTAppleCalendarView {
 }
 
 extension JTAppleCalendarView: JTAppleCalendarDelegateProtocol {
+//    func theCachedConfiguration() -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) { return cachedConfiguration }
     func cachedDate() -> (start: NSDate, end: NSDate, calendar: NSCalendar) { return (start: cachedConfiguration.startDate, end: cachedConfiguration.endDate, calendar: cachedConfiguration.calendar) }
     func numberOfRows() -> Int {return cachedConfiguration.numberOfRows}
     func numberOfColumns() -> Int { return MAX_NUMBER_OF_DAYS_IN_WEEK }
     func numberOfsectionsPermonth() -> Int { return numberOfSectionsPerMonth }
     func numberOfMonthsInCalendar() -> Int { return numberOfMonths }
     func numberOfDaysPerSection() -> Int { return numberOfItemsPerSection }
+    func numberOfDaysOffsetForMonth(month: NSDate) -> Int { return firstDayIndexForMonth(month) }
     
     func referenceSizeForHeaderInSection(section: Int) -> CGSize {
         if registeredHeaderViews.count < 1 { return CGSizeZero }
         return calendarViewHeaderSizeForSection(section)
+    }
+    
+    func rowsAreStatic() -> Bool {
+        return cachedConfiguration.generateInDates == true && cachedConfiguration.generateOutDates == .tillEndOfGrid
     }
     
 }

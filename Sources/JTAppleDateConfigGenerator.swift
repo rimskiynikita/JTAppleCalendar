@@ -23,6 +23,7 @@ struct DateConfigParameters {
 struct JTAppleDateConfigGenerator {
     
     var parameters: DateConfigParameters?
+    weak var delegate: JTAppleCalendarDelegateProtocol!
     
     
     mutating func setupMonthInfoDataForStartAndEndDate(parameters: DateConfigParameters?)-> (format: [[Int]], numberOfMonths: Int, numberOfSectionsPerMonth: Int) {
@@ -97,13 +98,6 @@ struct JTAppleDateConfigGenerator {
         
         // Number of sections in each month
         let numberOfSectionsPerMonth = Int(ceil(Float(MAX_NUMBER_OF_ROWS_PER_MONTH)  / Float(numberOfRows)))
-        var firstDayCalValue = 0
-        
-        switch firstDayOfWeek {
-        case .Monday: firstDayCalValue = 6 case .Tuesday: firstDayCalValue = 5 case .Wednesday: firstDayCalValue = 4
-        case .Thursday: firstDayCalValue = 10 case .Friday: firstDayCalValue = 9
-        case .Saturday: firstDayCalValue = 8 default: firstDayCalValue = 7
-        }
         
         // Section represents # of months. section is used as an offset to determine which month to calculate
         for numberOfMonthsIndex in 0 ..< numberOfMonths {
@@ -111,12 +105,8 @@ struct JTAppleDateConfigGenerator {
                 
                 let numberOfDaysInMonth = calendar.rangeOfUnit(NSCalendarUnit.Day, inUnit: NSCalendarUnit.Month, forDate: correctMonthForSectionDate).length
                 
-                let firstWeekdayOfMonthIndex = 0
+                let firstWeekdayOfMonthIndex = delegate.rowsAreStatic() ? delegate.firstDayIndexForMonth(correctMonthForSectionDate) : 0
                 
-//                firstWeekdayOfMonthIndex = calendar.component(.Weekday, fromDate: correctMonthForSectionDate)
-//                firstWeekdayOfMonthIndex -= 1 // firstWeekdayOfMonthIndex should be 0-Indexed
-//                
-//                firstWeekdayOfMonthIndex = (firstWeekdayOfMonthIndex + firstDayCalValue) % 7 // push it modularly so that we take it back one day so that the first day is Monday instead of Sunday which is the default
                 
                 
                 // We have number of days in month, now lets see how these days will be allotted into the number of sections in the month

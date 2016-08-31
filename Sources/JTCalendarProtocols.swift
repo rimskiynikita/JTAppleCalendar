@@ -130,13 +130,19 @@ protocol JTAppleCalendarLayoutProtocol: class {
 protocol JTAppleCalendarDelegateProtocol: class {
     var itemSize: CGFloat? {get set}
     var registeredHeaderViews: [JTAppleCalendarViewSource] {get set}
+    var cachedConfiguration: (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {get set}
+    
     func numberOfRows() -> Int
     func numberOfColumns() -> Int
     func cachedDate() -> (start: NSDate, end: NSDate, calendar: NSCalendar)
     func numberOfsectionsPermonth() -> Int
     func numberOfMonthsInCalendar() -> Int
     func numberOfDaysPerSection() -> Int
+    func numberOfDaysOffsetForMonth(month: NSDate) -> Int
     func referenceSizeForHeaderInSection(section: Int) -> CGSize
+    func firstDayIndexForMonth(date: NSDate) -> Int
+    func rowsAreStatic() -> Bool
+    
 }
 
 
