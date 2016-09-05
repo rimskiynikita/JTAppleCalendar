@@ -74,7 +74,7 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
     }
     /// Asks your data source object for the number of sections in the collection view. The number of sections in collectionView.
     public func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return monthInfo.count
+        return monthMap.count
     }
 
     /// Asks your data source object for the number of items in the specified section. The number of rows in section.
