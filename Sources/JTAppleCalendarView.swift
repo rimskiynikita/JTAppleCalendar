@@ -876,19 +876,30 @@ extension JTAppleCalendarView {
         return nil
     }
     
+    
+    
     func dateFromPath(indexPath: NSIndexPath)-> NSDate? { // Returns nil if date is out of scope
-        
         
         guard let monthIndex = monthMap[indexPath.section] else {
             return nil
         }
         
         let monthData = monthInfo[monthIndex]
-        let dayIndex = monthData.startIndex + indexPath.item
-
+        
+        var dayIndex = 0
+        if indexPath.item >= monthData.preDates && indexPath.item < monthData.numberOfDaysInMonth + monthData.preDates {
+            // This is a month date
+            dayIndex = monthData.startIndex + indexPath.item - monthData.preDates
+            // This is a preDate
+        } else if indexPath.item < monthData.preDates {
+            dayIndex = indexPath.item - monthData.preDates - 1
+        } else {
+            // This is a postDate
+            dayIndex =  monthData.startIndex - monthData.preDates + indexPath.item
+        }
+        
         let dateComponents = NSDateComponents()
         dateComponents.day = dayIndex
-        
         let date = calendar.dateByAddingComponents(dateComponents, toDate: startDateCache, options: [])
         return date
 

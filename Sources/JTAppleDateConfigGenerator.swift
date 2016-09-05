@@ -64,16 +64,15 @@ struct JTAppleDateConfigGenerator {
         for monthIndex in 0 ..< numberOfMonths {
             if let currentMonth = calendar.dateByAddingUnit(.Month, value: monthIndex, toDate: startMonth, options: []) {
 
-                var numberOfDaysInMonth = calendar.rangeOfUnit(NSCalendarUnit.Day, inUnit: NSCalendarUnit.Month, forDate: currentMonth).length
-
+                var numberOfDaysInMonthVariable = calendar.rangeOfUnit(NSCalendarUnit.Day, inUnit: NSCalendarUnit.Month, forDate: currentMonth).length
+                let numberOfDaysInMonthFixed = numberOfDaysInMonthVariable
+                
                 var numberOfRowsToGenerateForCurrentMonth = 0
-                var fdIndex: Int = 0
                 
                 if delegate.rowsAreStatic() {
-                    fdIndex = delegate.firstDayIndexForMonth(currentMonth)
                     numberOfRowsToGenerateForCurrentMonth = MAX_NUMBER_OF_ROWS_PER_MONTH
                 } else {
-                    let actualNumberOfRowsForThisMonth = Int(ceil(Float(numberOfDaysInMonth) / Float(MAX_NUMBER_OF_DAYS_IN_WEEK)))
+                    let actualNumberOfRowsForThisMonth = Int(ceil(Float(numberOfDaysInMonthVariable) / Float(MAX_NUMBER_OF_DAYS_IN_WEEK)))
                     numberOfRowsToGenerateForCurrentMonth = actualNumberOfRowsForThisMonth
                     
                 }
@@ -81,15 +80,15 @@ struct JTAppleDateConfigGenerator {
                 var numberOfPreDatesForThisMonth = 0
                 if delegate.preDatesAreGenerated() {
                     numberOfPreDatesForThisMonth = delegate.numberOfPreDatesForMonth(currentMonth)
-                    numberOfDaysInMonth += numberOfPreDatesForThisMonth
+                    numberOfDaysInMonthVariable += numberOfPreDatesForThisMonth
                 }
                 
                 var numberOfPostDatesForThisMonth = 0
                 let postGeneration = delegate.postDatesAreGenerated()
                 switch postGeneration {
                 case .tillEndOfGrid:
-                    numberOfPostDatesForThisMonth = MAX_NUMBER_OF_DAYS_IN_WEEK * numberOfRowsToGenerateForCurrentMonth - (numberOfDaysInMonth + numberOfPreDatesForThisMonth)
-                    numberOfDaysInMonth += numberOfPostDatesForThisMonth
+                    numberOfPostDatesForThisMonth = MAX_NUMBER_OF_DAYS_IN_WEEK * numberOfRowsToGenerateForCurrentMonth - (numberOfDaysInMonthFixed + numberOfPreDatesForThisMonth)
+                    numberOfDaysInMonthVariable += numberOfPostDatesForThisMonth
                 case .tillEndOfRow:
                     
                     break
@@ -98,23 +97,23 @@ struct JTAppleDateConfigGenerator {
                 }
                 
                 
-                let numberOfDaysInMonthFixed = numberOfDaysInMonth
+//                let numberOfDaysInMonthFixed = numberOfDaysInMonthVariable
                 var sectionsForTheMonth: [Int] = []
                 for _ in 0..<6 { // Max number of sections in the month
-                    if numberOfDaysInMonth < 1 { break }
+                    if numberOfDaysInMonthVariable < 1 { break }
                     
                     monthIndexMap[section] = monthIndex
                     
                     
                     var numberOfDaysInCurrentSection = numberOfRowsPerSectionThatUserWants * MAX_NUMBER_OF_DAYS_IN_WEEK
-                    if numberOfDaysInCurrentSection > numberOfDaysInMonth {
-                        numberOfDaysInCurrentSection = numberOfDaysInMonth
+                    if numberOfDaysInCurrentSection > numberOfDaysInMonthVariable {
+                        numberOfDaysInCurrentSection = numberOfDaysInMonthVariable
 //                        assert(false)
                     }
                     
                     sectionsForTheMonth.append(numberOfDaysInCurrentSection)
                     
-                    numberOfDaysInMonth -= numberOfDaysInCurrentSection
+                    numberOfDaysInMonthVariable -= numberOfDaysInCurrentSection
                     section += 1
                 }
                 
