@@ -6,6 +6,21 @@
 //
 //
 
+struct month {
+    let startIndex: Int
+    let sections: [Int]
+    let preDates: Int
+    let postDates: Int
+    
+    var numberOfDaysInMonth: Int {
+        get { return numberOfDaysInMonthGrid - preDates - postDates }
+    }
+    
+    var numberOfDaysInMonthGrid: Int {
+        get { return sections.reduce(0, combine: +) }
+    }
+}
+
 enum JTAppleCalendarViewSource {
     case fromXib(String)
     case fromType(AnyClass)
@@ -131,17 +146,23 @@ protocol JTAppleCalendarDelegateProtocol: class {
     var itemSize: CGFloat? {get set}
     var registeredHeaderViews: [JTAppleCalendarViewSource] {get set}
     var cachedConfiguration: (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {get set}
+    var monthInfo: [month] {get set}
+    var monthMap: [Int:Int] {get set}
     
     func numberOfRows() -> Int
     func numberOfColumns() -> Int
     func cachedDate() -> (start: NSDate, end: NSDate, calendar: NSCalendar)
-    func numberOfsectionsPermonth() -> Int
+    func numberOfsections(forMonth section:Int) -> Int
     func numberOfMonthsInCalendar() -> Int
-    func numberOfDaysPerSection() -> Int
-    func numberOfDaysOffsetForMonth(month: NSDate) -> Int
+//    func numberOfDaysPerSection() -> Int
+    func numberOfPreDatesForMonth(month: NSDate) -> Int
+    func numberOfPostDatesForMonth(month: NSDate) -> Int
     func referenceSizeForHeaderInSection(section: Int) -> CGSize
     func firstDayIndexForMonth(date: NSDate) -> Int
     func rowsAreStatic() -> Bool
+    func preDatesAreGenerated() -> Bool
+    func postDatesAreGenerated() -> OutDateCellGeneration
+    
     
 }
 

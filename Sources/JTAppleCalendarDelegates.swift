@@ -79,7 +79,7 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
 
     /// Asks your data source object for the number of items in the specified section. The number of rows in section.
     public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return  MAX_NUMBER_OF_DAYS_IN_WEEK * cachedConfiguration.numberOfRows
+        return (calendarView.collectionViewLayout as! JTAppleCalendarLayoutProtocol).cellCache[section]!.count
     }
     /// Asks the delegate if the specified item should be selected. true if the item should be selected or false if it should not.
     public func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
