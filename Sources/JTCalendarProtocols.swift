@@ -11,6 +11,7 @@ struct month {
     let sections: [Int]
     let preDates: Int
     let postDates: Int
+    let sectionIndexMaps: [Int:Int]
     
     var numberOfDaysInMonth: Int {
         get { return numberOfDaysInMonthGrid - preDates - postDates }

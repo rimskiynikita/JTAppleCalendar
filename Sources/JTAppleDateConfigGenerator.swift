@@ -99,10 +99,12 @@ struct JTAppleDateConfigGenerator {
                 
 //                let numberOfDaysInMonthFixed = numberOfDaysInMonthVariable
                 var sectionsForTheMonth: [Int] = []
-                for _ in 0..<6 { // Max number of sections in the month
+                var sectionIndexMaps: [Int:Int] = [:]
+                for index in 0..<6 { // Max number of sections in the month
                     if numberOfDaysInMonthVariable < 1 { break }
                     
                     monthIndexMap[section] = monthIndex
+                    sectionIndexMaps[section] = index
                     
                     
                     var numberOfDaysInCurrentSection = numberOfRowsPerSectionThatUserWants * MAX_NUMBER_OF_DAYS_IN_WEEK
@@ -117,7 +119,7 @@ struct JTAppleDateConfigGenerator {
                     section += 1
                 }
                 
-                monthArray.append(month(startIndex: startIndexForMonth, sections: sectionsForTheMonth, preDates: numberOfPreDatesForThisMonth, postDates: numberOfPostDatesForThisMonth))
+                monthArray.append(month(startIndex: startIndexForMonth, sections: sectionsForTheMonth, preDates: numberOfPreDatesForThisMonth, postDates: numberOfPostDatesForThisMonth, sectionIndexMaps: sectionIndexMaps))
                 startIndexForMonth += numberOfDaysInMonthFixed
             }
         }
