@@ -125,7 +125,7 @@ struct JTAppleDateConfigGenerator {
                     section += 1
                 }
                 
-                monthArray.append(month(startIndex: startIndexForMonth, sections: sectionsForTheMonth, preDates: numberOfPreDatesForThisMonth, postDates: numberOfPostDatesForThisMonth, sectionIndexMaps: sectionIndexMaps))
+                monthArray.append(month(startIndex: startIndexForMonth, sections: sectionsForTheMonth, preDates: numberOfPreDatesForThisMonth, postDates: numberOfPostDatesForThisMonth, sectionIndexMaps: sectionIndexMaps, rows: numberOfRowsToGenerateForCurrentMonth))
                 startIndexForMonth += numberOfDaysInMonthFixed
             }
         }

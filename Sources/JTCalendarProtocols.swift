@@ -12,7 +12,7 @@ struct month {
     let preDates: Int
     let postDates: Int
     let sectionIndexMaps: [Int:Int]
-    
+    let rows: Int
     var numberOfDaysInMonth: Int {
         get { return numberOfDaysInMonthGrid - preDates - postDates }
     }
@@ -151,7 +151,7 @@ protocol JTAppleCalendarDelegateProtocol: class {
     var monthMap: [Int:Int] {get set}
     
     func numberOfRows() -> Int
-    func numberOfColumns() -> Int
+//    func numberOfColumns() -> Int
     func cachedDate() -> (start: NSDate, end: NSDate, calendar: NSCalendar)
     func numberOfsections(forMonth section:Int) -> Int
     func numberOfMonthsInCalendar() -> Int

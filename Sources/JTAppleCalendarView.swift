@@ -948,7 +948,7 @@ extension JTAppleCalendarView {
 extension JTAppleCalendarView: JTAppleCalendarDelegateProtocol {
     func cachedDate() -> (start: NSDate, end: NSDate, calendar: NSCalendar) { return (start: cachedConfiguration.startDate, end: cachedConfiguration.endDate, calendar: cachedConfiguration.calendar) }
     func numberOfRows() -> Int {return cachedConfiguration.numberOfRows}
-    func numberOfColumns() -> Int { return MAX_NUMBER_OF_DAYS_IN_WEEK }
+//    func numberOfColumns() -> Int { return MAX_NUMBER_OF_DAYS_IN_WEEK }
     func numberOfsections(forMonth section:Int) -> Int { return numberOfSectionsForMonth(section) }
     func numberOfMonthsInCalendar() -> Int { return numberOfMonths }
     
