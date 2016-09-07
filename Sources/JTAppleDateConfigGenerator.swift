@@ -69,18 +69,22 @@ struct JTAppleDateConfigGenerator {
                 
                 var numberOfRowsToGenerateForCurrentMonth = 0
                 
-                if delegate.rowsAreStatic() {
-                    numberOfRowsToGenerateForCurrentMonth = MAX_NUMBER_OF_ROWS_PER_MONTH
-                } else {
-                    let actualNumberOfRowsForThisMonth = Int(ceil(Float(numberOfDaysInMonthVariable) / Float(MAX_NUMBER_OF_DAYS_IN_WEEK)))
-                    numberOfRowsToGenerateForCurrentMonth = actualNumberOfRowsForThisMonth
-                    
-                }
+                
+                
                 
                 var numberOfPreDatesForThisMonth = 0
                 if delegate.preDatesAreGenerated() {
                     numberOfPreDatesForThisMonth = delegate.numberOfPreDatesForMonth(currentMonth)
                     numberOfDaysInMonthVariable += numberOfPreDatesForThisMonth
+                }
+                
+                
+                if /*validParameters.inCellGeneration == true &&*/ validParameters.outCellGeneration == .tillEndOfGrid {
+                    numberOfRowsToGenerateForCurrentMonth = MAX_NUMBER_OF_ROWS_PER_MONTH
+                } else {
+                    let actualNumberOfRowsForThisMonth = Int(ceil(Float(numberOfDaysInMonthVariable) / Float(MAX_NUMBER_OF_DAYS_IN_WEEK)))
+                    numberOfRowsToGenerateForCurrentMonth = actualNumberOfRowsForThisMonth
+                    
                 }
                 
                 var numberOfPostDatesForThisMonth = 0
@@ -90,6 +94,8 @@ struct JTAppleDateConfigGenerator {
                     numberOfPostDatesForThisMonth = MAX_NUMBER_OF_DAYS_IN_WEEK * numberOfRowsToGenerateForCurrentMonth - (numberOfDaysInMonthFixed + numberOfPreDatesForThisMonth)
                     numberOfDaysInMonthVariable += numberOfPostDatesForThisMonth
                 case .tillEndOfRow:
+                    numberOfPostDatesForThisMonth = MAX_NUMBER_OF_DAYS_IN_WEEK * numberOfRowsToGenerateForCurrentMonth - (numberOfDaysInMonthFixed + numberOfPreDatesForThisMonth)
+                    numberOfDaysInMonthVariable += numberOfPostDatesForThisMonth
                     
                     break
                 default:

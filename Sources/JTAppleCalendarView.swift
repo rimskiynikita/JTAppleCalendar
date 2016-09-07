@@ -913,8 +913,8 @@ extension JTAppleCalendarView {
             dateComponents.day = dayIndex
             date = calendar.dateByAddingComponents(dateComponents, toDate: startOfMonthCache, options: [])
             dateOwner = .ThisMonth
-            // This is a preDate
         } else if indexPath.item < offSet {
+            // This is a preDate
             dayIndex = indexPath.item - offSet  + monthData.startIndex
             dateComponents.day = dayIndex
             date = calendar.dateByAddingComponents(dateComponents, toDate: startOfMonthCache, options: [])
