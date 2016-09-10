@@ -9,7 +9,7 @@
 import JTAppleCalendar
 
 class ViewController: UIViewController {
-    var numberOfRows = 6
+    var numberOfRows = 3
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var monthLabel: UILabel!
@@ -17,6 +17,7 @@ class ViewController: UIViewController {
     let testCalendar: NSCalendar! = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
     
     @IBAction func changeToThreeRows(sender: UIButton) {
+//        calendarView.selectDates(calendarView.selectedDates)
         numberOfRows = 3
         calendarView.reloadData()
     }
@@ -55,13 +56,13 @@ class ViewController: UIViewController {
         // The following default code can be removed since they are already the default.
         // They are only included here so that you can know what properties can be configured
         //_____________________________________________________________________________________________
-        calendarView.direction = .Vertical                                 // default is horizontal
+//        calendarView.direction = .Vertical                                 // default is horizontal
         calendarView.cellInset = CGPoint(x: 0, y: 0)                         // default is (3,3)
-        calendarView.allowsMultipleSelection = false                         // default is false
+        calendarView.allowsMultipleSelection = true                         // default is false
         calendarView.firstDayOfWeek = .Sunday                                // default is Sunday
         calendarView.scrollEnabled = true                                    // default is true
-        calendarView.scrollingMode = .NonStopToCell(withResistance: 0.75)           // default is .StopAtEachCalendarFrameWidth
-        calendarView.itemSize = 25                                          // default is nil. Use a value here to change the size of your cells
+        calendarView.scrollingMode = .StopAtEachCalendarFrameWidth           // default is .StopAtEachCalendarFrameWidth
+//        calendarView.itemSize = 53.428571428571431                                          // default is nil. Use a value here to change the size of your cells
         calendarView.rangeSelectionWillBeUsed = false                        // default is false
         
     
@@ -131,9 +132,9 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
     func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {
         
         let firstDate = formatter.dateFromString("2016 02 01")
-        let secondDate = formatter.dateFromString("2016 12 01")!
+        let secondDate = formatter.dateFromString("2016 03 01")!
         let aCalendar = NSCalendar.currentCalendar() // Properly configure your calendar to your time zone here
-        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .off)
+        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfRow)
     }
     
     func calendar(calendar: JTAppleCalendarView, isAboutToDisplayCell cell: JTAppleDayCellView, date: NSDate, cellState: CellState) {
@@ -191,4 +192,8 @@ func delayRunOnMainThread(delay:Double, closure:()->()) {
             Int64(delay * Double(NSEC_PER_SEC))
         ),
         dispatch_get_main_queue(), closure)
+}
+
+class ccc: UICollectionView {
+    
 }
