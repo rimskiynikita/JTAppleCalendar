@@ -554,8 +554,6 @@ public class JTAppleCalendarView: UIView {
     func configureChangeOfRows() {
         let layout = calendarView.collectionViewLayout as! JTAppleCalendarLayoutProtocol
         layout.clearCache()
-        
-//        monthInfo = setupMonthInfoDataForStartAndEndDate()
         setupMonthInfoAndMap()
         
         // the selected dates and paths will be retained. Ones that are not available on the new layout will be removed.
@@ -918,8 +916,6 @@ extension JTAppleCalendarView {
             dayIndex = indexPath.item - offSet  + monthData.startIndex
             dateComponents.day = dayIndex
             date = calendar.dateByAddingComponents(dateComponents, toDate: startOfMonthCache, options: [])
-            print(dayIndex)
-            print(date)
             if date < startOfMonthCache {
                 dateOwner = .PreviousMonthOutsideBoundary
             } else {

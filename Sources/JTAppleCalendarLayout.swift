@@ -48,12 +48,16 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
     public override func prepareLayout() {
         if !cellCache.isEmpty { return }
         
-        let weAreAtTheEndOfRow = {(attribute:UICollectionViewLayoutAttributes)->Bool in
-            return self.xCellOffset + attribute.frame.width >= self.collectionView!.bounds.size.width
+        var weAreAtTheEndOfRow: Bool {
+            get {
+                guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }
+                return self.xCellOffset + lastWrittenCellAttribute.frame.width >= lastWrittenCellAttribute.frame.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK)
+            }
         }
         
-        let weAreAtTheLastItemInRow = {(numberOfDaysInCurrentSection: Int, item:Int, attribute:UICollectionViewLayoutAttributes)->Bool in
-            return ((numberOfDaysInCurrentSection - 1 == item && self.xCellOffset + attribute.frame.width < self.collectionView!.bounds.size.width))
+        let weAreAtTheLastItemInRow = {(numberOfDaysInCurrentSection: Int, item:Int)->Bool in
+            guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }
+            return ((numberOfDaysInCurrentSection - 1 == item && self.xCellOffset + lastWrittenCellAttribute.frame.width < lastWrittenCellAttribute.frame.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK)))
         }
         
         
@@ -62,12 +66,9 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
             for numberOfDaysInCurrentSection in aMonth.sections {
                 // Generate and cache the headers
                 
-                let sectionIndexPath = NSIndexPath(forItem: 0, inSection: section)
                 
-                if section == 1 {
-                    print("section = \(section)")
-//                    break
-                }
+                let sectionIndexPath = NSIndexPath(forItem: 0, inSection: section)
+
                 
                 if let aHeaderAttr = layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader, atIndexPath: sectionIndexPath) {
                     headerCache.append(aHeaderAttr)
@@ -90,6 +91,10 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
                 for item in 0..<numberOfDaysInCurrentSection {
                     let indexPath = NSIndexPath(forItem: item, inSection: section)
                     
+                    if indexPath.item == 6 || indexPath.item == 6 || indexPath.item == 8 {
+                        print(indexPath)
+                    }
+                    
                     if let attribute = layoutAttributesForItemAtIndexPath(indexPath) {
                         if cellCache[section] == nil {
                             cellCache[section] = []
@@ -98,8 +103,8 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
                         lastWrittenCellAttribute = attribute
                         
                         if
-                            weAreAtTheEndOfRow(attribute) ||
-                                (weAreAtTheLastItemInRow(numberOfDaysInCurrentSection, item, attribute) && thereAreHeaders) { // We are at the last item in the section && if we have headers
+                            weAreAtTheEndOfRow ||
+                                (weAreAtTheLastItemInRow(numberOfDaysInCurrentSection, item) && thereAreHeaders) { // We are at the last item in the section && if we have headers
                             
                             
                             xCellOffset = 0
@@ -218,60 +223,12 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
             itemSize = sizeForitemAtIndexPath(attributes.indexPath)
         } // jt101 the width is already set form the outside. may change this to all inside here.
         
-        
-        
-        
-        
-        
-//        if delegate.registeredHeaderViews.count > 0 { // If we have headers the cell must start under the header
-//            let headerSize = headerCache[attributes.indexPath.section].frame.height
-//            let headerOrigin = headerCache[attributes.indexPath.section].frame.origin.y
-//            if scrollDirection == .Vertical { // Headers will affect the stride of Vertical NOT Horizontal
-//                stride += headerSize + headerOrigin
-//            } else {
-//                stride += CGFloat(attributes.indexPath.section) * itemSize.width * CGFloat(numberOfColumns)
-//            }
-//        } else { // If we do not have headers, this cell should start right behind the last one % 7
-        
-            
-            
-            
-            if scrollDirection == .Horizontal {
-//                stride = CGFloat(attributes.indexPath.section) * itemSize.width * CGFloat(numberOfColumns)
-            } else {
-//                if let theLastCell = lastWrittenCellAttribute {
-//                    let frame = theLastCell.frame
-//                    let startPoint = frame.origin.x + frame.size.width
-//                    if startPoint > self.collectionView!.bounds.size.width { // Start on a new line if greater than the width
-//                        yCellOffset += frame.height
-//                        xCellOffset = 0
-//
-//                    } else { // If we are still on the same row
-//                        xCellOffset += frame.size.width
-//                    }
-//                }
-//                
-                
-                
-                
-                
-            }
-//        }
-        
         var stride: CGFloat = 0
         
         if scrollDirection == .Horizontal {
             stride = itemSize.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK * attributes.indexPath.section)
-//            xCellOffset += stride
-            
-            // Headers will affect the start origin of Horizontal layout. Vertical layout is already accounted for in the stride because
-            // you are scrolling in the same direction as the headers height. Thus, headers affect vertical stride, while it affects Horizontal offsets
-            if thereAreHeaders {
-//                yCellOffset += headerCache[attributes.indexPath.section].frame.height // Adjust the y ofset
-            }
-        } else {
-//            yCellOffset += stride
         }
+        
         attributes.frame = CGRectMake(xCellOffset + stride, yCellOffset , self.itemSize.width, self.itemSize.height)
     }
     
@@ -292,10 +249,6 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
     }
     
     func sizeForitemAtIndexPath(indexPath: NSIndexPath) -> CGSize {
-        
-        if indexPath.section == 3 {
-            print()
-        }
         
         // Return the size if the cell size is already cached
         if let cachedCell  = currentCell where cachedCell.section == indexPath.section {
@@ -415,36 +368,5 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
         
         contentHeight = 0
         contentWidth = 0
-    }
-    
-    func test2() {
-        //        maxSections = numberOfMonthsInCalendar * numberOfSectionsPerMonth
-        //        daysPerSection = numberOfDaysPerSection
-        //
-        //         // Generate and cache the headers
-        //        for section in 0..<maxSections {
-        //            let sectionIndexPath = NSIndexPath(forItem: 0, inSection: section)
-        //            if let aHeaderAttr = layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader, atIndexPath: sectionIndexPath) {
-        //                headerCache.append(aHeaderAttr)
-        //                if scrollDirection == .Vertical { contentHeight += aHeaderAttr.frame.height } else { contentWidth += aHeaderAttr.frame.width }
-        //            }
-        //
-        //            // Generate and cache the cells
-        //            for item in 0..<daysPerSection {
-        //                let indexPath = NSIndexPath(forItem: item, inSection: section)
-        //                if let attribute = layoutAttributesForItemAtIndexPath(indexPath) {
-        //                    if cellCache[section] == nil {
-        //                        cellCache[section] = []
-        //                        if scrollDirection == .Vertical { contentHeight += (attribute.frame.height * CGFloat(numberOfRows)) }
-        //                    }
-        //                    cellCache[section]!.append(attribute)
-        //                }
-        //            }
-        //            // Save the content size for each section
-        //            sectionSize.append(scrollDirection == .Horizontal ? contentWidth : contentHeight)
-        //
-        //        }
-        //        if delegate.registeredHeaderViews.count < 1 { headerCache.removeAll() } // Get rid of header data if dev didnt register headers. The were used for calculation but are not needed to be displayed
-        //        if scrollDirection == .Horizontal { contentHeight = self.collectionView!.bounds.size.height } else { contentWidth = self.collectionView!.bounds.size.width }
     }
 }
