@@ -165,13 +165,11 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
                                 print(indexPath)
                             }
                             
-                            xCellOffset   = stride
+                            xCellOffset   = 0
                             yCellOffset   += attribute.frame.height
                             
                             if scrollDirection == .Vertical {
                                 contentHeight += attribute.frame.height
-                            } else {
-                                
                             }
 
 
@@ -180,20 +178,12 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
                         }
                     }
                 }
-                
-                if !thereAreHeaders && scrollDirection == .Horizontal {
-                    contentWidth += lastWrittenCellAttribute!.frame.width * 7
-                }
-                
                 // Save the content size for each section
                 sectionSize.append(scrollDirection == .Horizontal ? contentWidth : contentHeight)
                 
                 if scrollDirection == .Horizontal {
                     stride = sectionSize[section]
-                    xCellOffset = stride
                 }
-                
-                
                 section += 1
                 
                 
