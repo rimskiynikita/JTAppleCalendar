@@ -31,11 +31,15 @@ class JTAppleCalendar_iOSTests: XCTestCase, JTAppleCalendarViewDataSource {
     func testCountOfMonths() {
         print("Testing to see if setupMonthInfoDataForStartAndEndDate() gives valid month data even when number of rows change")
         firstDate = "2016 01 01"
-        secondDate = "2017 01 01"
+        secondDate = "2017 02 01"
         calendarView.dataSource = self
         
         var monthData = calendarView.setupMonthInfoDataForStartAndEndDate()
-        XCTAssert(monthData.count == 13)
+        XCTAssert(monthData.months.count == 2)
+        
+    
+        
+        
         
         numberOfRows = 3
         calendarView.reloadData()

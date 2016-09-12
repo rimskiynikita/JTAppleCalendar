@@ -20,12 +20,14 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
     var headerCache: [UICollectionViewLayoutAttributes] = []
     var sectionSize: [CGFloat] = []
     var lastWrittenCellAttribute: UICollectionViewLayoutAttributes?
-    var lastWrittenHeaderAttribute: UICollectionViewLayoutAttributes?
+//    var lastWrittenHeaderAttribute: UICollectionViewLayoutAttributes?
     var thereAreHeaders: Bool { get { return delegate.registeredHeaderViews.count > 0}}
     
     var monthData: [month] { get { return delegate.monthInfo } }
     var monthMap: [Int:Int] { get { return delegate.monthMap } }
     var numberOfRows: Int {get{ return delegate.numberOfRows()}}
+    var totalSections: Int { get { return delegate.totalMonthSections } }
+    var stride: CGFloat = 0
     
     weak var delegate: JTAppleCalendarDelegateProtocol!
     
@@ -44,6 +46,18 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
         self.delegate = delegate
     }
     
+    
+    //                var stride: CGFloat = 0
+    //
+    //                if attributes.indexPath.item == 29 {
+    //                    print()
+    //                }
+    //                if scrollDirection == .Horizontal && thereAreHeaders {
+    //                    stride = itemSize.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK * attributes.indexPath.section)
+    //                }
+    
+    
+    
     /// Tells the layout object to update the current layout.
     public override func prepareLayout() {
         if !cellCache.isEmpty { return }
@@ -51,24 +65,27 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
         var weAreAtTheEndOfRow: Bool {
             get {
                 guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }
-                return self.xCellOffset + lastWrittenCellAttribute.frame.width >= lastWrittenCellAttribute.frame.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK)
+//                let x = lastWrittenCellAttribute.frame.width
+                let x:CGFloat = 0
+                return self.xCellOffset + x  >= lastWrittenCellAttribute.frame.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK)
             }
         }
         
         let weAreAtTheLastItemInRow = {(numberOfDaysInCurrentSection: Int, item:Int)->Bool in
             guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }
-            return ((numberOfDaysInCurrentSection - 1 == item && self.xCellOffset + lastWrittenCellAttribute.frame.width < lastWrittenCellAttribute.frame.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK)))
+            return numberOfDaysInCurrentSection - 1 == item && self.xCellOffset <= lastWrittenCellAttribute.frame.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK)
         }
         
         
         var section = 0
+        
         for aMonth in monthData {
             for numberOfDaysInCurrentSection in aMonth.sections {
                 // Generate and cache the headers
                 
                 
+                
                 let sectionIndexPath = NSIndexPath(forItem: 0, inSection: section)
-
                 
                 if let aHeaderAttr = layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader, atIndexPath: sectionIndexPath) {
                     headerCache.append(aHeaderAttr)
@@ -76,13 +93,23 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
                     
                     switch scrollDirection {
                     case .Vertical:
-                        contentHeight += aHeaderAttr.frame.height
                         yCellOffset += aHeaderAttr.frame.height
-                        xCellOffset = 0
+                        contentHeight += aHeaderAttr.frame.height
+                        
+                        // After calculating a header, If the user has registered headers, lets reset the xoffset to 0
+//                        if thereAreHeaders && scrollDirection == .Vertical {
+//                            xCellOffset = 0
+//                        }
                     case .Horizontal:
-                        contentWidth += aHeaderAttr.frame.width
-                        yCellOffset = aHeaderAttr.frame.height
-//                        xCellOffset += aHeaderAttr.frame.width
+                        if thereAreHeaders {
+                            contentWidth += aHeaderAttr.frame.width
+                            yCellOffset = aHeaderAttr.frame.height
+                        } else {
+                            
+//                            contentWidth += aHeaderAttr.frame.width
+//                            yCellOffset = aHeaderAttr.frame.height
+////                        xCellOffset += aHeaderAttr.frame.width
+                        }
                     }
                     
                 }
@@ -90,11 +117,12 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
                 // Generate and cache the cells
                 for item in 0..<numberOfDaysInCurrentSection {
                     let indexPath = NSIndexPath(forItem: item, inSection: section)
-                    
-                    if indexPath.item == 6 || indexPath.item == 6 || indexPath.item == 8 {
-                        print(indexPath)
+                    print(indexPath.item)
+
+                    if section == 1 {
+                        print()
                     }
-                    
+//
                     if let attribute = layoutAttributesForItemAtIndexPath(indexPath) {
                         if cellCache[section] == nil {
                             cellCache[section] = []
@@ -102,24 +130,73 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
                         cellCache[section]!.append(attribute)
                         lastWrittenCellAttribute = attribute
                         
-                        if
-                            weAreAtTheEndOfRow ||
-                                (weAreAtTheLastItemInRow(numberOfDaysInCurrentSection, item) && thereAreHeaders) { // We are at the last item in the section && if we have headers
+                        
+                        
+                        print(indexPath)
+                        xCellOffset += attribute.frame.width
+                        
+                       
+
+                        
+                        if (weAreAtTheLastItemInRow(numberOfDaysInCurrentSection, item)) { // We are at the last item in the section && if we have headers
+                            
+
+                            
+                            if thereAreHeaders {
+                                xCellOffset = 0
+                                
+                                yCellOffset += attribute.frame.height
+                                if scrollDirection == .Vertical {
+                                    contentHeight += attribute.frame.height
+                                }
+                            } else {
+                                xCellOffset += 0
+                                if scrollDirection == .Vertical {
+                                    if monthData.last?.sectionIndexMaps[indexPath.section] != nil { // If we are on the last section ona partially filled row
+                                        if scrollDirection == .Vertical {
+                                            contentHeight += attribute.frame.height
+                                        }
+                                    }
+                                }
+                            }
+
+                        } else if weAreAtTheEndOfRow {
+                            if indexPath.item == 28 && section == 3 {
+                                print(indexPath)
+                            }
+                            
+                            xCellOffset   = stride
+                            yCellOffset   += attribute.frame.height
+                            
+                            if scrollDirection == .Vertical {
+                                contentHeight += attribute.frame.height
+                            } else {
+                                
+                            }
+
+
                             
                             
-                            xCellOffset = 0
-                            yCellOffset += attribute.frame.height
-                            if scrollDirection == .Vertical { contentHeight += attribute.frame.height }
-                            
-                            
-                        } else {
-                            xCellOffset += attribute.frame.width
                         }
                     }
                 }
-                section += 1
+                
+                if !thereAreHeaders && scrollDirection == .Horizontal {
+                    contentWidth += lastWrittenCellAttribute!.frame.width * 7
+                }
+                
                 // Save the content size for each section
                 sectionSize.append(scrollDirection == .Horizontal ? contentWidth : contentHeight)
+                
+                if scrollDirection == .Horizontal {
+                    stride = sectionSize[section]
+                    xCellOffset = stride
+                }
+                
+                
+                section += 1
+                
+                
                 
             }
             
@@ -128,7 +205,7 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
         if !thereAreHeaders { headerCache.removeAll() } // Get rid of header data if dev didnt register headers. The were used for calculation but are not needed to be displayed
         if scrollDirection == .Horizontal { contentHeight = self.collectionView!.bounds.size.height } else { contentWidth = self.collectionView!.bounds.size.width }
         
-        print(sectionSize)
+//        print(cellCache[0]![0])
     }
     
     /// Returns the width and height of the collection view’s contents. The width and height of the collection view’s contents.
@@ -223,11 +300,8 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
             itemSize = sizeForitemAtIndexPath(attributes.indexPath)
         } // jt101 the width is already set form the outside. may change this to all inside here.
         
-        var stride: CGFloat = 0
         
-        if scrollDirection == .Horizontal {
-            stride = itemSize.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK * attributes.indexPath.section)
-        }
+        
         
         attributes.frame = CGRectMake(xCellOffset + stride, yCellOffset , self.itemSize.width, self.itemSize.height)
     }
@@ -268,7 +342,6 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
         
         let numberOfSections = CGFloat(totalNumberOfRows) / CGFloat(numberOfRows)
         let fullSections =  Int(numberOfSections)
-//        let partial = numberOfSections - CGFloat(fullSections) > 0 ? 1 : 0
         
         let numberOfRowsForSection: Int
         if monthSection + 1 <= fullSections {
@@ -276,10 +349,6 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
         } else {
             numberOfRowsForSection = totalNumberOfRows - (monthSection * numberOfRows)
         }
-        
-        
-        
-        
         
         let size            = CGSize(width: currentItemSize.width, height: (collectionView!.frame.height - headerSize.height) / CGFloat(numberOfRowsForSection))
         currentCell         = (section: indexPath.section, itemSize: size)
@@ -364,7 +433,7 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
         currentHeader = nil
         currentCell = nil
         lastWrittenCellAttribute = nil
-        lastWrittenHeaderAttribute = nil
+//        lastWrittenHeaderAttribute = nil
         
         contentHeight = 0
         contentWidth = 0

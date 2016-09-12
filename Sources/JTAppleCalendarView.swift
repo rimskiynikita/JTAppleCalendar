@@ -220,23 +220,28 @@ public class JTAppleCalendarView: UIView {
             return Array(Set(theSelectedDates)).sort()
         }
     }
-    
-    lazy var monthInfo : [month] = {
+    lazy var theData: calendarData = {
         [weak self] in
-        let newMonthInfo = self!.setupMonthInfoDataForStartAndEndDate()
-        self!.monthMap = newMonthInfo.monthMap
-        return newMonthInfo.months
-        }()
-    
-    lazy var monthMap: [Int:Int] = {
-       [weak self] in
-        let newMonthInfo = self!.setupMonthInfoDataForStartAndEndDate()
-        self!.monthInfo = newMonthInfo.months
-        return newMonthInfo.monthMap
+        return self!.setupMonthInfoDataForStartAndEndDate()
     }()
     
+    
+    var monthInfo: [month]  {
+        get { return theData.months }
+        set { theData.months = monthInfo}
+    }
+    
+    var monthMap: [Int:Int] {
+        get { return theData.monthMap }
+        set { theData.monthMap = monthMap }
+    }
+
     var numberOfMonths: Int {
         get { return monthInfo.count }
+    }
+    
+    var totalMonthSections: Int {
+        get { return theData.totalSections }
     }
     
     
@@ -685,14 +690,15 @@ public class JTAppleCalendarView: UIView {
         return layout
     }
     
-    func setupMonthInfoDataForStartAndEndDate()-> (months: [month], monthMap: [Int:Int]) {
+    func setupMonthInfoDataForStartAndEndDate()-> calendarData {
         var months = [month]()
         var monthMap = [Int:Int]()
+        var totalSections = 0
         if let validConfig = dataSource?.configureCalendar(self) {
             // check if the dates are in correct order
             if validConfig.calendar.compareDate(validConfig.startDate, toDate: validConfig.endDate, toUnitGranularity: NSCalendarUnit.Nanosecond) == NSComparisonResult.OrderedDescending {
                 assert(false, "Error, your start date cannot be greater than your end date\n")
-                return (months, monthMap)
+                return (calendarData(months:[], totalSections: 0, monthMap: [:]))
             }
             
             // Set the new cache
@@ -717,9 +723,12 @@ public class JTAppleCalendarView: UIView {
                 let generatedData        = dateGenerator.setupMonthInfoDataForStartAndEndDate(parameters)
                 months = generatedData.months
                 monthMap = generatedData.monthMap
+                totalSections = generatedData.totalSections
             }
         }
-        return (months, monthMap)
+        
+        let data = calendarData(months: months, totalSections: totalSections, monthMap: monthMap)
+        return data
     }
     
     func pathsFromDates(dates:[NSDate])-> [NSIndexPath] {
@@ -944,7 +953,6 @@ extension JTAppleCalendarView {
 extension JTAppleCalendarView: JTAppleCalendarDelegateProtocol {
     func cachedDate() -> (start: NSDate, end: NSDate, calendar: NSCalendar) { return (start: cachedConfiguration.startDate, end: cachedConfiguration.endDate, calendar: cachedConfiguration.calendar) }
     func numberOfRows() -> Int {return cachedConfiguration.numberOfRows}
-//    func numberOfColumns() -> Int { return MAX_NUMBER_OF_DAYS_IN_WEEK }
     func numberOfsections(forMonth section:Int) -> Int { return numberOfSectionsForMonth(section) }
     func numberOfMonthsInCalendar() -> Int { return numberOfMonths }
     

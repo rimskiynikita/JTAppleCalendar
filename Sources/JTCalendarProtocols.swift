@@ -6,6 +6,12 @@
 //
 //
 
+struct calendarData {
+    var months: [month]
+    var totalSections: Int
+    var monthMap: [Int:Int]
+}
+
 struct month {
     let startIndex: Int
     let sections: [Int]
@@ -149,6 +155,7 @@ protocol JTAppleCalendarDelegateProtocol: class {
     var cachedConfiguration: (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {get set}
     var monthInfo: [month] {get set}
     var monthMap: [Int:Int] {get set}
+    var totalMonthSections: Int {get}
     
     func numberOfRows() -> Int
 //    func numberOfColumns() -> Int

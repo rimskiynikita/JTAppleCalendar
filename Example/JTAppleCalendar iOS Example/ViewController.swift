@@ -9,7 +9,7 @@
 import JTAppleCalendar
 
 class ViewController: UIViewController {
-    var numberOfRows = 3
+    var numberOfRows = 6
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var monthLabel: UILabel!
@@ -50,7 +50,7 @@ class ViewController: UIViewController {
 
         
         // Enable/disable the following code line to show/hide headers.
-        calendarView.registerHeaderViewXibs(fileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"]) // headers are Optional. You can register multiple if you want.
+//        calendarView.registerHeaderViewXibs(fileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"]) // headers are Optional. You can register multiple if you want.
         
         
         // The following default code can be removed since they are already the default.
@@ -61,13 +61,9 @@ class ViewController: UIViewController {
         calendarView.allowsMultipleSelection = true                         // default is false
         calendarView.firstDayOfWeek = .Sunday                                // default is Sunday
         calendarView.scrollEnabled = true                                    // default is true
-        calendarView.scrollingMode = .StopAtEachCalendarFrameWidth           // default is .StopAtEachCalendarFrameWidth
-//        calendarView.itemSize = 53.428571428571431                                          // default is nil. Use a value here to change the size of your cells
+        calendarView.scrollingMode = .StopAtEachSection           // default is .StopAtEachCalendarFrameWidth
+//        calendarView.itemSize = 30                                          // default is nil. Use a value here to change the size of your cells
         calendarView.rangeSelectionWillBeUsed = false                        // default is false
-        
-    
-        
-        
         
         
         //_____________________________________________________________________________________________
@@ -134,7 +130,7 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
         let firstDate = formatter.dateFromString("2016 02 01")
         let secondDate = formatter.dateFromString("2016 03 01")!
         let aCalendar = NSCalendar.currentCalendar() // Properly configure your calendar to your time zone here
-        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfRow)
+        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .tillEndOfGrid)
     }
     
     func calendar(calendar: JTAppleCalendarView, isAboutToDisplayCell cell: JTAppleDayCellView, date: NSDate, cellState: CellState) {
