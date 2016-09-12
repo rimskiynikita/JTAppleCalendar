@@ -151,9 +151,9 @@ public class JTAppleCalendarView: UIView {
     
     
     func setupMonthInfoAndMap() {
-        let generatedData = setupMonthInfoDataForStartAndEndDate()
-        monthInfo = generatedData.months
-        monthMap = generatedData.monthMap
+        theData = setupMonthInfoDataForStartAndEndDate()
+//        monthInfo = generatedData.months
+//        monthMap = generatedData.monthMap
     }
     
     
