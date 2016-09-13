@@ -360,7 +360,9 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
         let fullSections =  Int(numberOfSections)
         
         let numberOfRowsForSection: Int
-        if monthSection + 1 <= fullSections {
+        if scrollDirection == .Horizontal {
+            numberOfRowsForSection = MAX_NUMBER_OF_ROWS_PER_MONTH
+        } else if monthSection + 1 <= fullSections {
             numberOfRowsForSection = numberOfRows
         } else {
             numberOfRowsForSection = totalNumberOfRows - (monthSection * numberOfRows)
