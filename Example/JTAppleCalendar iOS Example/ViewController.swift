@@ -23,7 +23,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func changeToSixRows(sender: UIButton) {
-        numberOfRows = 6
+        numberOfRows = 2
         calendarView.reloadData()
     }
     
@@ -50,7 +50,7 @@ class ViewController: UIViewController {
 
         
         // Enable/disable the following code line to show/hide headers.
-//        calendarView.registerHeaderViewXibs(fileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"]) // headers are Optional. You can register multiple if you want.
+        calendarView.registerHeaderViewXibs(fileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"]) // headers are Optional. You can register multiple if you want.
         
         
         // The following default code can be removed since they are already the default.
@@ -80,14 +80,18 @@ class ViewController: UIViewController {
     }
     
     @IBAction func select11(sender: AnyObject?) {
-        calendarView.allowsMultipleSelection = false
-        let date = formatter.dateFromString("2016 02 11")
-        self.calendarView.selectDates([date!], triggerSelectionDelegate: false)
+        numberOfRows = 2
+        calendarView.reloadData()
+//        calendarView.allowsMultipleSelection = false
+//        let date = formatter.dateFromString("2016 02 11")
+//        self.calendarView.selectDates([date!], triggerSelectionDelegate: false)
     }
     
     @IBAction func scrollToDate(sender: AnyObject?) {
-        let date = formatter.dateFromString("2016 03 11")
-        calendarView.scrollToDate(date!)
+        numberOfRows = 6
+        calendarView.reloadData()
+//        let date = formatter.dateFromString("2016 03 11")
+//        calendarView.scrollToDate(date!)
     }
     
     @IBAction func printSelectedDates() {
