@@ -618,6 +618,7 @@ public class JTAppleCalendarView: UIView {
                     }
                     
                     guard let lastDayOfPrevMonth = NSDate.endOfMonthForDate(prevMonth, usingCalendar: calendar) else {
+                        assert(false)
                         print("Error generating date in indexPathOfdateCellCounterPart(). Contact the developer on github")
                         return retval
                     }
@@ -647,6 +648,7 @@ public class JTAppleCalendarView: UIView {
                             if dateInfoFromPath(attrib.indexPath)?.date == date { retval = attrib.indexPath }
                         }
                     } else {
+                        assert(false)
                         print("out of range error in indexPathOfdateCellCounterPart() upper. This should not happen. Contact developer on github")
                     }
                 } else if case 26...31 = dayIndex  { // check the following month

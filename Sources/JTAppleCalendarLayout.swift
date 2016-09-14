@@ -60,19 +60,18 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
         var weAreAtTheEndOfRow: Bool {
             get {
                 guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }
-                //                let x = lastWrittenCellAttribute.frame.width
-                let x:CGFloat = 0
-                return self.xCellOffset + x  >= lastWrittenCellAttribute.frame.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK)
+                return self.xCellOffset >= lastWrittenCellAttribute.frame.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK)
             }
         }
         
         let weAreAtTheLastItemInRow = {(numberOfDaysInCurrentSection: Int, item:Int)->Bool in
             guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }
-            return numberOfDaysInCurrentSection - 1 == item && self.xCellOffset <= lastWrittenCellAttribute.frame.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK)
+            return numberOfDaysInCurrentSection - 1 == item && self.xCellOffset < lastWrittenCellAttribute.frame.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK)
         }
         
         
         var section = 0
+        var x = 0
         
         for aMonth in monthData {
             for numberOfDaysInCurrentSection in aMonth.sections {
@@ -89,19 +88,17 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
                         contentWidth += aHeaderAttr.frame.width
                         yCellOffset = aHeaderAttr.frame.height
                     } else {
-                        
-                        //                            contentWidth += aHeaderAttr.frame.width
-                        //                            yCellOffset = aHeaderAttr.frame.height
-                        ////                        xCellOffset += aHeaderAttr.frame.width
+                        if lastWrittenCellAttribute == nil {
+                            contentWidth += aHeaderAttr.frame.width
+                        }
                     }
-                    
                     
                 }
                 
                 // Generate and cache the cells
                 for item in 0..<numberOfDaysInCurrentSection {
+                    
                     let indexPath = NSIndexPath(forItem: item, inSection: section)
-
                     if let attribute = layoutAttributesForItemAtIndexPath(indexPath) {
                         if cellCache[section] == nil {
                             cellCache[section] = []
@@ -115,25 +112,40 @@ public class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayou
                             if thereAreHeaders {
                                 xCellOffset = 0
                                 yCellOffset += attribute.frame.height
-
-                            } else {
-                                xCellOffset += 0
                             }
-                            
                         } else if weAreAtTheEndOfRow {
-                            if indexPath.item == 28 && section == 3 {
-                                print(indexPath)
-                            }
-                            
                             xCellOffset   = 0
-                            yCellOffset   += attribute.frame.height
+                            if thereAreHeaders {
+                                
+                                yCellOffset   += attribute.frame.height
+                            } else {
+                                if (x + 1) % numberOfRows * 7 == 0 { // If we are on the last item in this section, then reset, and increase stride
+                                    yCellOffset = 0
+                                    stride = contentWidth
+                                    contentWidth += lastWrittenCellAttribute!.frame.width * 7
+                                } else if let lastWrittenCellAttribute = self.lastWrittenCellAttribute where // If we are at the bottom of the screen
+                                    abs(lastWrittenCellAttribute.frame.origin.y + lastWrittenCellAttribute.frame.height - collectionView!.frame.height) < errorDelta {
+                                    
+                                    stride += contentWidth
+                                    contentWidth += lastWrittenCellAttribute.frame.width * 7
+                                    yCellOffset = 0
+                                    
+                                } else {
+                                    yCellOffset += attribute.frame.height
+                                }
+                                
+                            }
                         
                         }
                     }
+                    x += 1
                 }
                 // Save the content size for each section
                 sectionSize.append(scrollDirection == .Horizontal ? contentWidth : contentHeight)
-                stride = sectionSize[section]
+                
+                if thereAreHeaders {
+                    stride = sectionSize[section]
+                }
 
                 section += 1
                 
