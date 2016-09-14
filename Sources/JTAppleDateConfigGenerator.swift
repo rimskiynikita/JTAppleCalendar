@@ -26,7 +26,7 @@ struct JTAppleDateConfigGenerator {
     weak var delegate: JTAppleCalendarDelegateProtocol!
     
     
-    mutating func setupMonthInfoDataForStartAndEndDate(parameters: DateConfigParameters?)-> (months:[month], monthMap: [Int:Int], totalSections: Int) {
+    mutating func setupMonthInfoDataForStartAndEndDate(parameters: DateConfigParameters?)-> (months:[month], monthMap: [Int:Int], totalSections: Int, totalDays: Int) {
         self.parameters = parameters
         
         guard
@@ -35,7 +35,7 @@ struct JTAppleDateConfigGenerator {
             endMonth = validParameters.endOfMonthCache,
             calendar = validParameters.configuredCalendar else {
 
-                return ([],[:], 0)
+                return ([],[:], 0, 0)
 
         }
         
@@ -55,6 +55,7 @@ struct JTAppleDateConfigGenerator {
         var monthIndexMap: [Int:Int] = [:]
         var section = 0
         var startIndexForMonth = 0
+        var totalDays = 0
         let numberOfRowsPerSectionThatUserWants = validParameters.numberOfRows
         
         // Number of sections in each month
@@ -119,6 +120,8 @@ struct JTAppleDateConfigGenerator {
 //                        assert(false)
                     }
                     
+                    totalDays += numberOfDaysInCurrentSection
+                    
                     sectionsForTheMonth.append(numberOfDaysInCurrentSection)
                     
                     numberOfDaysInMonthVariable -= numberOfDaysInCurrentSection
@@ -133,7 +136,7 @@ struct JTAppleDateConfigGenerator {
 //        print(monthIndexMap)
 //        print(monthArray)
         
-        return (monthArray, monthIndexMap, section)
+        return (monthArray, monthIndexMap, section, totalDays)
     }
 }
 

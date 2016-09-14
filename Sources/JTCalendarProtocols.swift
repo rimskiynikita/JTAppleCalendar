@@ -10,6 +10,7 @@ struct calendarData {
     var months: [month]
     var totalSections: Int
     var monthMap: [Int:Int]
+    var totalDays: Int
 }
 
 struct month {
@@ -156,6 +157,7 @@ protocol JTAppleCalendarDelegateProtocol: class {
     var monthInfo: [month] {get set}
     var monthMap: [Int:Int] {get set}
     var totalMonthSections: Int {get}
+    var totalDays: Int {get}
     
     func numberOfRows() -> Int
 //    func numberOfColumns() -> Int

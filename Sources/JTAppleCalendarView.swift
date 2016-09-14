@@ -244,6 +244,10 @@ public class JTAppleCalendarView: UIView {
         get { return theData.totalSections }
     }
     
+    var totalDays: Int {
+        get { return theData.totalDays }
+    }
+    
     
     
     func numberOfItemsInSection(section: Int)-> Int {return collectionView(calendarView, numberOfItemsInSection: section)}
@@ -694,11 +698,12 @@ public class JTAppleCalendarView: UIView {
         var months = [month]()
         var monthMap = [Int:Int]()
         var totalSections = 0
+        var totalDays = 0
         if let validConfig = dataSource?.configureCalendar(self) {
             // check if the dates are in correct order
             if validConfig.calendar.compareDate(validConfig.startDate, toDate: validConfig.endDate, toUnitGranularity: NSCalendarUnit.Nanosecond) == NSComparisonResult.OrderedDescending {
                 assert(false, "Error, your start date cannot be greater than your end date\n")
-                return (calendarData(months:[], totalSections: 0, monthMap: [:]))
+                return (calendarData(months:[], totalSections: 0, monthMap: [:], totalDays: 0))
             }
             
             // Set the new cache
@@ -724,10 +729,11 @@ public class JTAppleCalendarView: UIView {
                 months = generatedData.months
                 monthMap = generatedData.monthMap
                 totalSections = generatedData.totalSections
+                totalDays = generatedData.totalDays
             }
         }
         
-        let data = calendarData(months: months, totalSections: totalSections, monthMap: monthMap)
+        let data = calendarData(months: months, totalSections: totalSections, monthMap: monthMap, totalDays: totalDays)
         return data
     }
     
