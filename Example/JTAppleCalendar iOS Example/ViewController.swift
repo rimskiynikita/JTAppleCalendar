@@ -50,7 +50,7 @@ class ViewController: UIViewController {
 
         
         // Enable/disable the following code line to show/hide headers.
-        calendarView.registerHeaderViewXibs(fileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"]) // headers are Optional. You can register multiple if you want.
+//        calendarView.registerHeaderViewXibs(fileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"]) // headers are Optional. You can register multiple if you want.
         
         
         // The following default code can be removed since they are already the default.
@@ -80,7 +80,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func select11(sender: AnyObject?) {
-        numberOfRows = 2
+        numberOfRows = 1
         calendarView.reloadData()
 //        calendarView.allowsMultipleSelection = false
 //        let date = formatter.dateFromString("2016 02 11")
@@ -132,13 +132,13 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
     func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {
         
         let firstDate = formatter.dateFromString("2016 02 01")
-        let secondDate = formatter.dateFromString("2016 03 01")!
+        let secondDate = formatter.dateFromString("2016 04 01")!
         let aCalendar = NSCalendar.currentCalendar() // Properly configure your calendar to your time zone here
-        //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfGrid)
+        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfGrid)
         //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfRow)
         //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .off)
         //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .tillEndOfGrid)
-        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .tillEndOfRow)
+//        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .off)
         //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .off)
     }
     
