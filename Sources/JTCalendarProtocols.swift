@@ -14,18 +14,42 @@ struct calendarData {
 }
 
 struct month {
-    let startIndex: Int
-    let sections: [Int]
+    let startDayIndex: Int      // Start index day for the month. The start is total number of days of previous months
+    let startCellIndex: Int     // Start cell index for the month. The start is total number of cells of previous months
+    let sections: [Int]         // The total number of items in this array are the total number of sections. The actual number is the number of items in each section
     let preDates: Int
     let postDates: Int
-    let sectionIndexMaps: [Int:Int]
-    let rows: Int
+    let sectionIndexMaps: [Int:Int] // Maps a section to the index in the total number of sections
+    let rows: Int                   // Number of rows for the month
+    
+    // Return the total number of days for the represented month
     var numberOfDaysInMonth: Int {
         get { return numberOfDaysInMonthGrid - preDates - postDates }
     }
     
+    // Return the total number of day cells to generate for the represented month
     var numberOfDaysInMonthGrid: Int {
-        get { return sections.reduce(0, combine: +) }
+        get { return sections.reduce(0, +) }
+    }
+    
+    // Return the section in which a day is contained
+    func indexPath(forDay number: Int) -> IndexPath? {
+        var possibleIndex: Int?
+        var indexPath: IndexPath?
+        for (enumeratedIndex, numberOfDaysInSection) in sections.enumerated() {
+            if number <= numberOfDaysInSection {
+                possibleIndex = enumeratedIndex
+                break
+            }
+        }
+        guard let validSectionIndex = possibleIndex else { return indexPath }
+        
+        
+        guard let validSection = sectionIndexMaps.key(for: validSectionIndex) else {return indexPath}
+        let itemIndex = preDates + number - 1
+        indexPath = IndexPath(item: itemIndex, section: validSection)
+        print(indexPath)
+        return indexPath
     }
 }
 
@@ -38,16 +62,16 @@ enum JTAppleCalendarViewSource {
 
 /// Default delegate functions
 public extension JTAppleCalendarViewDelegate {
-    func calendar(calendar : JTAppleCalendarView, canSelectDate date : NSDate, cell: JTAppleDayCellView, cellState: CellState)->Bool {return true}
-    func calendar(calendar : JTAppleCalendarView, canDeselectDate date : NSDate, cell: JTAppleDayCellView, cellState: CellState)->Bool {return true}
-    func calendar(calendar : JTAppleCalendarView, didSelectDate date : NSDate, cell: JTAppleDayCellView?, cellState: CellState) {}
-    func calendar(calendar : JTAppleCalendarView, didDeselectDate date : NSDate, cell: JTAppleDayCellView?, cellState: CellState) {}
-    func calendar(calendar : JTAppleCalendarView, didScrollToDateSegmentStartingWithdate startDate: NSDate, endingWithDate endDate: NSDate) {}
-    func calendar(calendar : JTAppleCalendarView, isAboutToDisplayCell cell: JTAppleDayCellView, date:NSDate, cellState: CellState) {}
-    func calendar(calendar : JTAppleCalendarView, isAboutToResetCell cell: JTAppleDayCellView){}
-    func calendar(calendar : JTAppleCalendarView, isAboutToDisplaySectionHeader header: JTAppleHeaderView, dateRange: (start: NSDate, end: NSDate), identifier: String) {}
-    func calendar(calendar : JTAppleCalendarView, sectionHeaderIdentifierForDate dateRange: (start: NSDate, end: NSDate), belongingTo month: Int) -> String {return ""}
-    func calendar(calendar : JTAppleCalendarView, sectionHeaderSizeForDate dateRange:(start: NSDate, end: NSDate), belongingTo month: Int) -> CGSize {return CGSizeZero}
+    func calendar(_ calendar : JTAppleCalendarView, canSelectDate date : Date, cell: JTAppleDayCellView, cellState: CellState)->Bool {return true}
+    func calendar(_ calendar : JTAppleCalendarView, canDeselectDate date : Date, cell: JTAppleDayCellView, cellState: CellState)->Bool {return true}
+    func calendar(_ calendar : JTAppleCalendarView, didSelectDate date : Date, cell: JTAppleDayCellView?, cellState: CellState) {}
+    func calendar(_ calendar : JTAppleCalendarView, didDeselectDate date : Date, cell: JTAppleDayCellView?, cellState: CellState) {}
+    func calendar(_ calendar : JTAppleCalendarView, didScrollToDateSegmentStartingWithdate startDate: Date, endingWithDate endDate: Date) {}
+    func calendar(_ calendar : JTAppleCalendarView, willDisplayCell cell: JTAppleDayCellView, date:Date, cellState: CellState) {}
+    func calendar(_ calendar : JTAppleCalendarView, willResetCell cell: JTAppleDayCellView){}
+    func calendar(_ calendar : JTAppleCalendarView, willDisplaySectionHeader header: JTAppleHeaderView, dateRange: (start: Date, end: Date), identifier: String) {}
+    func calendar(_ calendar : JTAppleCalendarView, sectionHeaderIdentifierForDate dateRange: (start: Date, end: Date), belongingTo month: Int) -> String {return ""}
+    func calendar(_ calendar : JTAppleCalendarView, sectionHeaderSizeForDate dateRange:(start: Date, end: Date), belongingTo month: Int) -> CGSize {return CGSize.zero}
 }
 
 /// The JTAppleCalendarViewDataSource protocol is adopted by an object that mediates the application’s data model for a JTAppleCalendarViewDataSource object. The data source provides the calendar-view object with the information it needs to construct and modify it self
@@ -61,7 +85,7 @@ public protocol JTAppleCalendarViewDataSource: class {
     ///     - numberOfRows: The number of rows to be displayed per month
     ///     - calendar: The *calendar* to be used by the calendarView.
 //    func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar)
-    func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration)
+    func configureCalendar(_ calendar: JTAppleCalendarView) -> (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration)
 }
 
 
@@ -75,7 +99,7 @@ public protocol JTAppleCalendarViewDelegate: class {
     ///     - cell: The date-cell view. This can be customized at this point.
     ///     - cellState: The month the date-cell belongs to.
     /// - returns: A Bool value indicating if the operation can be done.
-    func calendar(calendar : JTAppleCalendarView, canSelectDate date : NSDate, cell: JTAppleDayCellView, cellState: CellState) -> Bool
+    func calendar(_ calendar : JTAppleCalendarView, canSelectDate date : Date, cell: JTAppleDayCellView, cellState: CellState) -> Bool
     /// Asks the delegate if de-selecting the date-cell with a specified date is allowed
     /// - Parameters:
     ///     - calendar: The JTAppleCalendar view requesting this information.
@@ -83,57 +107,57 @@ public protocol JTAppleCalendarViewDelegate: class {
     ///     - cell: The date-cell view. This can be customized at this point.
     ///     - cellState: The month the date-cell belongs to.
     /// - returns: A Bool value indicating if the operation can be done.
-    func calendar(calendar : JTAppleCalendarView, canDeselectDate date : NSDate, cell: JTAppleDayCellView, cellState: CellState) -> Bool
+    func calendar(_ calendar : JTAppleCalendarView, canDeselectDate date : Date, cell: JTAppleDayCellView, cellState: CellState) -> Bool
     /// Tells the delegate that a date-cell with a specified date was selected
     /// - Parameters:
     ///     - calendar: The JTAppleCalendar view giving this information.
     ///     - date: The date attached to the date-cell.
     ///     - cell: The date-cell view. This can be customized at this point. This may be nil if the selected cell is off the screen
     ///     - cellState: The month the date-cell belongs to.
-    func calendar(calendar : JTAppleCalendarView, didSelectDate date : NSDate, cell: JTAppleDayCellView?, cellState: CellState)
+    func calendar(_ calendar : JTAppleCalendarView, didSelectDate date : Date, cell: JTAppleDayCellView?, cellState: CellState)
     /// Tells the delegate that a date-cell with a specified date was de-selected
     /// - Parameters:
     ///     - calendar: The JTAppleCalendar view giving this information.
     ///     - date: The date attached to the date-cell.
     ///     - cell: The date-cell view. This can be customized at this point. This may be nil if the selected cell is off the screen
     ///     - cellState: The month the date-cell belongs to.
-    func calendar(calendar : JTAppleCalendarView, didDeselectDate date : NSDate, cell: JTAppleDayCellView?, cellState: CellState)
+    func calendar(_ calendar : JTAppleCalendarView, didDeselectDate date : Date, cell: JTAppleDayCellView?, cellState: CellState)
     /// Tells the delegate that the JTAppleCalendar view scrolled to a segment beginning and ending with a particular date
     /// - Parameters:
     ///     - calendar: The JTAppleCalendar view giving this information.
     ///     - startDate: The date at the start of the segment.
     ///     - endDate: The date at the end of the segment.
-    func calendar(calendar : JTAppleCalendarView, didScrollToDateSegmentStartingWithdate startDate: NSDate, endingWithDate endDate: NSDate)
+    func calendar(_ calendar : JTAppleCalendarView, didScrollToDateSegmentStartingWithdate startDate: Date, endingWithDate endDate: Date)
     /// Tells the delegate that the JTAppleCalendar is about to display a date-cell. This is the point of customization for your date cells
     /// - Parameters:
     ///     - calendar: The JTAppleCalendar view giving this information.
     ///     - cell: The date-cell that is about to be displayed.
     ///     - date: The date attached to the cell.
     ///     - cellState: The month the date-cell belongs to.
-    func calendar(calendar : JTAppleCalendarView, isAboutToDisplayCell cell: JTAppleDayCellView, date:NSDate, cellState: CellState)
+    func calendar(_ calendar : JTAppleCalendarView, willDisplayCell cell: JTAppleDayCellView, date:Date, cellState: CellState)
     /// Tells the delegate that the JTAppleCalendar is about to reset a date-cell. Reset your cell here before being reused on screen. Make sure this function exits quicky.
     /// - Parameters:
     ///     - cell: The date-cell that is about to be reset.
-    func calendar(calendar : JTAppleCalendarView, isAboutToResetCell cell: JTAppleDayCellView)
+    func calendar(_ calendar : JTAppleCalendarView, willResetCell cell: JTAppleDayCellView)
     /// Implement this function to use headers in your project. Return your registered header for the date presented.
     /// - Parameters:
     ///     - date: Contains the startDate and endDate for the header that is about to be displayed
     /// - Returns:
     ///   String: Provide the registered header you wish to show for this date
-    func calendar(calendar : JTAppleCalendarView, sectionHeaderIdentifierForDate dateRange: (start: NSDate, end: NSDate), belongingTo month: Int) -> String
+    func calendar(_ calendar : JTAppleCalendarView, sectionHeaderIdentifierForDate dateRange: (start: Date, end: Date), belongingTo month: Int) -> String
     /// Implement this function to use headers in your project. Return the size for the header you wish to present
     /// - Parameters:
     ///     - date: Contains the startDate and endDate for the header that is about to be displayed
     /// - Returns:
     ///   CGSize: Provide the size for the header you wish to show for this date
-    func calendar(calendar : JTAppleCalendarView, sectionHeaderSizeForDate dateRange: (start: NSDate, end: NSDate), belongingTo month: Int) -> CGSize
+    func calendar(_ calendar : JTAppleCalendarView, sectionHeaderSizeForDate dateRange: (start: Date, end: Date), belongingTo month: Int) -> CGSize
     /// Tells the delegate that the JTAppleCalendar is about to display a header. This is the point of customization for your headers
     /// - Parameters:
     ///     - calendar: The JTAppleCalendar view giving this information.
     ///     - header: The header view that is about to be displayed.
     ///     - date: The date attached to the header.
     ///     - identifier: The identifier you provided for the header
-    func calendar(calendar : JTAppleCalendarView, isAboutToDisplaySectionHeader header: JTAppleHeaderView, dateRange: (start: NSDate, end: NSDate), identifier: String)
+    func calendar(_ calendar : JTAppleCalendarView, willDisplaySectionHeader header: JTAppleHeaderView, dateRange: (start: Date, end: Date), identifier: String)
 }
 
 protocol JTAppleCalendarLayoutProtocol: class {
@@ -143,17 +167,17 @@ protocol JTAppleCalendarLayoutProtocol: class {
     var cellCache: [Int:[UICollectionViewLayoutAttributes]] {get set}
     var headerCache: [UICollectionViewLayoutAttributes] {get set}
     var sectionSize: [CGFloat] {get set}
-    func targetContentOffsetForProposedContentOffset(proposedContentOffset: CGPoint) -> CGPoint
-    func sectionFromRectOffset(offset: CGPoint)-> Int
-    func sectionFromOffset(theOffSet: CGFloat) -> Int
-    func sizeOfContentForSection(section: Int)-> CGFloat
+    func targetContentOffsetForProposedContentOffset(_ proposedContentOffset: CGPoint) -> CGPoint
+    func sectionFromRectOffset(_ offset: CGPoint)-> Int
+    func sectionFromOffset(_ theOffSet: CGFloat) -> Int
+    func sizeOfContentForSection(_ section: Int)-> CGFloat
     func clearCache()
 }
 
 protocol JTAppleCalendarDelegateProtocol: class {
     var itemSize: CGFloat? {get set}
     var registeredHeaderViews: [JTAppleCalendarViewSource] {get set}
-    var cachedConfiguration: (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {get set}
+    var cachedConfiguration: (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {get set}
     var monthInfo: [month] {get set}
     var monthMap: [Int:Int] {get set}
     var totalMonthSections: Int {get}
@@ -161,14 +185,14 @@ protocol JTAppleCalendarDelegateProtocol: class {
     
     func numberOfRows() -> Int
 //    func numberOfColumns() -> Int
-    func cachedDate() -> (start: NSDate, end: NSDate, calendar: NSCalendar)
+    func cachedDate() -> (start: Date, end: Date, calendar: Calendar)
     func numberOfsections(forMonth section:Int) -> Int
     func numberOfMonthsInCalendar() -> Int
 //    func numberOfDaysPerSection() -> Int
-    func numberOfPreDatesForMonth(month: NSDate) -> Int
-    func numberOfPostDatesForMonth(month: NSDate) -> Int
-    func referenceSizeForHeaderInSection(section: Int) -> CGSize
-    func firstDayIndexForMonth(date: NSDate) -> Int
+    func numberOfPreDatesForMonth(_ month: Date) -> Int
+    func numberOfPostDatesForMonth(_ month: Date) -> Int
+    func referenceSizeForHeaderInSection(_ section: Int) -> CGSize
+    func firstDayIndexForMonth(_ date: Date) -> Int
     func rowsAreStatic() -> Bool
     func preDatesAreGenerated() -> Bool
     func postDatesAreGenerated() -> OutDateCellGeneration
@@ -179,17 +203,17 @@ protocol JTAppleCalendarDelegateProtocol: class {
 
 internal protocol JTAppleReusableViewProtocolTrait: class {
     associatedtype ViewType: UIView
-    func setupView(cellSource: JTAppleCalendarViewSource)
+    func setupView(_ cellSource: JTAppleCalendarViewSource)
     var view: ViewType? {get set}
 }
 
 extension JTAppleReusableViewProtocolTrait {
-    func setupView(cellSource: JTAppleCalendarViewSource) {
+    func setupView(_ cellSource: JTAppleCalendarViewSource) {
         if view != nil { return}
         switch cellSource {
         case let .fromXib(xibName):
-            let viewObject = NSBundle.mainBundle().loadNibNamed(xibName, owner: self, options: [:])
-            guard let view = viewObject[0] as? ViewType else {
+            let viewObject = Bundle.main.loadNibNamed(xibName, owner: self, options: [:])
+            guard let view = viewObject?[0] as? ViewType else {
                 print("xib: \(xibName),  file class does not conform to the JTAppleViewProtocol")
                 assert(false)
                 return
@@ -197,7 +221,7 @@ extension JTAppleReusableViewProtocolTrait {
             self.view = view
             break
         case let .fromClassName(className):
-            guard let theCellClass = NSBundle.mainBundle().classNamed(className) as? ViewType.Type else {
+            guard let theCellClass = Bundle.main.classNamed(className) as? ViewType.Type else {
                 print("Error loading registered class: '\(className)'")
                 print("Make sure that: \n\n(1) It is a subclass of: 'UIView' and conforms to 'JTAppleViewProtocol' \n(2) You registered your class using the fully qualified name like so -->  'theNameOfYourProject.theNameOfYourClass'\n")
                 assert(false)

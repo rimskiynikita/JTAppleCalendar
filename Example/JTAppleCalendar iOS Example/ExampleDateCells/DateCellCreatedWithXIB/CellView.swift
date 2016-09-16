@@ -15,22 +15,22 @@ class CellView: JTAppleDayCellView {
     @IBOutlet var selectedView: AnimationView!
     @IBOutlet var dayLabel: UILabel!
     
-    let textSelectedColor = UIColor.whiteColor()
-    let textDeselectedColor = UIColor.blackColor()
-    let previousMonthTextColor = UIColor.grayColor()
+    let textSelectedColor = UIColor.white
+    let textDeselectedColor = UIColor.black
+    let previousMonthTextColor = UIColor.gray
     lazy var todayDate : String = {
         [weak self] in
-        let aString = self!.c.stringFromDate(NSDate())
+        let aString = self!.c.string(from: Date())
         return aString
     }()
-    lazy var c : NSDateFormatter = {
-        let f = NSDateFormatter()
+    lazy var c : DateFormatter = {
+        let f = DateFormatter()
         f.dateFormat = "yyyy-MM-dd"
         
         return f
     }()
     
-    func setupCellBeforeDisplay(cellState: CellState, date: NSDate) {
+    func setupCellBeforeDisplay(_ cellState: CellState, date: Date) {
         // Setup Cell text
         dayLabel.text =  cellState.text
         
@@ -38,7 +38,7 @@ class CellView: JTAppleDayCellView {
         configureTextColor(cellState)
 
         // Setup Cell Background color
-        self.backgroundColor = c.stringFromDate(date) == todayDate ? todayColor:normalDayColor
+        self.backgroundColor = c.string(from: date) == todayDate ? todayColor:normalDayColor
         
         // Setup cell selection status
         delayRunOnMainThread(0.0) {
@@ -66,31 +66,31 @@ class CellView: JTAppleDayCellView {
 //        }
     }
     
-    func configureVisibility(cellState: CellState) {
+    func configureVisibility(_ cellState: CellState) {
         if
-            cellState.dateBelongsTo == .ThisMonth ||
-            cellState.dateBelongsTo == .PreviousMonthWithinBoundary ||
-            cellState.dateBelongsTo == .FollowingMonthWithinBoundary {
-            self.hidden = false
+            cellState.dateBelongsTo == .thisMonth ||
+            cellState.dateBelongsTo == .previousMonthWithinBoundary ||
+            cellState.dateBelongsTo == .followingMonthWithinBoundary {
+            self.isHidden = false
         } else {
-            self.hidden = false
+            self.isHidden = false
         }
         
     }
     
-    func configureTextColor(cellState: CellState) {
+    func configureTextColor(_ cellState: CellState) {
         if cellState.isSelected {
             dayLabel.textColor = textSelectedColor
-        } else if cellState.dateBelongsTo == .ThisMonth {
+        } else if cellState.dateBelongsTo == .thisMonth {
             dayLabel.textColor = textDeselectedColor
         } else {
             dayLabel.textColor = previousMonthTextColor
         }
     }
     
-    func cellSelectionChanged(cellState: CellState) {
+    func cellSelectionChanged(_ cellState: CellState) {
         if cellState.isSelected == true {
-            if selectedView.hidden == true {
+            if selectedView.isHidden == true {
                 configueViewIntoBubbleView(cellState)
                 selectedView.animateWithBounceEffect(withCompletionHandler: {
                 })
@@ -100,23 +100,23 @@ class CellView: JTAppleDayCellView {
         }
     }
     
-    private func configueViewIntoBubbleView(cellState: CellState, animateDeselection: Bool = false) {
+    fileprivate func configueViewIntoBubbleView(_ cellState: CellState, animateDeselection: Bool = false) {
         if cellState.isSelected {
             self.selectedView.layer.cornerRadius =  self.selectedView.frame.width  / 2
-            self.selectedView.hidden = false
+            self.selectedView.isHidden = false
             configureTextColor(cellState)
             
         } else {
             if animateDeselection {
                 configureTextColor(cellState)
-                if selectedView.hidden == false {
+                if selectedView.isHidden == false {
                     selectedView.animateWithFadeEffect(withCompletionHandler: { () -> Void in
-                        self.selectedView.hidden = true
+                        self.selectedView.isHidden = true
                         self.selectedView.alpha = 1
                     })
                 }
             } else {
-                selectedView.hidden = true
+                selectedView.isHidden = true
             }
         }
     }
@@ -125,7 +125,7 @@ class CellView: JTAppleDayCellView {
 class AnimationView: UIView {
 
     func animateWithFlipEffect(withCompletionHandler completionHandler:(()->Void)?) {
-        AnimationClass.flipAnimation(self, completion: completionHandler)
+        AnimationClass.flipAnimation(view: self, completion: completionHandler)
     }
     func animateWithBounceEffect(withCompletionHandler completionHandler:(()->Void)?) {
         let viewAnimation = AnimationClass.BounceEffect()
