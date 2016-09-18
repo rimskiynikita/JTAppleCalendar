@@ -658,7 +658,7 @@ open class JTAppleCalendarView: UIView {
                 let periodApart = calendar.dateComponents([.month], from: startOfMonthCache, to: date)
                 let monthSectionIndex = periodApart.month!
                 
-                if monthSectionIndex + 1 > monthInfo.count { return retval }// If there is no following months, there are no counterpart dates
+                if monthSectionIndex + 1 >= monthInfo.count { return retval }// If there is no following months, there are no counterpart dates
 
                 let followingMonthInfo = monthInfo[monthSectionIndex + 1]
                 
