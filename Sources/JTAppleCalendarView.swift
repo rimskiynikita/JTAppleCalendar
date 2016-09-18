@@ -15,14 +15,6 @@ let MIN_NUMBER_OF_DAYS_IN_WEEK = MAX_NUMBER_OF_DAYS_IN_WEEK     // Should not be
 let MAX_NUMBER_OF_ROWS_PER_MONTH = 6                            // Should not be changed
 let MIN_NUMBER_OF_ROWS_PER_MONTH = 1                            // Should not be changed
 
-let FIRST_DAY_INDEX = 0
-let NUMBER_OF_DAYS_INDEX = 1
-let OFFSET_CALC = 2
-
-
-
-
-
 /// Describes which month owns the date
 public enum DateOwner: Int {
     /// Describes which month owns the date
