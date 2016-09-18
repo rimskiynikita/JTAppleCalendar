@@ -17,7 +17,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
     var maxSections: Int { get { return delegate.monthMap.count } }
 
     var cellCache: [Int:[UICollectionViewLayoutAttributes]] = [:]
-    var headerCache: [UICollectionViewLayoutAttributes] = []
+    var headerCache: [Int:UICollectionViewLayoutAttributes] = [:]
     var sectionSize: [CGFloat] = []
     var lastWrittenCellAttribute: UICollectionViewLayoutAttributes?
     var thereAreHeaders: Bool { get { return delegate.registeredHeaderViews.count > 0}}
@@ -82,7 +82,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                 let sectionIndexPath = IndexPath(item: 0, section: section)
                 
                 if let aHeaderAttr = layoutAttributesForSupplementaryView(ofKind: UICollectionElementKindSectionHeader, at: sectionIndexPath) {
-                    headerCache.append(aHeaderAttr)
+                    headerCache[section] = aHeaderAttr
 
                     if thereAreHeaders {
                         contentWidth += aHeaderAttr.frame.width
@@ -187,7 +187,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                 
                 if thereAreHeaders {
                     if let aHeaderAttr = layoutAttributesForSupplementaryView(ofKind: UICollectionElementKindSectionHeader, at: sectionIndexPath) {
-                        headerCache.append(aHeaderAttr)
+                        headerCache[section] = aHeaderAttr
                         yCellOffset += aHeaderAttr.frame.height
                         contentHeight += aHeaderAttr.frame.height
                     }
@@ -254,7 +254,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
             if let validSection = cellCache[sectionIndex] , validSection.count > 0 {
                 // Add header view attributes
                 if thereAreHeaders {
-                    if headerCache[sectionIndex].frame.intersects(rect) { attributes.append(headerCache[sectionIndex]) }
+                    if headerCache[sectionIndex]!.frame.intersects(rect) { attributes.append(headerCache[sectionIndex]!) }
                 }
                 
                 for val in validSection {
@@ -275,7 +275,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
     
     /// Returns the layout attributes for the item at the specified index path. A layout attributes object containing the information to apply to the item’s cell.
     
-    override  open func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+    override open func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         
         
         let monthIndex = delegate.monthMap[(indexPath as NSIndexPath).section]!
@@ -296,9 +296,14 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
     open override func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         let attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: elementKind, with: indexPath)
         
+        if let alreadyCachedHeaderAttrib = headerCache[indexPath.section] {
+            return alreadyCachedHeaderAttrib
+        }
+        
+        
         // We cache the header here so we dont call the delegate so much
         let headerSize = cachedHeaderSizeForSection((indexPath as NSIndexPath).section)
-        
+
         // Use the calculaed header size and force the width of the header to take up 7 columns
         let modifiedSize = CGSize(width: itemSize.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK), height: headerSize.height)
         
@@ -390,7 +395,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
         case .horizontal:
             return cellCache[section]![0].frame.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK)
         case .vertical:
-            let headerSizeOfSection = headerCache.count > 0 ? headerCache[section].frame.height : 0
+            let headerSizeOfSection = headerCache.count > 0 ? headerCache[section]!.frame.height : 0
             return cellCache[section]![0].frame.height * CGFloat(numberOfRowsForMonth(section)) + headerSizeOfSection
         }
     }

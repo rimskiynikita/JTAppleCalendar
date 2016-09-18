@@ -32,24 +32,26 @@ struct month {
         get { return sections.reduce(0, +) }
     }
     
+    var startSection: Int {
+        return sectionIndexMaps.keys.min()!
+    }
+    
     // Return the section in which a day is contained
     func indexPath(forDay number: Int) -> IndexPath? {
-        var possibleIndex: Int?
-        var indexPath: IndexPath?
-        for (enumeratedIndex, numberOfDaysInSection) in sections.enumerated() {
-            if number <= numberOfDaysInSection {
-                possibleIndex = enumeratedIndex
-                break
-            }
-        }
-        guard let validSectionIndex = possibleIndex else { return indexPath }
+        var variableNumber = number
+        let possibleSection = sections.index {
+            let retval = variableNumber <= $0
+            variableNumber -= $0
+            return retval
+        }!
+        
+        let theSection = sectionIndexMaps.key(for: possibleSection)!
+
+        let dateOfStartIndex = sections[0..<possibleSection].reduce(0, +) - preDates + 1
+        let itemIndex = number - dateOfStartIndex
         
         
-        guard let validSection = sectionIndexMaps.key(for: validSectionIndex) else {return indexPath}
-        let itemIndex = preDates + number - 1
-        indexPath = IndexPath(item: itemIndex, section: validSection)
-        print(indexPath)
-        return indexPath
+        return IndexPath(item: itemIndex, section: theSection)
     }
 }
 
@@ -165,7 +167,7 @@ protocol JTAppleCalendarLayoutProtocol: class {
     var headerReferenceSize: CGSize {get set}
     var scrollDirection: UICollectionViewScrollDirection {get set}
     var cellCache: [Int:[UICollectionViewLayoutAttributes]] {get set}
-    var headerCache: [UICollectionViewLayoutAttributes] {get set}
+    var headerCache: [Int: UICollectionViewLayoutAttributes] {get set}
     var sectionSize: [CGFloat] {get set}
     func targetContentOffsetForProposedContentOffset(_ proposedContentOffset: CGPoint) -> CGPoint
     func sectionFromRectOffset(_ offset: CGPoint)-> Int

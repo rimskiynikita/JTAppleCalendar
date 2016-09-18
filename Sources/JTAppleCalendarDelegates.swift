@@ -164,7 +164,7 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
             var pathsToReload = indexPathsToReload
             if let aSelectedCounterPartIndexPath = selectCounterPartCellIndexPathIfExists(indexPath, date: infoOfDateSelectedByUser.date, dateOwner: cellState.dateBelongsTo) {
                 // ONLY if the counterPart cell is visible, then we need to inform the delegate
-                if !pathsToReload.contains(aSelectedCounterPartIndexPath) && calendarView.indexPathsForVisibleItems.contains(aSelectedCounterPartIndexPath){
+                if !pathsToReload.contains(aSelectedCounterPartIndexPath) {
                     pathsToReload.append(aSelectedCounterPartIndexPath)
                 }
             }

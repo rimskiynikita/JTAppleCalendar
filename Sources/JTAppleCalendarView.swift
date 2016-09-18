@@ -609,83 +609,71 @@ open class JTAppleCalendarView: UIView {
                 retval = counterPathIndex[0]
             }
         } else { // If the date does belong to this month, then lets find out if it has a counterpart date
-            if date >= startOfMonthCache && date <= endOfMonthCache {
-                guard let dayIndex = calendar.dateComponents([.day], from: date).day else {
-                    print("Invalid Index")
-                    return nil
+            if date < startOfMonthCache || date > endOfMonthCache { return retval }
+            guard let dayIndex = calendar.dateComponents([.day], from: date).day else {
+                print("Invalid Index")
+                return nil
+            }
+            if case 1...13 = dayIndex  { // then check the previous month
+                // get the index path of the last day of the previous month
+                let periodApart = calendar.dateComponents([.month], from: startOfMonthCache, to: date)
+                
+                guard let // If there is no previous months, there are no counterpart dates
+                    monthSectionIndex = periodApart.month,
+                    monthSectionIndex - 1 >= 0 else {
+                        return retval
                 }
-                if case 1...13 = dayIndex  { // then check the previous month
-                    // get the index path of the last day of the previous month
-                    
-                    guard let
-                        prevMonth = calendar.date(byAdding: .month, value: -1, to: date),
-                        prevMonth >= startOfMonthCache && prevMonth <= endOfMonthCache else {
+                
+                let previousMonthInfo = monthInfo[monthSectionIndex - 1]
+                if previousMonthInfo.postDates < 1 || dayIndex > previousMonthInfo.postDates { return retval } // If there are no postdates for the previous month, then there are no counterpart dates
+                
+                guard
+                    let prevMonth = calendar.date(byAdding: .month, value: -1, to: date),
+                    let lastDayOfPrevMonth = Date.endOfMonth(for: prevMonth, using: calendar) else {
+                        assert(false, "Error generating date in indexPathOfdateCellCounterPart(). Contact the developer on github")
                         return retval
-                    }
-                    
-                    guard let lastDayOfPrevMonth = Date.endOfMonth(for: prevMonth, using: calendar) else {
-                        assert(false)
-                        print("Error generating date in indexPathOfdateCellCounterPart(). Contact the developer on github")
-                        return retval
-                    }
-                    let indexPathOfLastDayOfPreviousMonth = pathsFromDates([lastDayOfPrevMonth])
-                    
-                    if indexPathOfLastDayOfPreviousMonth.count > 0 {
-                        let LastDayIndexPath = indexPathOfLastDayOfPreviousMonth[0]
-                        
-                        var section = (LastDayIndexPath as NSIndexPath).section
-                        var itemIndex = (LastDayIndexPath as NSIndexPath).item + dayIndex
-                        
-                        
-                        // Determine if the sections/item needs to be adjusted
-                        let extraSection = itemIndex / numberOfItemsInSection((indexPath as NSIndexPath).section)
-                        let extraIndex = itemIndex % numberOfItemsInSection((indexPath as NSIndexPath).section)
-                        
-                        section += extraSection
-                        itemIndex = extraIndex
-                        
-                        let reCalcRapth = IndexPath(item: itemIndex, section: section)
-                        
-                        // We are going to call a layout attribute function. Make sure the layout is updated. The layout/cell cache will be empty if there was a layout change
-                        if (calendarView.collectionViewLayout as! JTAppleCalendarLayout).cellCache.count < 1 {
-                            self.calendarView.collectionViewLayout.prepare()
-                        }
-                        if let attrib = calendarView.collectionViewLayout.layoutAttributesForItem(at: reCalcRapth) {
-                            if dateInfoFromPath(attrib.indexPath)?.date == date { retval = attrib.indexPath }
-                        }
-                    } else {
-                        assert(false)
-                        print("out of range error in indexPathOfdateCellCounterPart() upper. This should not happen. Contact developer on github")
-                    }
-                } else if case 26...31 = dayIndex  { // check the following month
-                    guard let
-                        followingMonth = calendar.date(byAdding: .month, value: 1, to: date),
-                        followingMonth >= startOfMonthCache && followingMonth <= endOfMonthCache else {
-                        return retval
-                    }
-                    
-                    guard let firstDayOfFollowingMonth = Date.startOfMonth(for: followingMonth, using: calendar) else {
-                        print("Error generating date in indexPathOfdateCellCounterPart(). Contact the developer on github")
-                        return retval
-                    }
-                    let indexPathOfFirstDayOfFollowingMonth = pathsFromDates([firstDayOfFollowingMonth])
-                    if indexPathOfFirstDayOfFollowingMonth.count > 0 {
-                        let firstDayIndex = (indexPathOfFirstDayOfFollowingMonth[0] as NSIndexPath).item
-                        let lastDay = Date.endOfMonth(for: date, using: calendar)!
-                        guard let lastDayIndex = calendar.dateComponents([.day], from: lastDay).day else {
-                            print("Invalid Index")
-                            return nil
-                        }
-                        let x = lastDayIndex - dayIndex
-                        let y = firstDayIndex - x - 1
-                        
-                        if y > -1 {
-                            return IndexPath(item: y, section: (indexPathOfFirstDayOfFollowingMonth[0] as NSIndexPath).section)
-                        }
-                    } else {
-                        print("out of range error in indexPathOfdateCellCounterPart() lower. This should not happen. Contact developer on github")
-                    }
                 }
+
+                let indexPathOfLastDayOfPreviousMonth = pathsFromDates([lastDayOfPrevMonth])
+                if indexPathOfLastDayOfPreviousMonth.count < 1 {
+                    print("out of range error in indexPathOfdateCellCounterPart() upper. This should not happen. Contact developer on github")
+                    return retval
+                }
+                
+                let lastDayIndexPath = indexPathOfLastDayOfPreviousMonth[0]
+                
+                var section = lastDayIndexPath.section
+                var itemIndex = lastDayIndexPath.item + dayIndex
+                
+                // Determine if the sections/item needs to be adjusted
+                let extraSection = itemIndex / numberOfItemsInSection(section)
+                let extraIndex = itemIndex % numberOfItemsInSection(section)
+                
+                section += extraSection
+                itemIndex = extraIndex
+                
+                let reCalcRapth = IndexPath(item: itemIndex, section: section)
+                retval = reCalcRapth
+            } else if case 26...31 = dayIndex  { // check the following month
+                let periodApart = calendar.dateComponents([.month], from: startOfMonthCache, to: date)
+                let monthSectionIndex = periodApart.month!
+                
+                if monthSectionIndex + 1 > monthInfo.count { return retval }// If there is no following months, there are no counterpart dates
+
+                let followingMonthInfo = monthInfo[monthSectionIndex + 1]
+                
+                if followingMonthInfo.preDates < 1 { return retval } // If there are no predates for the following month, then there are no counterpart dates
+                
+                let lastDateOfCurrentMonth = Date.endOfMonth(for: date, using: calendar)!
+                let lastDay = calendar.component(.day, from: lastDateOfCurrentMonth)
+                
+                let section = followingMonthInfo.startSection
+                let index = dayIndex - lastDay + (followingMonthInfo.preDates - 1)
+                
+                if index < 0 { return retval }
+                
+                print("section \(section) index \(index)")
+                retval = IndexPath(item: index, section: section)
             }
         }
         return retval
@@ -755,52 +743,19 @@ open class JTAppleCalendarView: UIView {
         for date in dates {
             
             if  calendar.startOfDay(for: date) >= startOfMonthCache && calendar.startOfDay(for: date) <= endOfMonthCache {
-//                let periodApart = calendar.dateComponents([.month], from: startOfMonthCache, to: date)
-//                let monthSectionIndex = periodApart.month!
-//                
-//                let currentMonth = monthInfo[monthSectionIndex]
-//                
-//                let indexPath = currentMonth.indexPath(forDay: 1)
-//                print(indexPath!)
-//                
-//
-//                let startSectionIndex = monthSectionIndex * numberOfsections(forMonth: monthSectionIndex)
-//                
-//                
-////                
-//                
-//                
-//                let sectionIndex = startMonthSectionForSection(startSectionIndex) // Get the section within the month
-//                
-                
-                
-                
-                
-                
-                
-                
-                
-//                for date in dates {
-                    if  calendar.startOfDay(for: date) >= startOfMonthCache && calendar.startOfDay(for: date) <= endOfMonthCache {
-                        let periodApart = calendar.dateComponents([.month], from: startOfMonthCache, to: date)
-                        let monthSectionIndex = periodApart.month
-//                        let startSectionIndex = monthSectionIndex * numberOfSectionsPerMonth
-//                        let sectionIndex = startMonthSectionForSection(startSectionIndex) // Get the section within the month
-        
-                        // Get the section Information
-                        let currentMonthInfo = monthInfo[monthSectionIndex!]
-                        let dayIndex = calendar.dateComponents([.day], from: date).day!
-        
-                        // Given the following, find the index Path
-                        let fdIndex = currentMonthInfo.preDates
-                        let cellIndex = dayIndex + fdIndex - 1
-                        let updatedSection = cellIndex / currentMonthInfo.sections.count
-                        let adjustedSection = updatedSection
-                        let adjustedCellIndex = cellIndex - (currentMonthInfo.sections.count * (cellIndex / currentMonthInfo.sections.count))
-                        returnPaths.append(IndexPath(item: adjustedCellIndex, section: adjustedSection))
-                    }
-//                }
+                if  calendar.startOfDay(for: date) >= startOfMonthCache && calendar.startOfDay(for: date) <= endOfMonthCache {
+                    
+                    let periodApart = calendar.dateComponents([.month], from: startOfMonthCache, to: date)
+                    print(periodApart)
+                    let day = calendar.dateComponents([.day], from: date).day!
+                    let monthSectionIndex = periodApart.month
 
+                    let currentMonthInfo = monthInfo[monthSectionIndex!]
+                    
+                    if let indexPath = currentMonthInfo.indexPath(forDay: day) {
+                        returnPaths.append(indexPath)
+                    }
+                }
             }
         }
         return returnPaths
@@ -844,7 +799,6 @@ extension JTAppleCalendarView {
             return .none
         }
         
-
         let cellState = CellState(
             isSelected: theSelectedIndexPaths.contains(indexPath),
             text: cellText,
