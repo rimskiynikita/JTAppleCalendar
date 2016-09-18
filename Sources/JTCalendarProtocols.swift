@@ -40,7 +40,7 @@ struct month {
     func indexPath(forDay number: Int) -> IndexPath? {
         var variableNumber = number
         let possibleSection = sections.index {
-            let retval = variableNumber <= $0
+            let retval = variableNumber < $0
             variableNumber -= $0
             return retval
         }!
