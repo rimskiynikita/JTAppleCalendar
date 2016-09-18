@@ -296,15 +296,15 @@ extension JTAppleCalendarView {
                         // If both paging and header is on, then scroll to the actual date
                         // If direction is vertical and user has a custom size that is at least the size of the collectionview. 
                         // If this check is not done, it will scroll to header, and have white space at bottom because view is smaller due to small custom user itemSize
-                        if self.direction == .vertical && (self.calendarView.collectionViewLayout as! JTAppleCalendarLayout).sizeOfSection((sectionIndexPath as NSIndexPath).section) >= self.calendarView.frame.height {
-                            self.scrollToHeaderInSection((sectionIndexPath as NSIndexPath).section, triggerScrollToDateDelegate: triggerScrollToDateDelegate, withAnimation: animateScroll, completionHandler: completionHandler)
+                        if self.direction == .vertical && (self.calendarView.collectionViewLayout as! JTAppleCalendarLayout).sizeOfSection(sectionIndexPath.section) >= self.calendarView.frame.height {
+                            self.scrollToHeaderInSection(sectionIndexPath.section, triggerScrollToDateDelegate: triggerScrollToDateDelegate, withAnimation: animateScroll, completionHandler: completionHandler)
                             return
                         } else {
-                            scrollToIndexPath(IndexPath(item: 0, section: (sectionIndexPath as NSIndexPath).section), animateScroll)
+                            scrollToIndexPath(IndexPath(item: 0, section: sectionIndexPath.section), animateScroll)
                         }
                     } else {
                         // If paging is on and header is off, then scroll to the start date in section
-                        scrollToIndexPath(IndexPath(item: 0, section: (sectionIndexPath as NSIndexPath).section), animateScroll)
+                        scrollToIndexPath(IndexPath(item: 0, section: sectionIndexPath.section), animateScroll)
                     }
                 } else {
                     // If paging is off, then scroll to the actual date in the section
@@ -330,7 +330,7 @@ extension JTAppleCalendarView {
         let path = pathsFromDates([date])
         // Return if date was incalid and no path was returned
         if path.count < 1 { return }
-        scrollToHeaderInSection((path[0] as NSIndexPath).section, triggerScrollToDateDelegate: triggerScrollToDateDelegate, withAnimation: animation, completionHandler: completionHandler)
+        scrollToHeaderInSection(path[0].section, triggerScrollToDateDelegate: triggerScrollToDateDelegate, withAnimation: animation, completionHandler: completionHandler)
     }
     
     /// Generates a range of dates from from a startDate to an endDate you provide

@@ -14,9 +14,9 @@ class JTAppleCalendar_iOSTests: XCTestCase, JTAppleCalendarViewDataSource {
     let formatter = NSDateFormatter()
     let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
     var numberOfRows = 6
-    var firstDate: NSDate!
-    var secondDate: NSDate!
-    var returnConfiguration: (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration)?
+    var firstDate: Date!
+    var secondDate: Date!
+    var returnConfiguration: (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration)?
     
     override func setUp() {
         super.setUp()
@@ -109,7 +109,7 @@ class JTAppleCalendar_iOSTests: XCTestCase, JTAppleCalendarViewDataSource {
 //    }
     
     
-    func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {
+    func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {
         return returnConfiguration!
         //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfRow)
         //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .off)

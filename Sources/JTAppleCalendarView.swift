@@ -375,12 +375,12 @@ open class JTAppleCalendarView: UIView {
     
     func validForwardAndBackwordSelectedIndexes(forIndexPath indexPath: IndexPath)->[IndexPath] {
         var retval = [IndexPath]()
-        if let validForwardIndex = calendarView.layoutAttributesForItem(at: IndexPath(item: (indexPath as NSIndexPath).item + 1, section: (indexPath as NSIndexPath).section)) ,
+        if let validForwardIndex = calendarView.layoutAttributesForItem(at: IndexPath(item: indexPath.item + 1, section: indexPath.section)) ,
             theSelectedIndexPaths.contains(validForwardIndex.indexPath){
             retval.append(validForwardIndex.indexPath)
         }
         
-        if let validBackwardIndex = calendarView.collectionViewLayout.layoutAttributesForItem(at: IndexPath(item: (indexPath as NSIndexPath).item - 1, section: (indexPath as NSIndexPath).section)) ,
+        if let validBackwardIndex = calendarView.collectionViewLayout.layoutAttributesForItem(at: IndexPath(item: indexPath.item - 1, section: indexPath.section)) ,
             theSelectedIndexPaths.contains(validBackwardIndex.indexPath) {
             retval.append(validBackwardIndex.indexPath)
         }
@@ -402,7 +402,7 @@ open class JTAppleCalendarView: UIView {
                 layoutOffset = attributes.frame.origin.y
                 calendarOffset = calendarView.contentOffset.y
             }
-            if  calendarOffset == layoutOffset || (scrollingMode.pagingIsEnabled() && ((indexPath as NSIndexPath).section ==  currentSectionPage)) {
+            if  calendarOffset == layoutOffset || (scrollingMode.pagingIsEnabled() && (indexPath.section ==  currentSectionPage)) {
                 retval = true
             } else {
                 retval = false
@@ -695,7 +695,7 @@ open class JTAppleCalendarView: UIView {
         var totalDays = 0
         if let validConfig = dataSource?.configureCalendar(self) {
             // check if the dates are in correct order
-            if (validConfig.calendar as NSCalendar).compare(validConfig.startDate, to: validConfig.endDate, toUnitGranularity: NSCalendar.Unit.nanosecond) == ComparisonResult.orderedDescending {
+            if validConfig.calendar.compare(validConfig.startDate, to: validConfig.endDate, toGranularity: .nanosecond) == ComparisonResult.orderedDescending {
                 assert(false, "Error, your start date cannot be greater than your end date\n")
                 return (calendarData(months:[], totalSections: 0, monthMap: [:], totalDays: 0))
             }
@@ -781,8 +781,8 @@ extension JTAppleCalendarView {
         let rangePosition = {()->SelectionRangePosition in
             if self.theSelectedIndexPaths.contains(indexPath) {
                 if self.selectedDates.count == 1 { return .full}
-                let left = self.theSelectedIndexPaths.contains(IndexPath(item: (indexPath as NSIndexPath).item - 1, section: (indexPath as NSIndexPath).section))
-                let right = self.theSelectedIndexPaths.contains(IndexPath(item: (indexPath as NSIndexPath).item + 1, section: (indexPath as NSIndexPath).section))
+                let left = self.theSelectedIndexPaths.contains(IndexPath(item: indexPath.item - 1, section: indexPath.section))
+                let right = self.theSelectedIndexPaths.contains(IndexPath(item: indexPath.item + 1, section: indexPath.section))
                 if (left == right) {
                     if left == false { return .full } else { return .middle }
                 } else {
@@ -798,9 +798,9 @@ extension JTAppleCalendarView {
             dateBelongsTo: dateBelongsTo,
             date: date,
             day: dayOfWeek,
-            row: { return (indexPath as NSIndexPath).item / MAX_NUMBER_OF_DAYS_IN_WEEK },
-            column: { return (indexPath as NSIndexPath).item % MAX_NUMBER_OF_DAYS_IN_WEEK },
-            dateSection: { return self.dateFromSection((indexPath as NSIndexPath).section)! },
+            row: { return indexPath.item / MAX_NUMBER_OF_DAYS_IN_WEEK },
+            column: { return indexPath.item % MAX_NUMBER_OF_DAYS_IN_WEEK },
+            dateSection: { return self.dateFromSection(indexPath.section)! },
             selectedPosition: rangePosition,
             cell: {return cell}
         )
@@ -888,7 +888,7 @@ extension JTAppleCalendarView {
     
     
     func dateInfoFromPath(_ indexPath: IndexPath)-> (date: Date, owner: DateOwner)? { // Returns nil if date is out of scope
-        guard let monthIndex = monthMap[(indexPath as NSIndexPath).section] else {
+        guard let monthIndex = monthMap[indexPath.section] else {
             return nil
         }
         
@@ -896,12 +896,12 @@ extension JTAppleCalendarView {
         let offSet: Int
         var numberOfDaysToAddToOffset: Int = 0
         
-        switch monthData.sectionIndexMaps[(indexPath as NSIndexPath).section]! {
+        switch monthData.sectionIndexMaps[indexPath.section]! {
         case 0:
             offSet = monthData.preDates
         default:
             offSet = 0
-            let currentSectionIndexMap = monthData.sectionIndexMaps[(indexPath as NSIndexPath).section]!
+            let currentSectionIndexMap = monthData.sectionIndexMaps[indexPath.section]!
             
             numberOfDaysToAddToOffset = monthData.sections[0..<currentSectionIndexMap].reduce(0, +)
             numberOfDaysToAddToOffset -= monthData.preDates
@@ -912,15 +912,15 @@ extension JTAppleCalendarView {
         let date: Date?
         var dateComponents = DateComponents()
         
-        if (indexPath as NSIndexPath).item >= offSet && (indexPath as NSIndexPath).item + numberOfDaysToAddToOffset < monthData.numberOfDaysInMonth + offSet {
+        if indexPath.item >= offSet && indexPath.item + numberOfDaysToAddToOffset < monthData.numberOfDaysInMonth + offSet {
             // This is a month date
-            dayIndex = monthData.startDayIndex + (indexPath as NSIndexPath).item - offSet + numberOfDaysToAddToOffset
+            dayIndex = monthData.startDayIndex + indexPath.item - offSet + numberOfDaysToAddToOffset
             dateComponents.day = dayIndex
             date = calendar.date(byAdding: dateComponents, to: startOfMonthCache)
             dateOwner = .thisMonth
-        } else if (indexPath as NSIndexPath).item < offSet {
+        } else if indexPath.item < offSet {
             // This is a preDate
-            dayIndex = (indexPath as NSIndexPath).item - offSet  + monthData.startDayIndex
+            dayIndex = indexPath.item - offSet  + monthData.startDayIndex
             dateComponents.day = dayIndex
             date = calendar.date(byAdding: dateComponents, to: startOfMonthCache)
             if date! < startOfMonthCache {
@@ -930,7 +930,7 @@ extension JTAppleCalendarView {
             }
         } else {
             // This is a postDate
-            dayIndex =  monthData.startDayIndex - offSet + (indexPath as NSIndexPath).item + numberOfDaysToAddToOffset
+            dayIndex =  monthData.startDayIndex - offSet + indexPath.item + numberOfDaysToAddToOffset
             dateComponents.day = dayIndex
             date = calendar.date(byAdding: dateComponents, to: startOfMonthCache)
             if date! > endOfMonthCache {

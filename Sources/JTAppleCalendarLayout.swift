@@ -212,7 +212,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                                 yCellOffset += attribute.frame.height
                                 contentHeight += attribute.frame.height
                             } else {
-                                if monthData.last?.sectionIndexMaps[(indexPath as NSIndexPath).section] != nil { // If we are on the last section on a partially filled row
+                                if monthData.last?.sectionIndexMaps[indexPath.section] != nil { // If we are on the last section on a partially filled row
                                     contentHeight += attribute.frame.height
                                 }
                             }
@@ -278,15 +278,15 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
     override open func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         
         
-        let monthIndex = delegate.monthMap[(indexPath as NSIndexPath).section]!
+        let monthIndex = delegate.monthMap[indexPath.section]!
         let numberOfDays = numberOfDaysInSection(monthIndex) // JT101 cacche this
         
-        if !(0...maxSections ~= (indexPath as NSIndexPath).section) || !(0...numberOfDays  ~= (indexPath as NSIndexPath).item) { return nil} // return nil on invalid range
+        if !(0...maxSections ~= indexPath.section) || !(0...numberOfDays  ~= indexPath.item) { return nil} // return nil on invalid range
         let attr = UICollectionViewLayoutAttributes(forCellWith: indexPath)
         
         // If this index is already cached, then return it else, apply a new layout attribut to it
-        if let alreadyCachedCellAttrib = cellCache[(indexPath as NSIndexPath).section] , (indexPath as NSIndexPath).item < alreadyCachedCellAttrib.count {
-            return alreadyCachedCellAttrib[(indexPath as NSIndexPath).item]
+        if let alreadyCachedCellAttrib = cellCache[indexPath.section] , indexPath.item < alreadyCachedCellAttrib.count {
+            return alreadyCachedCellAttrib[indexPath.item]
         }
         applyLayoutAttributes(attr)
         return attr
@@ -302,7 +302,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
         
         
         // We cache the header here so we dont call the delegate so much
-        let headerSize = cachedHeaderSizeForSection((indexPath as NSIndexPath).section)
+        let headerSize = cachedHeaderSizeForSection(indexPath.section)
 
         // Use the calculaed header size and force the width of the header to take up 7 columns
         let modifiedSize = CGSize(width: itemSize.width * CGFloat(MAX_NUMBER_OF_DAYS_IN_WEEK), height: headerSize.height)
@@ -358,20 +358,20 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
     func sizeForitemAtIndexPath(_ indexPath: IndexPath) -> CGSize {
         
         // Return the size if the cell size is already cached
-        if let cachedCell  = currentCell , cachedCell.section == (indexPath as NSIndexPath).section {
+        if let cachedCell  = currentCell , cachedCell.section == indexPath.section {
             return cachedCell.itemSize
         }
         
         // Get header size if it alrady cached
         var headerSize =  CGSize.zero
         if thereAreHeaders {
-            headerSize = cachedHeaderSizeForSection((indexPath as NSIndexPath).section)
+            headerSize = cachedHeaderSizeForSection(indexPath.section)
         }
         let currentItemSize = itemSize
         
         
-        let totalNumberOfRows = monthData[monthMap[(indexPath as NSIndexPath).section]!].rows
-        let monthSection = monthData[monthMap[(indexPath as NSIndexPath).section]!].sectionIndexMaps[(indexPath as NSIndexPath).section]!
+        let totalNumberOfRows = monthData[monthMap[indexPath.section]!].rows
+        let monthSection = monthData[monthMap[indexPath.section]!].sectionIndexMaps[indexPath.section]!
         
         let numberOfSections = CGFloat(totalNumberOfRows) / CGFloat(numberOfRows)
         let fullSections =  Int(numberOfSections)
@@ -386,7 +386,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
         }
         
         let size            = CGSize(width: currentItemSize.width, height: (collectionView!.frame.height - headerSize.height) / CGFloat(numberOfRowsForSection))
-        currentCell         = (section: (indexPath as NSIndexPath).section, itemSize: size)
+        currentCell         = (section: indexPath.section, itemSize: size)
         return size
     }
     
