@@ -49,8 +49,7 @@ struct month {
 
         let dateOfStartIndex = sections[0..<possibleSection].reduce(0, +) - preDates + 1
         let itemIndex = number - dateOfStartIndex
-        
-        
+
         return IndexPath(item: itemIndex, section: theSection)
     }
 }
