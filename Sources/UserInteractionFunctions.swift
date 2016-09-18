@@ -101,7 +101,19 @@ extension JTAppleCalendarView {
     /// Reload the date of specified date-cells on the calendar-view
     /// - Parameter dates: Date-cells with these specified dates will be reloaded
     public func reloadDates(_ dates: [Date]) {
-        batchReloadIndexPaths(pathsFromDates(dates))
+        var paths = [IndexPath]()
+        for date in dates {
+            let aPath = pathsFromDates([date])
+            paths.append(contentsOf: aPath)
+            
+            if aPath.count > 0 {
+                let cellState = cellStateFromIndexPath(aPath[0])
+                if let validCounterPartCell = indexPathOfdateCellCounterPart(date, indexPath: aPath[0], dateOwner: cellState.dateBelongsTo) {
+                    paths.append(validCounterPartCell)
+                }
+            }
+        }
+        batchReloadIndexPaths(paths)
     }
     
     /// Select a date-cell range
