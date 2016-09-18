@@ -152,10 +152,7 @@ open class JTAppleCalendarView: UIView {
     
     func setupMonthInfoAndMap() {
         theData = setupMonthInfoDataForStartAndEndDate()
-//        monthInfo = generatedData.months
-//        monthMap = generatedData.monthMap
     }
-    
     
     /// The object that acts as the delegate of the calendar view.
     weak open var delegate: JTAppleCalendarViewDelegate?
@@ -319,11 +316,13 @@ open class JTAppleCalendarView: UIView {
 
         layout.itemSize = CGSize(width: width, height: height)
     }
-    
+    var calleded = 0
     /// The frame rectangle which defines the view's location and size in its superview coordinate system.
     override open var frame: CGRect {
         didSet {
-            calendarView.frame = CGRect(x:0.0, y:/*bufferTop*/0.0, width: self.frame.size.width, height:self.frame.size.height/* - bufferBottom*/)
+            print("called = \(calleded)")
+            calleded += 1
+            calendarView.frame = CGRect(x:0.0, y:0.0, width: self.frame.size.width, height:self.frame.size.height)
             #if os(iOS)
                 let orientation = UIApplication.shared.statusBarOrientation
                 if orientation == .unknown { return }
@@ -565,6 +564,8 @@ open class JTAppleCalendarView: UIView {
         let layout = calendarView.collectionViewLayout as! JTAppleCalendarLayoutProtocol
         layout.clearCache()
         setupMonthInfoAndMap()
+        layout.prepare()
+        
         
         // the selected dates and paths will be retained. Ones that are not available on the new layout will be removed.
         var indexPathsToReselect = [IndexPath]()

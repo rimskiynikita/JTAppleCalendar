@@ -40,7 +40,7 @@ struct month {
     func indexPath(forDay number: Int) -> IndexPath? {
         var variableNumber = number
         let possibleSection = sections.index {
-            let retval = variableNumber < $0
+            let retval = variableNumber + preDates <= $0
             variableNumber -= $0
             return retval
         }!
@@ -174,6 +174,7 @@ protocol JTAppleCalendarLayoutProtocol: class {
     func sectionFromOffset(_ theOffSet: CGFloat) -> Int
     func sizeOfContentForSection(_ section: Int)-> CGFloat
     func clearCache()
+    func prepare()
 }
 
 protocol JTAppleCalendarDelegateProtocol: class {
