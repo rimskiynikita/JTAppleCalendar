@@ -14,40 +14,32 @@ class CellView: JTAppleDayCellView {
     @IBInspectable var normalDayColor: UIColor! //UIColor(white: 0.0, alpha: 0.1)
     @IBOutlet var selectedView: AnimationView!
     @IBOutlet var dayLabel: UILabel!
-    
     let textSelectedColor = UIColor.white
     let textDeselectedColor = UIColor.black
     let previousMonthTextColor = UIColor.gray
-    lazy var todayDate : String = {
+    lazy var todayDate: String = {
         [weak self] in
-        let aString = self!.c.string(from: Date())
+        let aString = self!.cal.string(from: Date())
         return aString
     }()
-    lazy var c : DateFormatter = {
-        let f = DateFormatter()
-        f.dateFormat = "yyyy-MM-dd"
-        
-        return f
+    lazy var cal: DateFormatter = {
+        let fmtter = DateFormatter()
+        fmtter.dateFormat = "yyyy-MM-dd"
+        return fmtter
     }()
-    
     func setupCellBeforeDisplay(_ cellState: CellState, date: Date) {
         // Setup Cell text
         dayLabel.text =  cellState.text
-        
         // Setup text color
         configureTextColor(cellState)
-
         // Setup Cell Background color
-        self.backgroundColor = c.string(from: date) == todayDate ? todayColor:normalDayColor
-        
+        self.backgroundColor = cal.string(from: date) == todayDate ? todayColor:normalDayColor
         // Setup cell selection status
         delayRunOnMainThread(0.0) {
             self.configueViewIntoBubbleView(cellState)
         }
-    
         // Configure Visibility
         configureVisibility(cellState)
-        
         // With cell states you can literally control every aspect of the calendar view
         // Uncomment this code block to watch "JTAPPLE" spelt on the calendar
 //        let dateSection = c.stringFromDate(cellState.dateSection().dateRange.start)
@@ -65,7 +57,6 @@ class CellView: JTAppleDayCellView {
 //            self.backgroundColor = UIColor.redColor()
 //        }
     }
-    
     func configureVisibility(_ cellState: CellState) {
         if
             cellState.dateBelongsTo == .thisMonth ||
@@ -75,9 +66,7 @@ class CellView: JTAppleDayCellView {
         } else {
             self.isHidden = false
         }
-        
     }
-    
     func configureTextColor(_ cellState: CellState) {
         if cellState.isSelected {
             dayLabel.textColor = textSelectedColor
@@ -87,7 +76,6 @@ class CellView: JTAppleDayCellView {
             dayLabel.textColor = previousMonthTextColor
         }
     }
-    
     func cellSelectionChanged(_ cellState: CellState) {
         if cellState.isSelected == true {
             if selectedView.isHidden == true {
@@ -99,13 +87,11 @@ class CellView: JTAppleDayCellView {
             configueViewIntoBubbleView(cellState, animateDeselection: true)
         }
     }
-    
     fileprivate func configueViewIntoBubbleView(_ cellState: CellState, animateDeselection: Bool = false) {
         if cellState.isSelected {
             self.selectedView.layer.cornerRadius =  self.selectedView.frame.width  / 2
             self.selectedView.isHidden = false
             configureTextColor(cellState)
-            
         } else {
             if animateDeselection {
                 configureTextColor(cellState)
@@ -123,17 +109,16 @@ class CellView: JTAppleDayCellView {
 }
 
 class AnimationView: UIView {
-
-    func animateWithFlipEffect(withCompletionHandler completionHandler:(()->Void)?) {
+    func animateWithFlipEffect(withCompletionHandler completionHandler:(() -> Void)?) {
         AnimationClass.flipAnimation(view: self, completion: completionHandler)
     }
-    func animateWithBounceEffect(withCompletionHandler completionHandler:(()->Void)?) {
+    func animateWithBounceEffect(withCompletionHandler completionHandler:(() -> Void)?) {
         let viewAnimation = AnimationClass.BounceEffect()
-        viewAnimation(self){ _ in
+        viewAnimation(self) { _ in
             completionHandler?()
         }
     }
-    func animateWithFadeEffect(withCompletionHandler completionHandler:(()->Void)?) {
+    func animateWithFadeEffect(withCompletionHandler completionHandler:(() -> Void)?) {
         let viewAnimation = AnimationClass.FadeOutEffect()
         viewAnimation(self) { _ in
             completionHandler?()

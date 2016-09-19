@@ -200,8 +200,7 @@ extension JTAppleCalendarView: UIScrollViewDelegate {
         var contentOffset: CGFloat = 0,
         theTargetContentOffset: CGFloat = 0,
         directionVelocity: CGFloat = 0
-        
-        let calendarLayout = (calendarView.collectionViewLayout as! JTAppleCalendarLayoutProtocol)
+        let calendarLayout = self.calendarViewLayout
         if direction == .horizontal {
             contentOffset = scrollView.contentOffset.x
             theTargetContentOffset = targetContentOffset.pointee.x

@@ -26,7 +26,7 @@ struct JTAppleDateConfigGenerator {
     weak var delegate: JTAppleCalendarDelegateProtocol!
     
     
-    mutating func setupMonthInfoDataForStartAndEndDate(_ parameters: DateConfigParameters?)-> (months:[month], monthMap: [Int:Int], totalSections: Int, totalDays: Int) {
+    mutating func setupMonthInfoDataForStartAndEndDate(_ parameters: DateConfigParameters?)-> (months:[Month], monthMap: [Int:Int], totalSections: Int, totalDays: Int) {
         self.parameters = parameters
         
         guard
@@ -50,7 +50,7 @@ struct JTAppleDateConfigGenerator {
         let differenceComponents = calendar.dateComponents([.month], from: startMonth, to: endMonth)
         let numberOfMonths = differenceComponents.month! + 1 // if we are for example on the same month and the difference is 0 we still need 1 to display it
         
-        var monthArray: [month] = []
+        var monthArray: [Month] = []
         
         var monthIndexMap: [Int:Int] = [:]
         var section = 0
@@ -60,7 +60,7 @@ struct JTAppleDateConfigGenerator {
         let numberOfRowsPerSectionThatUserWants = validParameters.numberOfRows
         
         // Number of sections in each month
-//        let numberOfSectionsPerMonth = Int(ceil(Float(MAX_NUMBER_OF_ROWS_PER_MONTH)  / Float(validParameters.numberOfRows)))
+//        let numberOfSectionsPerMonth = Int(ceil(Float(maxNumberOfRowsPerMonth)  / Float(validParameters.numberOfRows)))
         
         // Section represents # of months. section is used as an offset to determine which month to calculate
         for monthIndex in 0 ..< numberOfMonths {
@@ -81,9 +81,9 @@ struct JTAppleDateConfigGenerator {
                 
                 
                 if /*validParameters.inCellGeneration == true &&*/ validParameters.outCellGeneration == .tillEndOfGrid {
-                    numberOfRowsToGenerateForCurrentMonth = MAX_NUMBER_OF_ROWS_PER_MONTH
+                    numberOfRowsToGenerateForCurrentMonth = maxNumberOfRowsPerMonth
                 } else {
-                    let actualNumberOfRowsForThisMonth = Int(ceil(Float(numberOfDaysInMonthVariable) / Float(MAX_NUMBER_OF_DAYS_IN_WEEK)))
+                    let actualNumberOfRowsForThisMonth = Int(ceil(Float(numberOfDaysInMonthVariable) / Float(maxNumberOfDaysInWeek)))
                     numberOfRowsToGenerateForCurrentMonth = actualNumberOfRowsForThisMonth
                     
                 }
@@ -92,7 +92,7 @@ struct JTAppleDateConfigGenerator {
                 let postGeneration = delegate.postDatesAreGenerated()
                 switch postGeneration {
                 case .tillEndOfGrid, .tillEndOfRow:
-                    numberOfPostDatesForThisMonth = MAX_NUMBER_OF_DAYS_IN_WEEK * numberOfRowsToGenerateForCurrentMonth - (numberOfDaysInMonthFixed + numberOfPreDatesForThisMonth)
+                    numberOfPostDatesForThisMonth = maxNumberOfDaysInWeek * numberOfRowsToGenerateForCurrentMonth - (numberOfDaysInMonthFixed + numberOfPreDatesForThisMonth)
                     numberOfDaysInMonthVariable += numberOfPostDatesForThisMonth
                 default:
                     break
@@ -109,7 +109,7 @@ struct JTAppleDateConfigGenerator {
                     sectionIndexMaps[section] = index
                     
                     
-                    var numberOfDaysInCurrentSection = numberOfRowsPerSectionThatUserWants * MAX_NUMBER_OF_DAYS_IN_WEEK
+                    var numberOfDaysInCurrentSection = numberOfRowsPerSectionThatUserWants * maxNumberOfDaysInWeek
                     if numberOfDaysInCurrentSection > numberOfDaysInMonthVariable {
                         numberOfDaysInCurrentSection = numberOfDaysInMonthVariable
 //                        assert(false)
@@ -124,7 +124,7 @@ struct JTAppleDateConfigGenerator {
                     
                 }
                 
-                monthArray.append(month(startDayIndex: startIndexForMonth, startCellIndex: startCellIndexForMonth, sections: sectionsForTheMonth, preDates: numberOfPreDatesForThisMonth, postDates: numberOfPostDatesForThisMonth, sectionIndexMaps: sectionIndexMaps, rows: numberOfRowsToGenerateForCurrentMonth))
+                monthArray.append(Month(startDayIndex: startIndexForMonth, startCellIndex: startCellIndexForMonth, sections: sectionsForTheMonth, preDates: numberOfPreDatesForThisMonth, postDates: numberOfPostDatesForThisMonth, sectionIndexMaps: sectionIndexMaps, rows: numberOfRowsToGenerateForCurrentMonth))
                 startIndexForMonth     += numberOfDaysInMonthFixed
                 startCellIndexForMonth += numberOfDaysInMonthFixed + numberOfPreDatesForThisMonth + numberOfPostDatesForThisMonth
             }
