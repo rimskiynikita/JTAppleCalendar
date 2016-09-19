@@ -14,6 +14,7 @@ let MAX_NUMBER_OF_DAYS_IN_WEEK = 7                              // Should not be
 let MIN_NUMBER_OF_DAYS_IN_WEEK = MAX_NUMBER_OF_DAYS_IN_WEEK     // Should not be changed
 let MAX_NUMBER_OF_ROWS_PER_MONTH = 6                            // Should not be changed
 let MIN_NUMBER_OF_ROWS_PER_MONTH = 1                            // Should not be changed
+let developerErrorMessage = "There was an error in this code section. Please contact the developer on GitHub"
 
 /// Describes which month owns the date
 public enum DateOwner: Int {
@@ -343,6 +344,11 @@ open class JTAppleCalendarView: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.initialSetup()
+    }
+    func developerError(string: String) {
+        print(string)
+        print(developerErrorMessage)
+        assert(false)
     }
     
     
