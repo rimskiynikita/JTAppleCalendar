@@ -66,6 +66,8 @@
 		6B6162991D5C0E75002CF8E8 /* JTAppleCalendar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B60DECA1D5BDA74009174A2 /* JTAppleCalendar.framework */; };
 		6B74405E1D6ADE6A00DE2386 /* JTAppleDateConfigGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B74405D1D6ADE6A00DE2386 /* JTAppleDateConfigGenerator.swift */; };
 		6B74405F1D6ADE6A00DE2386 /* JTAppleDateConfigGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B74405D1D6ADE6A00DE2386 /* JTAppleDateConfigGenerator.swift */; };
+		6BA9245E1D8FD33F00415488 /* JTAppleCalendarDelegateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA9245D1D8FD33F00415488 /* JTAppleCalendarDelegateProtocol.swift */; };
+		6BA9245F1D8FD33F00415488 /* JTAppleCalendarDelegateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA9245D1D8FD33F00415488 /* JTAppleCalendarDelegateProtocol.swift */; };
 		6BF7B1FF1D606BA600D60900 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B60DF0F1D5BE834009174A2 /* ViewController.swift */; };
 		6BF7B2001D606C0F00D60900 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B60DF0D1D5BE834009174A2 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
@@ -175,6 +177,7 @@
 		6B60DF6D1D5C00A9009174A2 /* PinkSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PinkSectionHeaderView.xib; sourceTree = "<group>"; };
 		6B60DF6F1D5C00BB009174A2 /* WhiteSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WhiteSectionHeaderView.xib; sourceTree = "<group>"; };
 		6B74405D1D6ADE6A00DE2386 /* JTAppleDateConfigGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JTAppleDateConfigGenerator.swift; sourceTree = "<group>"; };
+		6BA9245D1D8FD33F00415488 /* JTAppleCalendarDelegateProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JTAppleCalendarDelegateProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -257,6 +260,7 @@
 			isa = PBXGroup;
 			children = (
 				6B60DED41D5BDD4D009174A2 /* GlobalFunctionsAndExtensions.swift */,
+				6BA9245D1D8FD33F00415488 /* JTAppleCalendarDelegateProtocol.swift */,
 				6B74405D1D6ADE6A00DE2386 /* JTAppleDateConfigGenerator.swift */,
 				6B60DED51D5BDD4D009174A2 /* JTAppleCalendarDelegates.swift */,
 				6B60DED61D5BDD4D009174A2 /* JTAppleCalendarLayout.swift */,
@@ -471,6 +475,7 @@
 				6B60DF081D5BE834009174A2 /* Frameworks */,
 				6B60DF091D5BE834009174A2 /* Resources */,
 				6B2EA03D1D644A8B006DAD00 /* Embed Frameworks */,
+				6BA9245C1D8FA1CF00415488 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -629,6 +634,22 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		6BA9245C1D8FA1CF00415488 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		6B60DEB71D5BDA46009174A2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -636,6 +657,7 @@
 			files = (
 				6B60DEDD1D5BDD4D009174A2 /* GlobalFunctionsAndExtensions.swift in Sources */,
 				6B60DEE41D5BDD4D009174A2 /* JTCalendarProtocols.swift in Sources */,
+				6BA9245E1D8FD33F00415488 /* JTAppleCalendarDelegateProtocol.swift in Sources */,
 				6B60DEE51D5BDD4D009174A2 /* UserInteractionFunctions.swift in Sources */,
 				6B60DEE01D5BDD4D009174A2 /* JTAppleCalendarView.swift in Sources */,
 				6B60DEE31D5BDD4D009174A2 /* JTAppleViews.swift in Sources */,
@@ -653,6 +675,7 @@
 			files = (
 				6B60DEE61D5BDD51009174A2 /* GlobalFunctionsAndExtensions.swift in Sources */,
 				6B60DEED1D5BDD58009174A2 /* JTCalendarProtocols.swift in Sources */,
+				6BA9245F1D8FD33F00415488 /* JTAppleCalendarDelegateProtocol.swift in Sources */,
 				6B60DEEE1D5BDD58009174A2 /* UserInteractionFunctions.swift in Sources */,
 				6B60DEE91D5BDD58009174A2 /* JTAppleCalendarView.swift in Sources */,
 				6B60DEEC1D5BDD58009174A2 /* JTAppleViews.swift in Sources */,

@@ -9,50 +9,37 @@
 import JTAppleCalendar
 
 class ViewController: UIViewController {
-    var numberOfRows = 3
-    
+    var numberOfRows = 6
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var monthLabel: UILabel!
     let formatter = DateFormatter()
     var testCalendar: Calendar! = Calendar(identifier: Calendar.Identifier.gregorian)
-    
     @IBAction func changeToThreeRows(_ sender: UIButton) {
 //        calendarView.selectDates(calendarView.selectedDates)
         numberOfRows = 3
         calendarView.reloadData()
     }
-    
     @IBAction func changeToSixRows(_ sender: UIButton) {
         numberOfRows = 2
         calendarView.reloadData()
     }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         formatter.dateFormat = "yyyy MM dd"
         testCalendar.timeZone = TimeZone(abbreviation: "GMT")!
-        
         // Setting up your dataSource and delegate is manditory
         //_____________________________________________________________________________________________
         calendarView.delegate = self
         calendarView.dataSource = self
         //_____________________________________________________________________________________________
-        
-
-        
         // Registering your cells is manditory
         //_____________________________________________________________________________________________
         calendarView.registerCellViewXib(file: "CellView")
         // You also can register by class
 //         calendarView.registerCellViewClass(fileName: "JTAppleCalendar_Example.CodeCellView")
         //_____________________________________________________________________________________________
-        
-
-        
         // Enable/disable the following code line to show/hide headers.
         calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"]) // headers are Optional. You can register multiple if you want.
-        
-        
         // The following default code can be removed since they are already the default.
         // They are only included here so that you can know what properties can be configured
         //_____________________________________________________________________________________________
@@ -64,121 +51,102 @@ class ViewController: UIViewController {
         calendarView.scrollingMode = .none           // default is .StopAtEachCalendarFrameWidth
 //        calendarView.itemSize = 30                                          // default is nil. Use a value here to change the size of your cells
         calendarView.rangeSelectionWillBeUsed = false                        // default is false
-        
-        
         //_____________________________________________________________________________________________
-        
         // Reloading the data on viewDidLoad() is only necessary if you made LAYOUT changes eg. number of row per month change
         // or changing the start day of week from sunday etc etc.
         calendarView.reloadData()
-        
         // After reloading. Scroll to your selected date, and setup your calendar
-//        calendarView.scrollToDate(NSDate(), triggerScrollToDateDelegate: false, animateScroll: false) {
+//        calendarView.scrollToDate(Date(), triggerScrollToDateDelegate: false, animateScroll: false) {
             let currentDate = self.calendarView.currentCalendarDateSegment()
             self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end)
 //        }
     }
-    
     @IBAction func select11(_ sender: AnyObject?) {
-        numberOfRows = 1
-        calendarView.reloadData()
+//        numberOfRows = 1
+//        calendarView.reloadData()
 //        calendarView.allowsMultipleSelection = false
-//        let date = formatter.dateFromString("2016 02 11")
-//        self.calendarView.selectDates([date!], triggerSelectionDelegate: false)
+        let date = formatter.date(from: "2016 02 11")
+        self.calendarView.selectDates([date!, Date()], triggerSelectionDelegate: false)
     }
-    
     @IBAction func scrollToDate(_ sender: AnyObject?) {
-        numberOfRows = 6
-        calendarView.reloadData()
-//        let date = formatter.dateFromString("2016 03 11")
-//        calendarView.scrollToDate(date!)
+//        numberOfRows = 6
+//        calendarView.reloadData()
+        let date = formatter.date(from: "2016 03 11")
+        calendarView.scrollToDate(date!)
     }
-    
     @IBAction func printSelectedDates() {
         print("Selected dates --->")
         for date in calendarView.selectedDates {
             print(formatter.string(from: date))
         }
     }
-    
     @IBAction func next(_ sender: UIButton) {
         self.calendarView.scrollToNextSegment() {
             let currentSegmentDates = self.calendarView.currentCalendarDateSegment()
             self.setupViewsOfCalendar(currentSegmentDates.dateRange.start, endDate: currentSegmentDates.dateRange.end)
         }
     }
-    
     @IBAction func previous(_ sender: UIButton) {
         self.calendarView.scrollToPreviousSegment() {
             let currentSegmentDates = self.calendarView.currentCalendarDateSegment()
             self.setupViewsOfCalendar(currentSegmentDates.dateRange.start, endDate: currentSegmentDates.dateRange.end)
         }
     }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
-    
     func setupViewsOfCalendar(_ startDate: Date, endDate: Date) {
         let month = testCalendar.component(.month, from: startDate)
         let monthName = DateFormatter().monthSymbols[(month-1) % 12] // 0 indexed array
-        let year = (Calendar.current as NSCalendar).component(NSCalendar.Unit.year, from: startDate)
+        let year = Calendar.current.component(.year, from: startDate)
         monthLabel.text = monthName + " " + String(year)
     }
 }
 
 // MARK : JTAppleCalendarDelegate
 extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDelegate {
-    func configureCalendar(_ calendar: JTAppleCalendarView) -> (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {
-        
+    func configureCalendar(_ calendar: JTAppleCalendarView) ->
+        (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {
         let firstDate = formatter.date(from: "2016 02 01")
-        let secondDate = formatter.date(from: "2016 04 01")!
+        let secondDate = Date()//formatter.date(from: "2016 04 01")!
         let aCalendar = Calendar.current // Properly configure your calendar to your time zone here
+        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .tillEndOfGrid)
 //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfGrid)
-        //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfRow)
-        //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .off)
-                return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .tillEndOfGrid)
+//                return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfRow)
+//                return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .off)
 //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .off)
-        //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .off)
+//        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .tillEndOfRow)
     }
-    
     func calendar(_ calendar: JTAppleCalendarView, willDisplayCell cell: JTAppleDayCellView, date: Date, cellState: CellState) {
         (cell as? CellView)?.setupCellBeforeDisplay(cellState, date: date)
     }
-    
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {
         (cell as? CellView)?.cellSelectionChanged(cellState)
     }
-    
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {
         (cell as? CellView)?.cellSelectionChanged(cellState)
 //        printSelectedDates()
     }
-    
     func calendar(_ calendar: JTAppleCalendarView, willResetCell cell: JTAppleDayCellView) {
         (cell as? CellView)?.selectedView.isHidden = true
     }
-    
     func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentStartingWithdate startDate: Date, endingWithDate endDate: Date) {
         setupViewsOfCalendar(startDate, endDate: endDate)
     }
-    
-    func calendar(_ calendar : JTAppleCalendarView, sectionHeaderIdentifierForDate dateRange: (start: Date, end: Date), belongingTo month: Int) -> String {
+    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderIdentifierForDate dateRange: (start: Date, end: Date), belongingTo month: Int) -> String {
         if month % 2 > 0 {
             return "WhiteSectionHeaderView"
         }
         return "PinkSectionHeaderView"
     }
-    
-    func calendar(_ calendar : JTAppleCalendarView, sectionHeaderSizeForDate dateRange: (start: Date, end: Date), belongingTo month: Int) -> CGSize {
+    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderSizeForDate dateRange: (start: Date, end: Date), belongingTo month: Int) -> CGSize {
         if month % 2 > 0 {
             return CGSize(width: 200, height: 50)
         } else {
             return CGSize(width: 200, height: 100) // Yes you can have different size headers
         }
     }
-    
-    func calendar(_ calendar : JTAppleCalendarView, willDisplaySectionHeader header: JTAppleHeaderView, dateRange: (start: Date, end: Date), identifier: String) {
+    func calendar(_ calendar: JTAppleCalendarView, willDisplaySectionHeader header: JTAppleHeaderView, dateRange: (start: Date, end: Date), identifier: String) {
         switch identifier {
         case "WhiteSectionHeaderView":
             let headerCell = (header as? WhiteSectionHeaderView)
@@ -189,8 +157,7 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
         }
     }
 }
-
-func delayRunOnMainThread(_ delay:Double, closure:@escaping ()->()) {
+func delayRunOnMainThread(_ delay: Double, closure:@escaping () -> ()) {
     DispatchQueue.main.asyncAfter(
         deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
 }

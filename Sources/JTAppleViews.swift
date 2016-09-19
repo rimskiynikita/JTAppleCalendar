@@ -17,4 +17,3 @@ open class JTAppleHeaderView: UIView, JTAppleViewProtocol {
 
 protocol JTAppleViewProtocol {
 }
-

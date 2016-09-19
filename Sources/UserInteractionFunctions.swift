@@ -237,7 +237,11 @@ extension JTAppleCalendarView {
     /// - Paramater preferredScrollPositionIndex: Integer indicating the end scroll position on the screen.
     /// This value indicates column number for Horizontal scrolling and row number for a vertical scrolling calendar
     /// - Parameter completionHandler: A completion handler that will be executed at the end of the scroll animation
-    public func scrollToDate(_ date: Date, triggerScrollToDateDelegate: Bool = true, animateScroll: Bool = true, preferredScrollPosition: UICollectionViewScrollPosition? = nil, completionHandler:(()->Void)? = nil) {
+    public func scrollToDate(_ date: Date,
+                             triggerScrollToDateDelegate: Bool = true,
+                             animateScroll: Bool = true,
+                             preferredScrollPosition: UICollectionViewScrollPosition? = nil,
+                             completionHandler:(() -> Void)? = nil) {
         self.triggerScrollToDateDelegate = triggerScrollToDateDelegate
         let components = calendar.dateComponents([.year, .month, .day], from: date)
         let firstDayOfDate = calendar.date(from: components)!

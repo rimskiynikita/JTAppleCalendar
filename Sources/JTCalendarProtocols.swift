@@ -21,17 +21,14 @@ struct Month {
     let postDates: Int
     let sectionIndexMaps: [Int:Int] // Maps a section to the index in the total number of sections
     let rows: Int                   // Number of rows for the month
-    
     // Return the total number of days for the represented month
     var numberOfDaysInMonth: Int {
         get { return numberOfDaysInMonthGrid - preDates - postDates }
     }
-    
     // Return the total number of day cells to generate for the represented month
     var numberOfDaysInMonthGrid: Int {
         get { return sections.reduce(0, +) }
     }
-    
     var startSection: Int {
         return sectionIndexMaps.keys.min()!
     }
@@ -43,7 +40,6 @@ struct Month {
             variableNumber -= $0
             return retval
         }!
-        
         let theSection = sectionIndexMaps.key(for: possibleSection)!
 
         let dateOfStartIndex = sections[0..<possibleSection].reduce(0, +) - preDates + 1
@@ -74,7 +70,7 @@ public extension JTAppleCalendarViewDelegate {
     func calendar(_ calendar: JTAppleCalendarView, sectionHeaderSizeForDate dateRange:(start: Date, end: Date), belongingTo month: Int) -> CGSize {return CGSize.zero}
 }
 
-/// The JTAppleCalendarViewDataSource protocol is adopted by an object that mediates the application’s data model for a JTAppleCalendarViewDataSource object. 
+/// The JTAppleCalendarViewDataSource protocol is adopted by an object that mediates the application’s data model for a JTAppleCalendarViewDataSource object.
 /// The data source provides the calendar-view object with the information it needs to construct and modify it self
 public protocol JTAppleCalendarViewDataSource: class {
     /// Asks the data source to return the start and end boundary dates as well as the calendar to use. You should properly configure your calendar at this point.

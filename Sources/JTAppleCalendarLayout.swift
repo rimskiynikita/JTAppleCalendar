@@ -99,7 +99,6 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                                     contentWidth += lastWrittenCellAttribute!.frame.width * 7
                                 } else if let lastWrittenCellAttribute = self.lastWrittenCellAttribute, // If we are at the bottom of the screen
                                     abs(lastWrittenCellAttribute.frame.origin.y + lastWrittenCellAttribute.frame.height - collectionView!.frame.height) < errorDelta {
-                                    
                                     stride += contentWidth
                                     contentWidth += lastWrittenCellAttribute.frame.width * 7
                                     yCellOffset = 0
@@ -158,9 +157,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                         }
                         cellCache[section]!.append(attribute)
                         lastWrittenCellAttribute = attribute
-                        
                         xCellOffset += attribute.frame.width
-
                         if (weAreAtTheLastItemInRow(numberOfDaysInCurrentSection, item)) { // We are at the last item in the section && if we have headers
                             if thereAreHeaders {
                                 xCellOffset = 0

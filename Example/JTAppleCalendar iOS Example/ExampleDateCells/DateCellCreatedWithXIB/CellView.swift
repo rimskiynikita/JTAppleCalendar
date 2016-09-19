@@ -49,9 +49,11 @@ class CellView: JTAppleDayCellView {
 //            self.backgroundColor = UIColor.redColor()
 //        } else if dateSection == "2016-03-01" && (cellState.column() == 0 || cellState.column() == 6 || cellState.row() == 2 || cellState.row() == 0) {
 //            self.backgroundColor = UIColor.redColor()
-//        } else if dateSection == "2016-04-01" && (cellState.column() == 0 || (cellState.column() == 6 && cellState.row() < 3) || cellState.row() == 2 || cellState.row() == 0) {
+//        } else if dateSection == "2016-04-01" && (cellState.column() == 0 ||
+        //(cellState.column() == 6 && cellState.row() < 3) || cellState.row() == 2 || cellState.row() == 0) {
 //            self.backgroundColor = UIColor.redColor()
-//        } else if dateSection == "2016-05-01" && (cellState.column() == 0 || (cellState.column() == 6 && cellState.row() < 3) || cellState.row() == 2 || cellState.row() == 0) {
+//        } else if dateSection == "2016-05-01" && (cellState.column() == 0 || (cellState.column() == 6 && cellState.row() < 3)
+            //|| cellState.row() == 2 || cellState.row() == 0) {
 //            self.backgroundColor = UIColor.redColor()
 //        } else if dateSection == "2016-06-01" && (cellState.column() == 0 || cellState.row() == 5) {
 //            self.backgroundColor = UIColor.redColor()

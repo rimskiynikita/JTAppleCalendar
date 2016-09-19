@@ -71,7 +71,6 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
         cell.setupView(cellViewSource)
         cell.updateCellView(cellInset.x, cellInsetY: cellInset.y)
         cell.bounds.origin = CGPoint(x: 0, y: 0)
-        
         let cellState = cellStateFromIndexPath(indexPath)
         delegate?.calendar(self, willDisplayCell: cell.view!, date: cellState.date, cellState: cellState)
 
@@ -149,7 +148,7 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
         }
         return false
     }
-    /// Tells the delegate that the item at the specified index path was selected. 
+    /// Tells the delegate that the item at the specified index path was selected.
     /// The collection view calls this method when the user successfully selects an item in the collection view.
     /// It does not call this method when you programmatically set the selection.
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
