@@ -683,7 +683,17 @@ extension JTAppleCalendarView {
             validDateInfo = nonNilDateInfo
         } else {
             guard let newDateInfo = dateInfoFromPath(indexPath) else {
-                assert(false, "Error this should not be nil. Contact developer Jay on github by opening a request")
+                developerError(string: "Error this should not be nil. Contact developer Jay on github by opening a request")
+                return CellState(isSelected: false,
+                                 text: "",
+                                 dateBelongsTo: .thisMonth,
+                                 date: Date(),
+                                 day: .sunday,
+                                 row: {return 0},
+                                 column: {return 0},
+                                 dateSection: {return (dateRange: (Date(), Date()), month: 0)},
+                                 selectedPosition: {return .left},
+                                 cell: {return nil})
             }
             validDateInfo = newDateInfo
         }
