@@ -185,11 +185,9 @@ protocol JTAppleCalendarDelegateProtocol: class {
     var totalDays: Int {get}
     
     func numberOfRows() -> Int
-//    func numberOfColumns() -> Int
     func cachedDate() -> (start: Date, end: Date, calendar: Calendar)
     func numberOfsections(forMonth section:Int) -> Int
     func numberOfMonthsInCalendar() -> Int
-//    func numberOfDaysPerSection() -> Int
     func numberOfPreDatesForMonth(_ month: Date) -> Int
     func numberOfPostDatesForMonth(_ month: Date) -> Int
     func referenceSizeForHeaderInSection(_ section: Int) -> CGSize
@@ -197,8 +195,6 @@ protocol JTAppleCalendarDelegateProtocol: class {
     func rowsAreStatic() -> Bool
     func preDatesAreGenerated() -> Bool
     func postDatesAreGenerated() -> OutDateCellGeneration
-    
-    
 }
 
 

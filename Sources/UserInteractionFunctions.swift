@@ -129,101 +129,100 @@ extension JTAppleCalendarView {
     /// - Parameter date: The date-cell with this date will be selected
     /// - Parameter triggerDidSelectDelegate: Triggers the delegate function only if the value is set to true. Sometimes it is necessary to setup some dates without triggereing the delegate e.g. For instance, when youre initally setting up data in your viewDidLoad
     public func selectDates(_ dates: [Date], triggerSelectionDelegate: Bool = true, keepSelectionIfMultiSelectionAllowed: Bool = false) {
-//        var allIndexPathsToReload: [NSIndexPath] = []
-//        var validDatesToSelect = dates
-//        // If user is trying to select multiple dates with multiselection disabled, then only select the last object
-//        if !calendarView.allowsMultipleSelection && dates.count > 0 { validDatesToSelect = [dates.last!] }
-//        
-//        let addToIndexSetToReload = {(indexPath: NSIndexPath)->Void in
-//            if !allIndexPathsToReload.contains(indexPath) { allIndexPathsToReload.append(indexPath) } // To avoid adding the  same indexPath twice.
-//        }
-//        
-//        let selectTheDate = {(indexPath: NSIndexPath, date: NSDate) -> Void in
-//            self.calendarView.selectItemAtIndexPath(indexPath, animated: false, scrollPosition: .None)
-//            addToIndexSetToReload(indexPath)
-//            // If triggereing is enabled, then let their delegate handle the reloading of view, else we will reload the data
-//            if triggerSelectionDelegate {
-//                self.internalCollectionView(self.calendarView, didSelectItemAtIndexPath: indexPath)
-//            } else { // Although we do not want the delegate triggered, we still want counterpart cells to be selected
-//                
-//                // Because there is no triggering of the delegate, the cell will not be added to selection and it will not be reloaded. We need to do this here
-//                self.addCellToSelectedSetIfUnselected(indexPath, date: date)
-//                let cellState = self.cellStateFromIndexPath(indexPath, withDate: date)
-//                if let aSelectedCounterPartIndexPath = self.selectCounterPartCellIndexPathIfExists(indexPath, date: date, dateOwner: cellState.dateBelongsTo) {
-//                    // If there was a counterpart cell then it will also need to be reloaded
-//                    addToIndexSetToReload(aSelectedCounterPartIndexPath)
-//                }
-//            }
-//        }
-//        
-//        let deSelectTheDate = { (oldIndexPath: NSIndexPath) -> Void in
-//            addToIndexSetToReload(oldIndexPath)
-//            if let index = self.theSelectedIndexPaths.indexOf(oldIndexPath) {
-//                let oldDate = self.theSelectedDates[index]
-//                self.calendarView.deselectItemAtIndexPath(oldIndexPath, animated: false)
-//                self.theSelectedIndexPaths.removeAtIndex(index)
-//                self.theSelectedDates.removeAtIndex(index)
-//                
-//                // If delegate triggering is enabled, let the delegate function handle the cell
-//                if triggerSelectionDelegate {
-//                    self.internalCollectionView(self.calendarView, didDeselectItemAtIndexPath: oldIndexPath)
-//                } else { // Although we do not want the delegate triggered, we still want counterpart cells to be deselected
-//                    let cellState = self.cellStateFromIndexPath(oldIndexPath, withDate: oldDate)
-//                    if let anUnselectedCounterPartIndexPath = self.deselectCounterPartCellIndexPath(oldIndexPath, date: oldDate, dateOwner: cellState.dateBelongsTo) {
-//                        // If there was a counterpart cell then it will also need to be reloaded
-//                        addToIndexSetToReload(anUnselectedCounterPartIndexPath)
-//                    }
-//                }
-//            }
-//        }
-//        
-//        for date in validDatesToSelect {
-//            let components = self.calendar.components([.Year, .Month, .Day],  fromDate: date)
-//            let firstDayOfDate = self.calendar.dateFromComponents(components)!
-//            
-//            // If the date is not within valid boundaries, then exit
-//            if !(firstDayOfDate >= self.startOfMonthCache && firstDayOfDate <= self.endOfMonthCache) { continue }
-//            let pathFromDates = self.pathsFromDates([date])
-//            
-//            // If the date path youre searching for, doesnt exist, then return
-//            if pathFromDates.count < 0 { continue }
-//            let sectionIndexPath = pathFromDates[0]
-//            
-//            // Remove old selections
-//            if self.calendarView.allowsMultipleSelection == false { // If single selection is ON
-//                let selectedIndexPaths = self.theSelectedIndexPaths // made a copy because the array is about to be mutated
-//                for indexPath in selectedIndexPaths {
-//                    if indexPath != sectionIndexPath { deSelectTheDate(indexPath) }
-//                }
-//                
-//                // Add new selections
-//                // Must be added here. If added in delegate didSelectItemAtIndexPath
-//                selectTheDate(sectionIndexPath, date)
-//            } else { // If multiple selection is on. Multiple selection behaves differently to singleselection. It behaves like a toggle. unless keepSelectionIfMultiSelectionAllowed is true.
-//                // If user wants to force selection if multiselection is enabled, then removed the selected dates from generated dates
-//                if keepSelectionIfMultiSelectionAllowed {
-//                    if selectedDates.contains(calendar.startOfDayForDate(date)) {
-//                        addToIndexSetToReload(sectionIndexPath)
-//                        continue // Do not deselect or select the cell. Just add it to be reloaded
-//                    }
-//                }
-//                if self.theSelectedIndexPaths.contains(sectionIndexPath) { // If this cell is already selected, then deselect it
-//                    deSelectTheDate(sectionIndexPath)
-//                } else {
-//                    // Add new selections
-//                    // Must be added here. If added in delegate didSelectItemAtIndexPath
-//                    selectTheDate(sectionIndexPath, date)
-//                }
-//            }
-//        }
-//        
-//        
-//        // If triggering was false, although the selectDelegates weren't called, we do want the cell refreshed. Reload to call itemAtIndexPath
-//        if /*triggerSelectionDelegate == false &&*/ allIndexPathsToReload.count > 0 {
-//            delayRunOnMainThread(0.0) {
-//                self.batchReloadIndexPaths(allIndexPathsToReload)
-//            }
-//        }
+        var allIndexPathsToReload: [IndexPath] = []
+        var validDatesToSelect = dates
+        // If user is trying to select multiple dates with multiselection disabled, then only select the last object
+        if !calendarView.allowsMultipleSelection && dates.count > 0 { validDatesToSelect = [dates.last!] }
+        
+        let addToIndexSetToReload = {(indexPath: IndexPath)->Void in
+            if !allIndexPathsToReload.contains(indexPath) { allIndexPathsToReload.append(indexPath) } // To avoid adding the  same indexPath twice.
+        }
+        
+        let selectTheDate = {(indexPath: IndexPath, date: Date) -> Void in
+            self.calendarView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+            addToIndexSetToReload(indexPath)
+            // If triggereing is enabled, then let their delegate handle the reloading of view, else we will reload the data
+            if triggerSelectionDelegate {
+                self.internalCollectionView(self.calendarView, didSelectItemAtIndexPath: indexPath)
+            } else { // Although we do not want the delegate triggered, we still want counterpart cells to be selected
+                
+                // Because there is no triggering of the delegate, the cell will not be added to selection and it will not be reloaded. We need to do this here
+                self.addCellToSelectedSetIfUnselected(indexPath, date: date)
+                let cellState = self.cellStateFromIndexPath(indexPath)//, withDateInfo: date)
+                if let aSelectedCounterPartIndexPath = self.selectCounterPartCellIndexPathIfExists(indexPath, date: date, dateOwner: cellState.dateBelongsTo) {
+                    // If there was a counterpart cell then it will also need to be reloaded
+                    addToIndexSetToReload(aSelectedCounterPartIndexPath)
+                }
+            }
+        }
+        
+        let deSelectTheDate = { (oldIndexPath: IndexPath) -> Void in
+            addToIndexSetToReload(oldIndexPath)
+            if let index = self.theSelectedIndexPaths.index(of: oldIndexPath) {
+                let oldDate = self.theSelectedDates[index]
+                self.calendarView.deselectItem(at: oldIndexPath, animated: false)
+                self.theSelectedIndexPaths.remove(at: index)
+                self.theSelectedDates.remove(at: index)
+                
+                // If delegate triggering is enabled, let the delegate function handle the cell
+                if triggerSelectionDelegate {
+                    self.internalCollectionView(self.calendarView, didDeselectItemAtIndexPath: oldIndexPath)
+                } else { // Although we do not want the delegate triggered, we still want counterpart cells to be deselected
+                    let cellState = self.cellStateFromIndexPath(oldIndexPath)//, withDateInfo: oldDate)
+                    if let anUnselectedCounterPartIndexPath = self.deselectCounterPartCellIndexPath(oldIndexPath, date: oldDate, dateOwner: cellState.dateBelongsTo) {
+                        // If there was a counterpart cell then it will also need to be reloaded
+                        addToIndexSetToReload(anUnselectedCounterPartIndexPath)
+                    }
+                }
+            }
+        }
+        
+        for date in validDatesToSelect {
+            let components = self.calendar.dateComponents([.year, .month, .day],  from: date)
+            let firstDayOfDate = self.calendar.date(from: components)!
+            
+            // If the date is not within valid boundaries, then exit
+            if !(firstDayOfDate >= self.startOfMonthCache && firstDayOfDate <= self.endOfMonthCache) { continue }
+            let pathFromDates = self.pathsFromDates([date])
+            
+            // If the date path youre searching for, doesnt exist, then return
+            if pathFromDates.count < 0 { continue }
+            let sectionIndexPath = pathFromDates[0]
+            
+            // Remove old selections
+            if self.calendarView.allowsMultipleSelection == false { // If single selection is ON
+                let selectedIndexPaths = self.theSelectedIndexPaths // made a copy because the array is about to be mutated
+                for indexPath in selectedIndexPaths {
+                    if indexPath != sectionIndexPath { deSelectTheDate(indexPath) }
+                }
+                
+                // Add new selections
+                // Must be added here. If added in delegate didSelectItemAtIndexPath
+                selectTheDate(sectionIndexPath, date)
+            } else { // If multiple selection is on. Multiple selection behaves differently to singleselection. It behaves like a toggle. unless keepSelectionIfMultiSelectionAllowed is true.
+                // If user wants to force selection if multiselection is enabled, then removed the selected dates from generated dates
+                if keepSelectionIfMultiSelectionAllowed {
+                    if selectedDates.contains(calendar.startOfDay(for: date)) {
+                        addToIndexSetToReload(sectionIndexPath)
+                        continue // Do not deselect or select the cell. Just add it to be reloaded
+                    }
+                }
+                if self.theSelectedIndexPaths.contains(sectionIndexPath) { // If this cell is already selected, then deselect it
+                    deSelectTheDate(sectionIndexPath)
+                } else {
+                    // Add new selections
+                    // Must be added here. If added in delegate didSelectItemAtIndexPath
+                    selectTheDate(sectionIndexPath, date)
+                }
+            }
+        }
+        
+        // If triggering was false, although the selectDelegates weren't called, we do want the cell refreshed. Reload to call itemAtIndexPath
+        if triggerSelectionDelegate == false && allIndexPathsToReload.count > 0 {
+            delayRunOnMainThread(0.0) {
+                self.batchReloadIndexPaths(allIndexPathsToReload)
+            }
+        }
     }
     
     /// Scrolls the calendar view to the next section view. It will execute a completion handler at the end of scroll animation if provided.
