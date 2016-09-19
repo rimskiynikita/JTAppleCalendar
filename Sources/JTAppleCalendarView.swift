@@ -279,12 +279,9 @@ open class JTAppleCalendarView: UIView {
 
         layout.itemSize = CGSize(width: width, height: height)
     }
-    var calleded = 0
     /// The frame rectangle which defines the view's location and size in its superview coordinate system.
     override open var frame: CGRect {
         didSet {
-            print("called = \(calleded)")
-            calleded += 1
             calendarView.frame = CGRect(x:0.0, y:0.0, width: self.frame.size.width, height:self.frame.size.height)
             #if os(iOS)
                 let orientation = UIApplication.shared.statusBarOrientation
