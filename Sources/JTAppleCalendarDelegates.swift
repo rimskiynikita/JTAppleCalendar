@@ -49,7 +49,9 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
         }
         headerView.setupView(source)
         headerView.update()
-        delegate?.calendar(self, willDisplaySectionHeader: headerView.view!, dateRange: validDate.dateRange, identifier: reuseIdentifier)
+        delayRunOnMainThread(0.0) {
+            self.delegate?.calendar(self, willDisplaySectionHeader: headerView.view!, dateRange: validDate.dateRange, identifier: reuseIdentifier)
+        }
         return headerView
     }
     public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -59,7 +61,9 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
             developerError(string: "Cell view was nil")
             return
         }
-        delegate?.calendar(self, willResetCell: cellView)
+        delayRunOnMainThread(0.0) {
+            self.delegate?.calendar(self, willResetCell: cellView)
+        }
     }
     /// Asks your data source object for the cell that corresponds to the specified item in the collection view.
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -72,8 +76,10 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
         cell.updateCellView(cellInset.x, cellInsetY: cellInset.y)
         cell.bounds.origin = CGPoint(x: 0, y: 0)
         let cellState = cellStateFromIndexPath(indexPath)
-        delegate?.calendar(self, willDisplayCell: cell.view!, date: cellState.date, cellState: cellState)
-
+        delayRunOnMainThread(0.0) { 
+            self.delegate?.calendar(self, willDisplayCell: cell.view!, date: cellState.date, cellState: cellState)
+        }
+        
         return cell
     }
     /// Asks your data source object for the number of sections in the collection view. The number of sections in collectionView.
@@ -152,7 +158,6 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
     /// The collection view calls this method when the user successfully selects an item in the collection view.
     /// It does not call this method when you programmatically set the selection.
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("clicked on path section: \(indexPath.section) item: \(indexPath.item)")
         // index paths to be reloaded should be index to the left and right of the selected index
         let indexPathsToBeReloaded = rangeSelectionWillBeUsed ? validForwardAndBackwordSelectedIndexes(forIndexPath: indexPath) : [IndexPath]()
         internalCollectionView(collectionView, didSelectItemAtIndexPath: indexPath, indexPathsToReload: indexPathsToBeReloaded)
