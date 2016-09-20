@@ -520,7 +520,7 @@ open class JTAppleCalendarView: UIView {
         if registeredHeaderViews.count > 0 {
             if let
                 validDate = dateFromSection(section),
-                let size = delegate?.calendar(self, sectionHeaderSizeForDate:validDate.dateRange, belongingTo: validDate.month) {retval = size }
+                let size = delegate?.calendar(self, sectionHeaderSizeFor: validDate.dateRange, belongingTo: validDate.month) {retval = size }
         }
         return retval
     }

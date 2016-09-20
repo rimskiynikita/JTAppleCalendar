@@ -24,7 +24,7 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
             case let .fromType(classType): reuseIdentifier = classType.description()
             }
         } else {
-            reuseIdentifier = delegate!.calendar(self, sectionHeaderIdentifierForDate: validDate.dateRange, belongingTo: validDate.month)
+            reuseIdentifier = delegate!.calendar(self, sectionHeaderIdentifierFor: validDate.dateRange, belongingTo: validDate.month)
             for item in registeredHeaderViews {
                 switch item {
                 case let .fromXib(xibName) where xibName == reuseIdentifier:
@@ -361,6 +361,8 @@ extension JTAppleCalendarView: UIScrollViewDelegate {
     /// Tells the delegate that the scroll view has ended decelerating the scrolling movement.
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let currentSegmentDates = currentCalendarDateSegment()
-        self.delegate?.calendar(self, didScrollToDateSegmentStartingWithdate: currentSegmentDates.dateRange.start, endingWithDate: currentSegmentDates.dateRange.end)
+        self.delegate?.calendar(self,
+                                didScrollToDateSegmentFor: (start: currentSegmentDates.dateRange.start, end: currentSegmentDates.dateRange.end),
+                                belongingTo: currentSegmentDates.month)
     }
 }

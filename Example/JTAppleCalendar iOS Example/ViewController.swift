@@ -21,11 +21,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func changeDirection(_ sender: UIButton) {
-        if sender.title(for: .normal)! == "Horizontal" {
-            calendarView.direction = .horizontal
-        } else {
-            calendarView.direction = .vertical
-        }
+        if sender.title(for: .normal)! == "Horizontal" { calendarView.direction = .horizontal } else { calendarView.direction = .vertical }
         calendarView.reloadData()
     }
     @IBAction func changeToSixRows(_ sender: UIButton) {
@@ -57,7 +53,7 @@ class ViewController: UIViewController {
         calendarView.allowsMultipleSelection = true                         // default is false
         calendarView.firstDayOfWeek = .sunday                                // default is Sunday
         calendarView.scrollEnabled = true                                    // default is true
-        calendarView.scrollingMode = .none           // default is .StopAtEachCalendarFrameWidth
+        calendarView.scrollingMode = .stopAtEachCalendarFrameWidth
 //        calendarView.itemSize = 30                                          // default is nil. Use a value here to change the size of your cells
         calendarView.rangeSelectionWillBeUsed = false                        // default is false
         //_____________________________________________________________________________________________
@@ -67,7 +63,7 @@ class ViewController: UIViewController {
         // After reloading. Scroll to your selected date, and setup your calendar
 //        calendarView.scrollToDate(Date(), triggerScrollToDateDelegate: false, animateScroll: false) {
             let currentDate = self.calendarView.currentCalendarDateSegment()
-            self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end)
+            self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end, month: currentDate.month)
 //        }
     }
     @IBAction func select11(_ sender: AnyObject?) {
@@ -93,20 +89,19 @@ class ViewController: UIViewController {
     @IBAction func next(_ sender: UIButton) {
         self.calendarView.scrollToNextSegment() {
             let currentSegmentDates = self.calendarView.currentCalendarDateSegment()
-            self.setupViewsOfCalendar(currentSegmentDates.dateRange.start, endDate: currentSegmentDates.dateRange.end)
+            self.setupViewsOfCalendar(currentSegmentDates.dateRange.start, endDate: currentSegmentDates.dateRange.end, month: currentSegmentDates.month)
         }
     }
     @IBAction func previous(_ sender: UIButton) {
         self.calendarView.scrollToPreviousSegment() {
             let currentSegmentDates = self.calendarView.currentCalendarDateSegment()
-            self.setupViewsOfCalendar(currentSegmentDates.dateRange.start, endDate: currentSegmentDates.dateRange.end)
+            self.setupViewsOfCalendar(currentSegmentDates.dateRange.start, endDate: currentSegmentDates.dateRange.end, month: currentSegmentDates.month)
         }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
-    func setupViewsOfCalendar(_ startDate: Date, endDate: Date) {
-        let month = testCalendar.component(.month, from: startDate)
+    func setupViewsOfCalendar(_ startDate: Date, endDate: Date, month: Int) {
         let monthName = DateFormatter().monthSymbols[(month-1) % 12] // 0 indexed array
         let year = Calendar.current.component(.year, from: startDate)
         monthLabel.text = monthName + " " + String(year)
@@ -118,7 +113,7 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
     func configureCalendar(_ calendar: JTAppleCalendarView) ->
         (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {
         let firstDate = formatter.date(from: "2016 02 01")
-        let secondDate = formatter.date(from: "2030     03 01")!
+        let secondDate = formatter.date(from: "2030 03 01")!
         let aCalendar = Calendar.current // Properly configure your calendar to your time zone here
         return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .tillEndOfGrid)
 //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfGrid)
@@ -140,16 +135,16 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
     func calendar(_ calendar: JTAppleCalendarView, willResetCell cell: JTAppleDayCellView) {
         (cell as? CellView)?.selectedView.isHidden = true
     }
-    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentStartingWithdate startDate: Date, endingWithDate endDate: Date) {
-        setupViewsOfCalendar(startDate, endDate: endDate)
+    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor dateRange: (start: Date, end: Date), belongingTo month: Int) {
+        setupViewsOfCalendar(dateRange.start, endDate: dateRange.end, month: month)
     }
-    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderIdentifierForDate dateRange: (start: Date, end: Date), belongingTo month: Int) -> String {
+    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderIdentifierFor dateRange: (start: Date, end: Date), belongingTo month: Int) -> String {
         if month % 2 > 0 {
             return "WhiteSectionHeaderView"
         }
         return "PinkSectionHeaderView"
     }
-    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderSizeForDate dateRange: (start: Date, end: Date), belongingTo month: Int) -> CGSize {
+    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderSizeFor dateRange: (start: Date, end: Date), belongingTo month: Int) -> CGSize {
         if month % 2 > 0 {
             return CGSize(width: 200, height: 50)
         } else {
