@@ -94,11 +94,9 @@ open class JTAppleCalendarView: UIView {
     open var direction: UICollectionViewScrollDirection = .horizontal {
         didSet {
             if oldValue == direction { return }
-            if let layout = generateNewLayout() as? UICollectionViewLayout {
-                calendarView.collectionViewLayout = layout
-            } else {
-                developerError(string: "Layout is not of type `UICollectionViewLayout`")
-            }
+            calendarViewLayout.scrollDirection = direction
+            setupMonthInfoAndMap()
+            layoutNeedsUpdating = true
         }
     }
     /// Enables/Disables multiple selection on JTAppleCalendar
@@ -134,7 +132,6 @@ open class JTAppleCalendarView: UIView {
     weak open var dataSource: JTAppleCalendarViewDataSource? {
         didSet {
             setupMonthInfoAndMap()
-            updateLayoutItemSize(calendarViewLayout)
             reloadData(checkDelegateDataSource: false)
         }
     }
@@ -145,6 +142,7 @@ open class JTAppleCalendarView: UIView {
     }
     func setupMonthInfoAndMap() {
         theData = setupMonthInfoDataForStartAndEndDate()
+        updateLayoutItemSize(calendarViewLayout)
     }
     /// The object that acts as the delegate of the calendar view.
     weak open var delegate: JTAppleCalendarViewDelegate?
