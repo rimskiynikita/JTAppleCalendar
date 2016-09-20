@@ -138,6 +138,11 @@ open class JTAppleCalendarView: UIView {
             reloadData(checkDelegateDataSource: false)
         }
     }
+    func generateNewLayout() -> JTAppleCalendarLayoutProtocol {
+        let layout = JTAppleCalendarLayout(withDelegate: self)
+        layout.scrollDirection = direction
+        return layout
+    }
     func setupMonthInfoAndMap() {
         theData = setupMonthInfoDataForStartAndEndDate()
     }
@@ -611,11 +616,6 @@ open class JTAppleCalendarView: UIView {
                               preferredScrollPosition: nil,
                               completionHandler: completionHandler)
         }
-    }
-    func generateNewLayout() -> JTAppleCalendarLayoutProtocol {
-        let layout = JTAppleCalendarLayout(withDelegate: self)
-        layout.scrollDirection = direction
-        return layout
     }
     func setupMonthInfoDataForStartAndEndDate() -> CalendarData {
         var months = [Month]()
