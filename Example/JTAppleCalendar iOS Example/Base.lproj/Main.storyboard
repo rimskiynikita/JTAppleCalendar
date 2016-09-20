@@ -26,34 +26,161 @@
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="iQI-Hq-aUc">
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rWO-5s-mKQ">
-                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                        <state key="normal" title="Change to 3 rows"/>
-                                        <connections>
-                                            <action selector="changeToThreeRows:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Wb1-go-yPa"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="13p-cR-5Oy">
-                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                        <state key="normal" title="Change to 6 Rows"/>
-                                        <connections>
-                                            <action selector="changeToSixRows:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YTT-Xm-Hgz"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WaY-fY-0lz">
-                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                        <state key="normal" title="Select 11th Feb 2016"/>
-                                        <connections>
-                                            <action selector="select11:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2hr-AE-WhN"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4fl-ZS-PXq">
-                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                        <state key="normal" title="Scroll to 11th Mar 2016"/>
-                                        <connections>
-                                            <action selector="scrollToDate:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WYt-WI-pJk"/>
-                                        </connections>
-                                    </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="aZd-el-ynv">
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rWO-5s-mKQ">
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <state key="normal" title="ChangeRowsTo"/>
+                                                <connections>
+                                                    <action selector="changeToThreeRows:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Wb1-go-yPa"/>
+                                                </connections>
+                                            </button>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="wAg-fY-dvR">
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ykE-Ba-EbA">
+                                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <state key="normal" title="1"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                                <integer key="value" value="1"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="changeToRow:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LcP-YZ-L7B"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cDl-9c-uWn">
+                                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <state key="normal" title="2"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                                <integer key="value" value="1"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="changeToRow:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Eet-to-htT"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pb9-XQ-mrA">
+                                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <state key="normal" title="3"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                                <integer key="value" value="1"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="changeToRow:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bDV-6L-J94"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XpU-sN-wJM">
+                                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <state key="normal" title="6"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                                <integer key="value" value="1"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="changeToRow:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pg9-Wf-4h5"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="xmS-Wb-nhZ">
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="13p-cR-5Oy">
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <state key="normal" title="ScrollToDate"/>
+                                                <connections>
+                                                    <action selector="changeToSixRows:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YTT-Xm-Hgz"/>
+                                                </connections>
+                                            </button>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ddm-aL-9re">
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="vLv-Qw-vMG"/>
+                                                </constraints>
+                                                <nil key="textColor"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bqq-bF-6n4">
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WaY-fY-0lz">
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <state key="normal" title="SelectDatesFrom"/>
+                                                <connections>
+                                                    <action selector="select11:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2hr-AE-WhN"/>
+                                                </connections>
+                                            </button>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Dq6-SM-k3s">
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="Oa9-87-I0S"/>
+                                                </constraints>
+                                                <nil key="textColor"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tym-7r-3zr">
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <state key="normal" title="To"/>
+                                                <connections>
+                                                    <action selector="select11:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ATs-jm-SeN"/>
+                                                </connections>
+                                            </button>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2bZ-UQ-yK6">
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="lVn-OU-uYd"/>
+                                                </constraints>
+                                                <nil key="textColor"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iXK-tz-k0E">
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4fl-ZS-PXq">
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <state key="normal" title="Scroll to 11th Mar 2016"/>
+                                                <connections>
+                                                    <action selector="scrollToDate:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WYt-WI-pJk"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Pm2-qg-gpi">
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UmE-fw-ixS">
+                                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                <state key="normal" title="Horizontal"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                        <integer key="value" value="1"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="changeDirection:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sZt-zj-FDp"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pR5-bT-hSw">
+                                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                <state key="normal" title="Vertical"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                        <integer key="value" value="1"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="changeDirection:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wIO-lN-J38"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X5M-bv-yCY">
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <state key="normal" title="Print Selected dates"/>
@@ -63,19 +190,9 @@
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="157" id="CrF-cF-ZI6"/>
-                                    <constraint firstAttribute="height" constant="150" id="MpW-6y-Eea"/>
+                                    <constraint firstAttribute="height" constant="200" id="MpW-6y-Eea"/>
                                 </constraints>
                             </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hate the look? fine.. design the cellview.xib and the calendarView background however you want" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lwa-pM-Iyc">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="135" id="XUx-9p-kLX"/>
-                                    <constraint firstAttribute="width" constant="130" id="dGC-cN-5ep"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="vbP-Kr-0hG">
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="1YD-90-lES">
@@ -167,6 +284,7 @@
                             <constraint firstItem="sua-xp-Lel" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="33C-kJ-U7i"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="vbP-Kr-0hG" secondAttribute="bottom" id="AMa-yL-cwK"/>
                             <constraint firstItem="vbP-Kr-0hG" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Csi-Q6-zyc"/>
+                            <constraint firstItem="iQI-Hq-aUc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Fx5-Y6-rZj"/>
                             <constraint firstItem="cFX-1e-6ck" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="GsT-zx-Yef"/>
                             <constraint firstItem="iQI-Hq-aUc" firstAttribute="top" secondItem="vbP-Kr-0hG" secondAttribute="bottom" id="IeI-WL-Nh8"/>
                             <constraint firstItem="sua-xp-Lel" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="QqV-eD-GsA"/>
@@ -177,22 +295,21 @@
                             <constraint firstAttribute="trailingMargin" secondItem="Ik7-d5-Fp7" secondAttribute="trailing" id="ilm-o0-e6c"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="vbP-Kr-0hG" secondAttribute="bottom" constant="200" id="jXl-ia-jmV"/>
                             <constraint firstItem="Ik7-d5-Fp7" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="jhB-zy-7YW"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Lwa-pM-Iyc" secondAttribute="trailing" id="lQL-YC-LEC"/>
                             <constraint firstItem="iQI-Hq-aUc" firstAttribute="top" secondItem="vbP-Kr-0hG" secondAttribute="bottom" constant="75" id="mfW-T7-VVk"/>
                             <constraint firstItem="vbP-Kr-0hG" firstAttribute="top" secondItem="Ik7-d5-Fp7" secondAttribute="bottom" constant="8" id="qQQ-hd-dti"/>
                             <constraint firstItem="sua-xp-Lel" firstAttribute="top" secondItem="vbP-Kr-0hG" secondAttribute="bottom" constant="8" id="sY6-Sc-fJp"/>
                             <constraint firstItem="sua-xp-Lel" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="t2y-ba-MSk"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Lwa-pM-Iyc" secondAttribute="bottom" id="tFc-xX-rnt"/>
                             <constraint firstItem="cFX-1e-6ck" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="tXR-F0-D3M"/>
                             <constraint firstAttribute="trailingMargin" secondItem="vbP-Kr-0hG" secondAttribute="trailing" id="trh-p3-iJf"/>
                             <constraint firstItem="iQI-Hq-aUc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="uon-9e-ZBG"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="iQI-Hq-aUc" secondAttribute="trailing" id="vmc-5M-cHs"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="sY6-Sc-fJp"/>
-                                <exclude reference="t2y-ba-MSk"/>
                                 <exclude reference="SnB-SU-fZX"/>
                                 <exclude reference="mfW-T7-VVk"/>
+                                <exclude reference="sY6-Sc-fJp"/>
+                                <exclude reference="t2y-ba-MSk"/>
                                 <exclude reference="AMa-yL-cwK"/>
                                 <exclude reference="jXl-ia-jmV"/>
                             </mask>

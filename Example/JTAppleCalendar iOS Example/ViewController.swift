@@ -14,9 +14,18 @@ class ViewController: UIViewController {
     @IBOutlet weak var monthLabel: UILabel!
     let formatter = DateFormatter()
     var testCalendar: Calendar! = Calendar(identifier: Calendar.Identifier.gregorian)
-    @IBAction func changeToThreeRows(_ sender: UIButton) {
-//        calendarView.selectDates(calendarView.selectedDates)
-        numberOfRows = 3
+    
+    @IBAction func changeToRow(_ sender: UIButton) {
+        numberOfRows = Int(sender.title(for: .normal)!)!
+        calendarView.reloadData()
+    }
+    
+    @IBAction func changeDirection(_ sender: UIButton) {
+        if sender.title(for: .normal)! == "Horizontal" {
+            calendarView.direction = .horizontal
+        } else {
+            calendarView.direction = .vertical
+        }
         calendarView.reloadData()
     }
     @IBAction func changeToSixRows(_ sender: UIButton) {
@@ -43,12 +52,12 @@ class ViewController: UIViewController {
         // The following default code can be removed since they are already the default.
         // They are only included here so that you can know what properties can be configured
         //_____________________________________________________________________________________________
-//        calendarView.direction = .Vertical                                 // default is horizontal
+        calendarView.direction = .vertical                                 // default is horizontal
         calendarView.cellInset = CGPoint(x: 0, y: 0)                         // default is (3,3)
         calendarView.allowsMultipleSelection = true                         // default is false
         calendarView.firstDayOfWeek = .sunday                                // default is Sunday
         calendarView.scrollEnabled = true                                    // default is true
-        calendarView.scrollingMode = .none           // default is .StopAtEachCalendarFrameWidth
+        calendarView.scrollingMode = .stopAtEachCalendarFrameWidth           // default is .StopAtEachCalendarFrameWidth
 //        calendarView.itemSize = 30                                          // default is nil. Use a value here to change the size of your cells
         calendarView.rangeSelectionWillBeUsed = false                        // default is false
         //_____________________________________________________________________________________________
@@ -76,6 +85,7 @@ class ViewController: UIViewController {
     }
     @IBAction func printSelectedDates() {
         print("Selected dates --->")
+        calendarView.reloadData()
         for date in calendarView.selectedDates {
             print(formatter.string(from: date))
         }

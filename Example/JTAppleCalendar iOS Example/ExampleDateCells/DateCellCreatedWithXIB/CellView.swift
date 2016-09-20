@@ -29,15 +29,17 @@ class CellView: JTAppleDayCellView {
     }()
     func setupCellBeforeDisplay(_ cellState: CellState, date: Date) {
         // Setup Cell text
+        
         dayLabel.text =  cellState.text
+        
         // Setup text color
         configureTextColor(cellState)
         // Setup Cell Background color
         self.backgroundColor = cal.string(from: date) == todayDate ? todayColor:normalDayColor
         // Setup cell selection status
-        delayRunOnMainThread(0.0) {
+//        delayRunOnMainThread(0.0) {
             self.configueViewIntoBubbleView(cellState)
-        }
+//        }
         // Configure Visibility
         configureVisibility(cellState)
         // With cell states you can literally control every aspect of the calendar view
