@@ -95,7 +95,6 @@ open class JTAppleCalendarView: UIView {
         didSet {
             if oldValue == direction { return }
             calendarViewLayout.scrollDirection = direction
-            setupMonthInfoAndMap()
             layoutNeedsUpdating = true
         }
     }
@@ -127,30 +126,39 @@ open class JTAppleCalendarView: UIView {
             return layout
         }
     }
-    fileprivate var layoutNeedsUpdating = false
+    var layoutNeedsUpdating = false
     /// The object that acts as the data source of the calendar view.
     weak open var dataSource: JTAppleCalendarViewDataSource? {
         didSet {
+            // Refetch the data source for a data source change
             setupMonthInfoAndMap()
-            reloadData(checkDelegateDataSource: false)
         }
-    }
-    func generateNewLayout() -> JTAppleCalendarLayoutProtocol {
-        let layout = JTAppleCalendarLayout(withDelegate: self)
-        layout.scrollDirection = direction
-        return layout
     }
     func setupMonthInfoAndMap() {
         theData = setupMonthInfoDataForStartAndEndDate()
-        updateLayoutItemSize(calendarViewLayout)
     }
+    /// Lays out subviews.
+    override open func layoutSubviews() { self.frame = super.frame }
+    /// The frame rectangle which defines the view's location and size in its superview coordinate system.
+    override open var frame: CGRect {
+        didSet {
+            calendarView.frame = self.frame
+            if calendarView.frame != lastFrame {
+                lastFrame = calendarView.frame
+                invalidateLayout()
+                updateLayoutItemSize(calendarViewLayout)
+                if delegate != nil && calendarView.frame != CGRect.zero {
+                    reloadData()
+                }
+            }
+        }
+    }
+    
     /// The object that acts as the delegate of the calendar view.
     weak open var delegate: JTAppleCalendarViewDelegate?
 
     var delayedExecutionClosure: [(() -> Void)] = []
-    #if os(iOS)
-        var lastOrientation: UIInterfaceOrientation?
-    #endif
+    var lastFrame = CGRect.zero
     var currentSectionPage: Int {
         return calendarViewLayout.sectionFromRectOffset(calendarView.contentOffset)
     }
@@ -282,32 +290,11 @@ open class JTAppleCalendarView: UIView {
 
         layout.itemSize = CGSize(width: width, height: height)
     }
-    /// The frame rectangle which defines the view's location and size in its superview coordinate system.
-    override open var frame: CGRect {
-        didSet {
-            calendarView.frame = CGRect(x:0.0, y:0.0, width: self.frame.size.width, height:self.frame.size.height)
-            #if os(iOS)
-                let orientation = UIApplication.shared.statusBarOrientation
-                if orientation == .unknown { return }
-                let layout = calendarViewLayout
-                if lastOrientation != orientation {
-                    calendarView.collectionViewLayout.invalidateLayout()
-                    layout.clearCache()
-                    lastOrientation = orientation
-                    updateLayoutItemSize(layout)
-                    if delegate != nil { reloadData() }
-                } else {
-                    updateLayoutItemSize(layout)
-                }
-            #elseif os(tvOS)
-                calendarView.collectionViewLayout.invalidateLayout()
-                let layout = calendarViewLayout
-                layout.clearCache()
-                updateLayoutItemSize(layout)
-                if delegate != nil { reloadData() }
-                updateLayoutItemSize(layout)
-            #endif
-        }
+    func invalidateLayout() {
+        let layout = calendarViewLayout
+        layout.invalidateLayout()
+        layout.clearCache()
+        layoutNeedsUpdating = true
     }
     /// Initializes and returns a newly allocated view object with the specified frame rectangle.
     public override init(frame: CGRect) {
@@ -323,8 +310,6 @@ open class JTAppleCalendarView: UIView {
     required public init?(coder aDecoder: NSCoder) { super.init(coder: aDecoder) }
     /// Prepares the receiver for service after it has been loaded from an Interface Builder archive, or nib file.
     override open func awakeFromNib() { self.initialSetup() }
-    /// Lays out subviews.
-    override open func layoutSubviews() { self.frame = super.frame }
     // MARK: Setup
     func initialSetup() {
         self.clipsToBounds = true
@@ -501,6 +486,7 @@ open class JTAppleCalendarView: UIView {
                 newDateBoundary.numberOfRows != cachedConfiguration.numberOfRows ||
                 newDateBoundary.generateInDates != cachedConfiguration.generateInDates ||
                 newDateBoundary.generateOutDates != cachedConfiguration.generateOutDates {
+                    setupMonthInfoAndMap()
                     layoutNeedsUpdating = true
             }
         }
@@ -508,7 +494,7 @@ open class JTAppleCalendarView: UIView {
     func configureChangeOfRows() {
         let layout = calendarViewLayout
         layout.clearCache()
-        setupMonthInfoAndMap()
+//        setupMonthInfoAndMap()
         layout.prepare()
         // the selected dates and paths will be retained. Ones that are not available on the new layout will be removed.
         var indexPathsToReselect = [IndexPath]()
@@ -598,7 +584,6 @@ open class JTAppleCalendarView: UIView {
                 let section = followingMonthInfo.startSection
                 let index = dayIndex - lastDay + (followingMonthInfo.preDates - 1)
                 if index < 0 { return retval }
-                print("section \(section) index \(index)")
                 retval = IndexPath(item: index, section: section)
             }
         }
@@ -657,7 +642,6 @@ open class JTAppleCalendarView: UIView {
             if  calendar.startOfDay(for: date) >= startOfMonthCache && calendar.startOfDay(for: date) <= endOfMonthCache {
                 if  calendar.startOfDay(for: date) >= startOfMonthCache && calendar.startOfDay(for: date) <= endOfMonthCache {
                     let periodApart = calendar.dateComponents([.month], from: startOfMonthCache, to: date)
-                    print(periodApart)
                     let day = calendar.dateComponents([.day], from: date).day!
                     let monthSectionIndex = periodApart.month
                     let currentMonthInfo = monthInfo[monthSectionIndex!]

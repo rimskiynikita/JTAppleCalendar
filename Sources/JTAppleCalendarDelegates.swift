@@ -49,9 +49,7 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
         }
         headerView.setupView(source)
         headerView.update()
-        delayRunOnMainThread(0.0) {
-            self.delegate?.calendar(self, willDisplaySectionHeader: headerView.view!, dateRange: validDate.dateRange, identifier: reuseIdentifier)
-        }
+        self.delegate?.calendar(self, willDisplaySectionHeader: headerView.view!, dateRange: validDate.dateRange, identifier: reuseIdentifier)
         return headerView
     }
     public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -61,9 +59,7 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
             developerError(string: "Cell view was nil")
             return
         }
-        delayRunOnMainThread(0.0) {
-            self.delegate?.calendar(self, willResetCell: cellView)
-        }
+        self.delegate?.calendar(self, willResetCell: cellView)
     }
     /// Asks your data source object for the cell that corresponds to the specified item in the collection view.
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -76,26 +72,24 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
         cell.updateCellView(cellInset.x, cellInsetY: cellInset.y)
         cell.bounds.origin = CGPoint(x: 0, y: 0)
         let cellState = cellStateFromIndexPath(indexPath)
-        delayRunOnMainThread(0.0) { 
-            self.delegate?.calendar(self, willDisplayCell: cell.view!, date: cellState.date, cellState: cellState)
-        }
+        delegate?.calendar(self, willDisplayCell: cell.view!, date: cellState.date, cellState: cellState)
         
         return cell
     }
     /// Asks your data source object for the number of sections in the collection view. The number of sections in collectionView.
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return monthMap.count
+        return monthMap.count 
     }
 
     /// Asks your data source object for the number of items in the specified section. The number of rows in section.
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard
-            let layout =  calendarView.collectionViewLayout as? JTAppleCalendarLayoutProtocol,
-            let cellCacheSection = layout.cellCache[section] else {
+            let count =  calendarViewLayout.cellCache[section]?.count else {
                 developerError(string: "cellCacheSection does not exist.")
                 return 0
         }
-        return cellCacheSection.count
+        
+        return count
     }
     /// Asks the delegate if the specified item should be selected. true if the item should be selected or false if it should not.
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -184,8 +178,6 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
                 }
             }
             delegate.calendar(self, didSelectDate: infoOfDateSelectedByUser.date, cell: selectedCell?.view, cellState: cellState)
-            print(cellState.date)
-            print(cellState.dateBelongsTo)
         }
     }
 }

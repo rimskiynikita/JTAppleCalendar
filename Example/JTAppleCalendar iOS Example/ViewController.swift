@@ -52,12 +52,12 @@ class ViewController: UIViewController {
         // The following default code can be removed since they are already the default.
         // They are only included here so that you can know what properties can be configured
         //_____________________________________________________________________________________________
-        calendarView.direction = .vertical                                 // default is horizontal
+//        calendarView.direction = .vertical                                 // default is horizontal
         calendarView.cellInset = CGPoint(x: 0, y: 0)                         // default is (3,3)
         calendarView.allowsMultipleSelection = true                         // default is false
         calendarView.firstDayOfWeek = .sunday                                // default is Sunday
         calendarView.scrollEnabled = true                                    // default is true
-        calendarView.scrollingMode = .stopAtEachCalendarFrameWidth           // default is .StopAtEachCalendarFrameWidth
+        calendarView.scrollingMode = .none           // default is .StopAtEachCalendarFrameWidth
 //        calendarView.itemSize = 30                                          // default is nil. Use a value here to change the size of your cells
         calendarView.rangeSelectionWillBeUsed = false                        // default is false
         //_____________________________________________________________________________________________
@@ -86,9 +86,9 @@ class ViewController: UIViewController {
     @IBAction func printSelectedDates() {
         print("Selected dates --->")
         calendarView.reloadData()
-        for date in calendarView.selectedDates {
-            print(formatter.string(from: date))
-        }
+//        for date in calendarView.selectedDates {
+//            print(formatter.string(from: date))
+//        }
     }
     @IBAction func next(_ sender: UIButton) {
         self.calendarView.scrollToNextSegment() {
@@ -118,7 +118,7 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
     func configureCalendar(_ calendar: JTAppleCalendarView) ->
         (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {
         let firstDate = formatter.date(from: "2016 02 01")
-        let secondDate = Date()//formatter.date(from: "2016 04 01")!
+        let secondDate = formatter.date(from: "2030     03 01")!
         let aCalendar = Calendar.current // Properly configure your calendar to your time zone here
         return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .tillEndOfGrid)
 //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfGrid)
