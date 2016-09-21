@@ -19,6 +19,26 @@ public enum DateOwner: Int {
     case thisMonth = 0, previousMonthWithinBoundary, previousMonthOutsideBoundary, followingMonthWithinBoundary, followingMonthOutsideBoundary
 }
 
+public struct ConfigurationParameters {
+    var startDate: Date
+    var endDate: Date
+    var numberOfRows: Int
+    var calendar: Calendar
+    var generateInDates: Bool
+    var generateOutDates: OutDateCellGeneration
+    var firstDayOfWeek: DaysOfWeek
+    
+    public init(startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration, firstDayOfWeek: DaysOfWeek) {
+        self.startDate = startDate
+        self.endDate = endDate
+        self.numberOfRows = numberOfRows
+        self.calendar = calendar
+        self.generateInDates = generateInDates
+        self.generateOutDates = generateOutDates
+        self.firstDayOfWeek = firstDayOfWeek
+    }
+}
+
 
 /// Describes which month the cell belongs to
 /// - ThisMonth: Cell belongs to the current month
@@ -104,12 +124,7 @@ open class JTAppleCalendarView: UIView {
             self.calendarView.allowsMultipleSelection = allowsMultipleSelection
         }
     }
-    /// First day of the week value for JTApleCalendar. You can set this to anyday. After changing this value you must reload your calendar view to show the change.
-    open var firstDayOfWeek = DaysOfWeek.sunday {
-        didSet {
-            if firstDayOfWeek != oldValue { layoutNeedsUpdating = true }
-        }
-    }
+
     /// Alerts the calendar that range selection will be checked. If you are not using rangeSelection and you enable this,
     /// then whenever you click on a datecell, you may notice a very fast refreshing of the date-cells both left and right of the cell you just selected.
     open var rangeSelectionWillBeUsed = false
@@ -126,7 +141,11 @@ open class JTAppleCalendarView: UIView {
             return layout
         }
     }
-    var layoutNeedsUpdating = false
+    var layoutNeedsUpdating = false {
+        didSet {
+            print("")
+        }
+    }
     /// The object that acts as the data source of the calendar view.
     weak open var dataSource: JTAppleCalendarViewDataSource? {
         didSet {
@@ -147,7 +166,8 @@ open class JTAppleCalendarView: UIView {
                 lastFrame = calendarView.frame
                 invalidateLayout()
                 updateLayoutItemSize(calendarViewLayout)
-                if delegate != nil && calendarView.frame != CGRect.zero {
+                if delegate != nil {
+                    finalLoadable = true
                     reloadData()
                 }
             }
@@ -159,6 +179,7 @@ open class JTAppleCalendarView: UIView {
 
     var delayedExecutionClosure: [(() -> Void)] = []
     var lastFrame = CGRect.zero
+    var finalLoadable = false
     var currentSectionPage: Int {
         return calendarViewLayout.sectionFromRectOffset(calendarView.contentOffset)
     }
@@ -172,18 +193,19 @@ open class JTAppleCalendarView: UIView {
     var calendar: Calendar {
         get { return cachedConfiguration.calendar }
     }
-    lazy var cachedConfiguration: (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) = {
+    lazy var cachedConfiguration: ConfigurationParameters = {
         [weak self] in
         guard let  config = self!.dataSource?.configureCalendar(self!) else {
             assert(false, "DataSource is not set")
-            return (startDate: Date(), endDate: Date(), 0, Calendar(identifier: .gregorian), false, .off)
+            return ConfigurationParameters(startDate: Date(), endDate: Date(), numberOfRows: 0, calendar: Calendar(identifier: .gregorian), generateInDates: false, generateOutDates: .off, firstDayOfWeek: .sunday)
         }
-        return (startDate: config.startDate,
+        return ConfigurationParameters(startDate: config.startDate,
                 endDate: config.endDate,
                 numberOfRows: config.numberOfRows,
                 calendar: config.calendar,
-                config.generateInDates,
-                config.generateOutDates)
+                generateInDates: config.generateInDates,
+                generateOutDates: config.generateOutDates,
+                firstDayOfWeek: config.firstDayOfWeek)
         }()
     // Set the start of the month
     lazy var startOfMonthCache: Date = {
@@ -378,7 +400,7 @@ open class JTAppleCalendarView: UIView {
     }
     func firstDayIndexForMonth(_ date: Date) -> Int {
         let firstDayCalValue: Int
-        switch firstDayOfWeek {
+        switch cachedConfiguration.firstDayOfWeek {
         case .monday: firstDayCalValue = 6 case .tuesday: firstDayCalValue = 5 case .wednesday: firstDayCalValue = 4
         case .thursday: firstDayCalValue = 10 case .friday: firstDayCalValue = 9
         case .saturday: firstDayCalValue = 8 default: firstDayCalValue = 7
@@ -485,7 +507,8 @@ open class JTAppleCalendarView: UIView {
                 newDateBoundary.calendar != cachedConfiguration.calendar ||
                 newDateBoundary.numberOfRows != cachedConfiguration.numberOfRows ||
                 newDateBoundary.generateInDates != cachedConfiguration.generateInDates ||
-                newDateBoundary.generateOutDates != cachedConfiguration.generateOutDates {
+                newDateBoundary.generateOutDates != cachedConfiguration.generateOutDates ||
+                newDateBoundary.firstDayOfWeek != cachedConfiguration.firstDayOfWeek {
                     setupMonthInfoAndMap()
                     layoutNeedsUpdating = true
             }
@@ -625,7 +648,7 @@ open class JTAppleCalendarView: UIView {
                                                                 startOfMonthCache: startOfMonthCache,
                                                                 endOfMonthCache: endOfMonthCache,
                                                                 configuredCalendar: validConfig.calendar,
-                                                                firstDayOfWeek: firstDayOfWeek)
+                                                                firstDayOfWeek: validConfig.firstDayOfWeek)
                 let generatedData        = dateGenerator.setupMonthInfoDataForStartAndEndDate(parameters)
                 months = generatedData.months
                 monthMap = generatedData.monthMap

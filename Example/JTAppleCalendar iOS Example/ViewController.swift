@@ -21,7 +21,13 @@ class ViewController: UIViewController {
     }
     
     @IBAction func changeDirection(_ sender: UIButton) {
-        if sender.title(for: .normal)! == "Horizontal" { calendarView.direction = .horizontal } else { calendarView.direction = .vertical }
+        if sender.title(for: .normal)! == "Horizontal" {
+            calendarView.direction = .horizontal
+            calendarView.itemSize = nil
+        } else {
+            calendarView.direction = .vertical
+            calendarView.itemSize = 35
+        }
         calendarView.reloadData()
     }
     @IBAction func changeToSixRows(_ sender: UIButton) {
@@ -51,15 +57,13 @@ class ViewController: UIViewController {
 //        calendarView.direction = .vertical                                 // default is horizontal
         calendarView.cellInset = CGPoint(x: 0, y: 0)                         // default is (3,3)
         calendarView.allowsMultipleSelection = true                         // default is false
-        calendarView.firstDayOfWeek = .sunday                                // default is Sunday
         calendarView.scrollEnabled = true                                    // default is true
         calendarView.scrollingMode = .stopAtEachCalendarFrameWidth
-//        calendarView.itemSize = 30                                          // default is nil. Use a value here to change the size of your cells
         calendarView.rangeSelectionWillBeUsed = false                        // default is false
         //_____________________________________________________________________________________________
         // Reloading the data on viewDidLoad() is only necessary if you made LAYOUT changes eg. number of row per month change
         // or changing the start day of week from sunday etc etc.
-        calendarView.reloadData()
+
         // After reloading. Scroll to your selected date, and setup your calendar
 //        calendarView.scrollToDate(Date(), triggerScrollToDateDelegate: false, animateScroll: false) {
             let currentDate = self.calendarView.currentCalendarDateSegment()
@@ -110,12 +114,25 @@ class ViewController: UIViewController {
 
 // MARK : JTAppleCalendarDelegate
 extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDelegate {
-    func configureCalendar(_ calendar: JTAppleCalendarView) ->
-        (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {
-        let firstDate = formatter.date(from: "2016 02 01")
-        let secondDate = formatter.date(from: "2030 03 01")!
-        let aCalendar = Calendar.current // Properly configure your calendar to your time zone here
-        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .tillEndOfGrid)
+    func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters {
+        
+        
+        let parameters = ConfigurationParameters(startDate: formatter.date(from: "2016 02 01")!,
+                                                 endDate: formatter.date(from: "2030 03 01")!,
+                                                 numberOfRows: numberOfRows,
+                                                 calendar: Calendar.current,
+                                                 generateInDates: true,
+                                                 generateOutDates: .tillEndOfGrid,
+                                                 firstDayOfWeek: .sunday)
+        return parameters
+        
+        
+        
+//        (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {
+        
+        
+        
+//        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .tillEndOfGrid)
 //        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfGrid)
 //                return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfRow)
 //                return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .off)

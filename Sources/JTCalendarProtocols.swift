@@ -81,8 +81,7 @@ public protocol JTAppleCalendarViewDataSource: class {
     ///     - endDate: The *end* boundary date for your calendarView.
     ///     - numberOfRows: The number of rows to be displayed per month
     ///     - calendar: The *calendar* to be used by the calendarView.
-    func configureCalendar(_ calendar: JTAppleCalendarView) ->
-        (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration)
+    func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters
 }
 
 
@@ -175,7 +174,7 @@ protocol JTAppleCalendarLayoutProtocol: class {
 protocol JTAppleCalendarDelegateProtocol: class {
     var itemSize: CGFloat? {get set}
     var registeredHeaderViews: [JTAppleCalendarViewSource] {get set}
-    var cachedConfiguration: (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {get set}
+    var cachedConfiguration: ConfigurationParameters {get set}
     var monthInfo: [Month] {get set}
     var monthMap: [Int:Int] {get set}
     var totalMonthSections: Int {get}

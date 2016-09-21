@@ -89,6 +89,7 @@ extension JTAppleCalendarView {
     }
     /// Reloads the data on the calendar view. Scroll delegates are not triggered with this function.
     public func reloadData(withAnchor date: Date? = nil, animation: Bool = false, completionHandler: (() -> Void)? = nil) {
+        if !finalLoadable { return }
         reloadData(checkDelegateDataSource: true, withAnchorDate: date, withAnimation: animation, completionHandler: completionHandler)
     }
     /// Reload the date of specified date-cells on the calendar-view
