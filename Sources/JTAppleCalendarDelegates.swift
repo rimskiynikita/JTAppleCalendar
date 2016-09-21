@@ -178,6 +178,7 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
                 }
             }
             delegate.calendar(self, didSelectDate: infoOfDateSelectedByUser.date, cell: selectedCell?.view, cellState: cellState)
+            print(infoOfDateSelectedByUser.date)
         }
     }
 }

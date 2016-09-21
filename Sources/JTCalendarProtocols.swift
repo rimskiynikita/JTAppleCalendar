@@ -184,7 +184,7 @@ protocol JTAppleCalendarDelegateProtocol: class {
     func numberOfsections(forMonth section: Int) -> Int
     func numberOfMonthsInCalendar() -> Int
     func numberOfPreDatesForMonth(_ month: Date) -> Int
-    func numberOfPostDatesForMonth(_ month: Date) -> Int
+//    func numberOfPostDatesForMonth(_ month: Date) -> Int
     func referenceSizeForHeaderInSection(_ section: Int) -> CGSize
     func firstDayIndexForMonth(_ date: Date) -> Int
     func rowsAreStatic() -> Bool

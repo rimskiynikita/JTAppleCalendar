@@ -28,7 +28,12 @@ public struct ConfigurationParameters {
     var generateOutDates: OutDateCellGeneration
     var firstDayOfWeek: DaysOfWeek
     
-    public init(startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration, firstDayOfWeek: DaysOfWeek) {
+    public init(startDate: Date,
+                endDate: Date,
+                numberOfRows: Int, calendar: Calendar,
+                generateInDates: Bool,
+                generateOutDates: OutDateCellGeneration,
+                firstDayOfWeek: DaysOfWeek) {
         self.startDate = startDate
         self.endDate = endDate
         self.numberOfRows = numberOfRows
@@ -405,6 +410,9 @@ open class JTAppleCalendarView: UIView {
         case .thursday: firstDayCalValue = 10 case .friday: firstDayCalValue = 9
         case .saturday: firstDayCalValue = 8 default: firstDayCalValue = 7
         }
+        
+        print(firstDayCalValue)
+        print(date)
         var firstWeekdayOfMonthIndex = calendar.component(.weekday, from: date)
         firstWeekdayOfMonthIndex -= 1 // firstWeekdayOfMonthIndex should be 0-Indexed
         // push it modularly so that we take it back one day so that the first day is Monday instead of Sunday which is the default
