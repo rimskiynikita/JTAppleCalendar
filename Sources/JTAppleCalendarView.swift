@@ -479,7 +479,10 @@ open class JTAppleCalendarView: UIView {
                     // This is a scroll done after a layout reset and dev didnt set an anchor date. If a scroll is in progress, then cancel this one and
                     // allow it to take precedent
                     if !self.scrollInProgress {
-                        scrollToDate(self.startOfMonthCache)
+//                        delayRunOnMainThread(1.0) {
+                            self.calendarView.scrollToItem(at: IndexPath(item: 0, section:0), at: .left, animated: false)
+//                        }
+//                        scrollToDate(self.startOfMonthCache)
                     } else {
                         if let validCompletionHandler = completionHandler { self.delayedExecutionClosure.append(validCompletionHandler) }
                     }

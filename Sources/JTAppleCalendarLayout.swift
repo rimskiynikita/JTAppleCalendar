@@ -41,13 +41,93 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
     open override func prepare() {
         if !cellCache.isEmpty { return }
         maxMissCount = scrollDirection == .horizontal ? maxNumberOfRowsPerMonth : maxNumberOfDaysInWeek
-        if scrollDirection == .vertical { verticalStuff() } else { horizontalStuff() }
+        if scrollDirection == .vertical { verticalStuff() } else {
+            if thereAreHeaders {
+                horizontalStuffWithHeaders()
+            } else {
+                horizontalStuffNoHeaders()
+            }
+        }
         
         // Get rid of header data if dev didnt register headers. The were used for calculation but are not needed to be displayed
         if !thereAreHeaders { headerCache.removeAll() }
         daysInSection.removeAll() // Clear chache
     }
-    func horizontalStuff() {
+    func horizontalStuffNoHeaders() {
+        var weAreAtTheEndOfRow: Bool {
+            get {
+                guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }
+                return self.xCellOffset >= lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek)
+            }
+        }
+        var section = 0
+        var rowNumber = 0
+        for aMonth in monthData {
+            for numberOfDaysInCurrentSection in aMonth.sections {
+                // Generate and cache the headers
+//                let sectionIndexPath = IndexPath(item: 0, section: section)
+//                if let aHeaderAttr = layoutAttributesForSupplementaryView(ofKind: UICollectionElementKindSectionHeader, at: sectionIndexPath) {
+//                    headerCache[section] = aHeaderAttr
+                    
+//                    if lastWrittenCellAttribute == nil {
+//                        contentWidth += aHeaderAttr.frame.width
+//                    }
+//                }
+                // Generate and cache the cells
+                for item in 0..<numberOfDaysInCurrentSection {
+                    let indexPath = IndexPath(item: item, section: section)
+                    if let attribute = deterimeToApplyAttribs(at: indexPath) {
+                        if cellCache[section] == nil {
+                            cellCache[section] = []
+                        }
+                        cellCache[section]!.append(attribute)
+                        lastWrittenCellAttribute = attribute
+                        xCellOffset += attribute.frame.width
+                        print(attribute.indexPath)
+                        print("\(attribute.frame) \n")
+                        
+                        if weAreAtTheEndOfRow {
+                            xCellOffset = 0
+
+                            if rowNumber + 1 == numberOfRows { // If we are at the end of a virtual section
+                                yCellOffset = 0
+                                contentWidth += lastWrittenCellAttribute!.frame.width * 7
+                                stride = contentWidth
+                                rowNumber = 0
+                                
+                            } else { // We we are simply onlyl at the end of a row
+                                yCellOffset += attribute.frame.height
+                                rowNumber += 1
+                            }
+                            
+                            
+//                            if (rowNumber + 1) % numberOfRows * maxNumberOfDaysInWeek == 0 { // If we are on the last item in this section, then reset, and increase stride
+//                                yCellOffset = 0
+//                                stride = contentWidth
+//                                contentWidth += lastWrittenCellAttribute!.frame.width * 7
+//                            } else if let lastWrittenCellAttribute = self.lastWrittenCellAttribute, // If we are at the bottom of the screen
+//                                abs(lastWrittenCellAttribute.frame.origin.y + lastWrittenCellAttribute.frame.height - collectionView!.frame.height) < errorDelta {
+//                                stride += contentWidth
+//                                contentWidth += lastWrittenCellAttribute.frame.width * 7
+//                                yCellOffset = 0
+//                            } else {
+//                                yCellOffset += attribute.frame.height
+//                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
+                // Save the content size for each section
+                sectionSize.append(contentWidth)
+                section += 1
+            }
+        }
+        contentHeight = self.collectionView!.bounds.size.height
+    }
+    
+    func horizontalStuffWithHeaders() {
         var weAreAtTheEndOfRow: Bool {
             get {
                 guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }

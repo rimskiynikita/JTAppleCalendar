@@ -50,7 +50,7 @@ class ViewController: UIViewController {
 //         calendarView.registerCellViewClass(fileName: "JTAppleCalendar_Example.CodeCellView")
         //_____________________________________________________________________________________________
         // Enable/disable the following code line to show/hide headers.
-        calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"]) // headers are Optional. You can register multiple if you want.
+//        calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"]) // headers are Optional. You can register multiple if you want.
         // The following default code can be removed since they are already the default.
         // They are only included here so that you can know what properties can be configured
         //_____________________________________________________________________________________________
@@ -60,14 +60,17 @@ class ViewController: UIViewController {
         calendarView.scrollEnabled = true                                    // default is true
         calendarView.scrollingMode = .stopAtEachCalendarFrameWidth
         calendarView.rangeSelectionWillBeUsed = false                        // default is false
+    
         //_____________________________________________________________________________________________
         // Reloading the data on viewDidLoad() is only necessary if you made LAYOUT changes eg. number of row per month change
         // or changing the start day of week from sunday etc etc.
 
         // After reloading. Scroll to your selected date, and setup your calendar
 //        calendarView.scrollToDate(Date(), triggerScrollToDateDelegate: false, animateScroll: false) {
-            let currentDate = self.calendarView.currentCalendarDateSegment()
-            self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end, month: currentDate.month)
+//            let currentDate = self.calendarView.currentCalendarDateSegment()
+//            self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end, month: currentDate.month)
+        
+//        calendarView.selectDates([formatter.date(from: "2016 02 01")!])
 //        }
     }
     @IBAction func select11(_ sender: AnyObject?) {
@@ -115,12 +118,21 @@ class ViewController: UIViewController {
 // MARK : JTAppleCalendarDelegate
 extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDelegate {
     func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters {
+        let startDate = formatter.date(from: "2016 02 01")!
+        let endDate = formatter.date(from: "2016 03 01")!
+        let calendar = Calendar.current
         
-        
-        let parameters = ConfigurationParameters(startDate: formatter.date(from: "2016 02 01")!,
-                                                 endDate: formatter.date(from: "2030 03 01")!,
+//        let parameters =  ConfigurationParameters(startDate: startDate,
+//                                endDate: endDate,
+//                                numberOfRows: numberOfRows,
+//                                calendar: calendar,
+//                                generateInDates: true,
+//                                generateOutDates: .tillEndOfGrid,
+//                                firstDayOfWeek: .monday)
+        let parameters = ConfigurationParameters(startDate: startDate,
+                                                 endDate: endDate,
                                                  numberOfRows: numberOfRows,
-                                                 calendar: Calendar.current,
+                                                 calendar: calendar,
                                                  generateInDates: true,
                                                  generateOutDates: .tillEndOfGrid,
                                                  firstDayOfWeek: .sunday)
