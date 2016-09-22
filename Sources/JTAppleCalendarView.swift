@@ -168,13 +168,13 @@ open class JTAppleCalendarView: UIView {
         didSet {
             calendarView.frame = self.frame
             if calendarView.frame != lastFrame {
-                lastFrame = calendarView.frame
                 invalidateLayout()
                 updateLayoutItemSize(calendarViewLayout)
                 if delegate != nil {
                     finalLoadable = true
                     reloadData()
                 }
+                lastFrame = calendarView.frame
             }
         }
     }
@@ -411,8 +411,8 @@ open class JTAppleCalendarView: UIView {
         case .saturday: firstDayCalValue = 8 default: firstDayCalValue = 7
         }
         
-        print(firstDayCalValue)
-        print(date)
+//        print(firstDayCalValue)
+//        print(date)
         var firstWeekdayOfMonthIndex = calendar.component(.weekday, from: date)
         firstWeekdayOfMonthIndex -= 1 // firstWeekdayOfMonthIndex should be 0-Indexed
         // push it modularly so that we take it back one day so that the first day is Monday instead of Sunday which is the default
