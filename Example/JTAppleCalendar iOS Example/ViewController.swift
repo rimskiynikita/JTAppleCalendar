@@ -30,8 +30,12 @@ class ViewController: UIViewController {
         }
         calendarView.reloadData()
     }
-    @IBAction func changeToSixRows(_ sender: UIButton) {
-        numberOfRows = 2
+    @IBAction func headers(_ sender: UIButton) {
+        if sender.title(for: .normal)! == "HeadersOn" {
+            calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"])
+        } else {
+            calendarView.unregisterHeaders()
+        }
         calendarView.reloadData()
     }
     override func viewDidLoad() {
@@ -135,7 +139,7 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
                                                  numberOfRows: numberOfRows,
                                                  calendar: calendar,
                                                  generateInDates: true,
-                                                 generateOutDates: .tillEndOfRow,
+                                                 generateOutDates: .tillEndOfGrid,
                                                  firstDayOfWeek: .sunday)
         return parameters
         

@@ -57,7 +57,8 @@ extension JTAppleCalendarView {
     /// Register header views with the calender. This needs to be done before the view can be displayed
     /// - Parameter fileNames: A dictionary containing [headerViewNames:HeaderviewSizes]
     public func registerHeaderView(xibFileNames: [String]) {
-        registeredHeaderViews.removeAll() // remove the already registered xib files if the user re-registers again.
+        if xibFileNames.count < 1 { return }
+        unregisterHeaders()
         for headerViewXibName in xibFileNames {
             registeredHeaderViews.append(JTAppleCalendarViewSource.fromXib(headerViewXibName))
             self.calendarView.register(JTAppleCollectionReusableView.self,
@@ -68,7 +69,8 @@ extension JTAppleCalendarView {
     /// Register header views with the calender. This needs to be done before the view can be displayed
     /// - Parameter fileNames: A dictionary containing [headerViewNames:HeaderviewSizes]
     public func registerHeaderView(classStringNames: [String]) {
-        registeredHeaderViews.removeAll() // remove the already registered xib files if the user re-registers again.
+        if classStringNames.count < 1 { return }
+        unregisterHeaders()
         for headerViewClassName in classStringNames {
             registeredHeaderViews.append(JTAppleCalendarViewSource.fromClassName(headerViewClassName))
             self.calendarView.register(JTAppleCollectionReusableView.self,
@@ -79,13 +81,18 @@ extension JTAppleCalendarView {
     /// Register header views with the calender. This needs to be done before the view can be displayed
     /// - Parameter fileNames: A dictionary containing [headerViewNames:HeaderviewSizes]
     public func registerHeaderView(classTypeNames: [AnyClass]) {
-        registeredHeaderViews.removeAll() // remove the already registered xib files if the user re-registers again.
+        if classTypeNames.count < 1 { return }
+        unregisterHeaders()
         for aClass in classTypeNames {
             registeredHeaderViews.append(JTAppleCalendarViewSource.fromType(aClass))
             self.calendarView.register(JTAppleCollectionReusableView.self,
                                             forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
                                             withReuseIdentifier: aClass.description())
         }
+    }
+    public func unregisterHeaders() {
+        registeredHeaderViews.removeAll() // remove the already registered xib files if the user re-registers again.
+        layoutNeedsUpdating = true
     }
     /// Reloads the data on the calendar view. Scroll delegates are not triggered with this function.
     public func reloadData(withAnchor date: Date? = nil, animation: Bool = false, completionHandler: (() -> Void)? = nil) {
