@@ -18,7 +18,6 @@ extension JTAppleCalendarView: JTAppleCalendarDelegateProtocol {
     func preDatesAreGenerated() -> Bool { return cachedConfiguration.generateInDates }
     func postDatesAreGenerated() -> OutDateCellGeneration { return cachedConfiguration.generateOutDates }
     func referenceSizeForHeaderInSection(_ section: Int) -> CGSize {
-        if registeredHeaderViews.count < 1 { return CGSize.zero }
         return calendarViewHeaderSizeForSection(section)
     }
     func rowsAreStatic() -> Bool {
