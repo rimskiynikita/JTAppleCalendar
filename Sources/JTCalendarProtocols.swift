@@ -179,12 +179,13 @@ protocol JTAppleCalendarDelegateProtocol: class {
     var monthMap: [Int:Int] {get set}
     var totalMonthSections: Int {get}
     var totalDays: Int {get}
+    
     func numberOfRows() -> Int
     func cachedDate() -> (start: Date, end: Date, calendar: Calendar)
     func numberOfsections(forMonth section: Int) -> Int
     func numberOfMonthsInCalendar() -> Int
     func numberOfPreDatesForMonth(_ month: Date) -> Int
-//    func numberOfPostDatesForMonth(_ month: Date) -> Int
+    
     func referenceSizeForHeaderInSection(_ section: Int) -> CGSize
     func firstDayIndexForMonth(_ date: Date) -> Int
     func rowsAreStatic() -> Bool

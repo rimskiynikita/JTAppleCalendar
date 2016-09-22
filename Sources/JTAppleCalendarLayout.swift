@@ -65,14 +65,13 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
         for aMonth in monthData {
             for numberOfDaysInCurrentSection in aMonth.sections {
                 // Generate and cache the headers
-//                let sectionIndexPath = IndexPath(item: 0, section: section)
-//                if let aHeaderAttr = layoutAttributesForSupplementaryView(ofKind: UICollectionElementKindSectionHeader, at: sectionIndexPath) {
-//                    headerCache[section] = aHeaderAttr
-                    
-//                    if lastWrittenCellAttribute == nil {
-//                        contentWidth += aHeaderAttr.frame.width
-//                    }
-//                }
+                let sectionIndexPath = IndexPath(item: 0, section: section)
+                if let aHeaderAttr = layoutAttributesForSupplementaryView(ofKind: UICollectionElementKindSectionHeader, at: sectionIndexPath) {
+                    headerCache[section] = aHeaderAttr
+                    if thereAreHeaders {
+                        yCellOffset += aHeaderAttr.frame.height
+                    }
+                }
                 // Generate and cache the cells
                 for item in 0..<numberOfDaysInCurrentSection {
                     let indexPath = IndexPath(item: item, section: section)
@@ -317,15 +316,18 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
         if let alreadyCachedHeaderAttrib = headerCache[indexPath.section] {
             return alreadyCachedHeaderAttrib
         }
-        // We cache the header here so we dont call the delegate so much
+        
         let headerSize = cachedHeaderSizeForSection(indexPath.section)
 
-        // Use the calculaed header size and force the width of the header to take up 7 columns
-        let modifiedSize = CGSize(width: itemSize.width * CGFloat(maxNumberOfDaysInWeek), height: headerSize.height)
         switch scrollDirection {
         case .horizontal:
-            attributes.frame = CGRect(x: contentWidth, y: 0, width: modifiedSize.width, height: modifiedSize.height)
+            let modifiedSize = sizeForitemAtIndexPath(indexPath)
+            attributes.frame = CGRect(x: contentWidth, y: 0, width: modifiedSize.width * 7, height: headerSize.height)
         case .vertical:
+            // Use the calculaed header size and force the width of the header to take up 7 columns
+            // We cache the header here so we dont call the delegate so much
+            
+            let modifiedSize = CGSize(width: collectionView!.frame.width, height: headerSize.height)
             attributes.frame = CGRect(x: 0, y: yCellOffset, width: modifiedSize.width, height: modifiedSize.height)
         }
         if attributes.frame == CGRect.zero { return nil }
@@ -334,16 +336,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
     func applyLayoutAttributes(_ attributes: UICollectionViewLayoutAttributes) {
         if attributes.representedElementKind != nil { return }
         // Calculate the item size
-        if let itemSize = delegate!.itemSize {
-            if scrollDirection == .vertical {
-                self.itemSize.height = itemSize
-            } else {
-                self.itemSize.width = itemSize
-                self.itemSize.height = sizeForitemAtIndexPath(attributes.indexPath).height
-            }
-        } else {
-            itemSize = sizeForitemAtIndexPath(attributes.indexPath)
-        } // jt101 the width is already set form the outside. may change this to all inside here.
+        itemSize = sizeForitemAtIndexPath(attributes.indexPath)
         attributes.frame = CGRect(x: xCellOffset + stride, y: yCellOffset, width: self.itemSize.width, height: self.itemSize.height)
     }
     func numberOfDaysInSection(_ index: Int) -> Int {
@@ -368,26 +361,61 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
         if let cachedCell  = currentCell, cachedCell.section == indexPath.section {
             return cachedCell.itemSize
         }
-        // Get header size if it alrady cached
-        var headerSize =  CGSize.zero
-        if thereAreHeaders {
-            headerSize = cachedHeaderSizeForSection(indexPath.section)
-        }
-        let currentItemSize = itemSize
-        let totalNumberOfRows = monthData[monthMap[indexPath.section]!].rows
-        let monthSection = monthData[monthMap[indexPath.section]!].sectionIndexMaps[indexPath.section]!
-        let numberOfSections = CGFloat(totalNumberOfRows) / CGFloat(numberOfRows)
-        let fullSections =  Int(numberOfSections)
-        let numberOfRowsForSection: Int
-        if scrollDirection == .horizontal {
-            numberOfRowsForSection = maxNumberOfRowsPerMonth
-        } else if monthSection + 1 <= fullSections {
-            numberOfRowsForSection = numberOfRows
+        
+        var size: CGSize = CGSize.zero
+        if let itemSize = delegate!.itemSize {
+            if scrollDirection == .vertical {
+                size.height = itemSize
+                size.width = self.itemSize.width
+            } else {
+                size.width = itemSize
+
+                var headerSize =  CGSize.zero
+                if thereAreHeaders {
+                    headerSize = cachedHeaderSizeForSection(indexPath.section)
+                }
+                let totalNumberOfRows = monthData[monthMap[indexPath.section]!].rows
+                let monthSection = monthData[monthMap[indexPath.section]!].sectionIndexMaps[indexPath.section]!
+                let numberOfSections = CGFloat(totalNumberOfRows) / CGFloat(numberOfRows)
+                let fullSections =  Int(numberOfSections)
+                let numberOfRowsForSection: Int
+                if scrollDirection == .horizontal {
+                    numberOfRowsForSection = maxNumberOfRowsPerMonth
+                } else if monthSection + 1 <= fullSections {
+                    numberOfRowsForSection = numberOfRows
+                } else {
+                    numberOfRowsForSection = totalNumberOfRows - (monthSection * numberOfRows)
+                }
+                
+                size.height = (collectionView!.frame.height - headerSize.height) / CGFloat(numberOfRowsForSection)
+                currentCell = (section: indexPath.section, itemSize: size)
+
+                
+                
+            }
         } else {
-            numberOfRowsForSection = totalNumberOfRows - (monthSection * numberOfRows)
+        // Get header size if it alrady cached
+            var headerSize =  CGSize.zero
+            if thereAreHeaders {
+                headerSize = cachedHeaderSizeForSection(indexPath.section)
+            }
+            let currentItemSize = itemSize
+            let totalNumberOfRows = monthData[monthMap[indexPath.section]!].rows
+            let monthSection = monthData[monthMap[indexPath.section]!].sectionIndexMaps[indexPath.section]!
+            let numberOfSections = CGFloat(totalNumberOfRows) / CGFloat(numberOfRows)
+            let fullSections =  Int(numberOfSections)
+            let numberOfRowsForSection: Int
+            if scrollDirection == .horizontal {
+                numberOfRowsForSection = maxNumberOfRowsPerMonth
+            } else if monthSection + 1 <= fullSections {
+                numberOfRowsForSection = numberOfRows
+            } else {
+                numberOfRowsForSection = totalNumberOfRows - (monthSection * numberOfRows)
+            }
+            size        = CGSize(width: currentItemSize.width, height: (collectionView!.frame.height - headerSize.height) / CGFloat(numberOfRowsForSection))
+            currentCell = (section: indexPath.section, itemSize: size)
+            
         }
-        let size            = CGSize(width: currentItemSize.width, height: (collectionView!.frame.height - headerSize.height) / CGFloat(numberOfRowsForSection))
-        currentCell         = (section: indexPath.section, itemSize: size)
         return size
     }
     func sizeOfSection(_ section: Int) -> CGFloat {

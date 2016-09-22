@@ -314,7 +314,6 @@ open class JTAppleCalendarView: UIView {
             if direction == .vertical { height = userSetItemSize }
             if direction == .horizontal { width = userSetItemSize }
         }
-
         layout.itemSize = CGSize(width: width, height: height)
     }
     func invalidateLayout() {

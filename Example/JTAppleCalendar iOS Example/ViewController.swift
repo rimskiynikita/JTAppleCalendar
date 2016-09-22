@@ -50,12 +50,13 @@ class ViewController: UIViewController {
 //         calendarView.registerCellViewClass(fileName: "JTAppleCalendar_Example.CodeCellView")
         //_____________________________________________________________________________________________
         // Enable/disable the following code line to show/hide headers.
-//        calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"]) // headers are Optional. You can register multiple if you want.
+        calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"]) // headers are Optional. You can register multiple if you want.
         // The following default code can be removed since they are already the default.
         // They are only included here so that you can know what properties can be configured
         //_____________________________________________________________________________________________
 //        calendarView.direction = .vertical                                 // default is horizontal
         calendarView.cellInset = CGPoint(x: 0, y: 0)                         // default is (3,3)
+//        calendarView.itemSize = 30
         calendarView.allowsMultipleSelection = true                         // default is false
         calendarView.scrollEnabled = true                                    // default is true
         calendarView.scrollingMode = .stopAtEachCalendarFrameWidth
@@ -119,7 +120,7 @@ class ViewController: UIViewController {
 extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDelegate {
     func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters {
         let startDate = formatter.date(from: "2016 02 01")!
-        let endDate = formatter.date(from: "2016 03 01")!
+        let endDate = formatter.date(from: "2020 03 01")!
         let calendar = Calendar.current
         
 //        let parameters =  ConfigurationParameters(startDate: startDate,
@@ -134,7 +135,7 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
                                                  numberOfRows: numberOfRows,
                                                  calendar: calendar,
                                                  generateInDates: true,
-                                                 generateOutDates: .tillEndOfGrid,
+                                                 generateOutDates: .tillEndOfRow,
                                                  firstDayOfWeek: .sunday)
         return parameters
         

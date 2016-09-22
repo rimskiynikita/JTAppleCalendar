@@ -17,9 +17,7 @@ extension JTAppleCalendarView: JTAppleCalendarDelegateProtocol {
 //    func numberOfPostDatesForMonth(_ month: Date) -> Int { return firstDayIndexForMonth(month) }
     func preDatesAreGenerated() -> Bool { return cachedConfiguration.generateInDates }
     func postDatesAreGenerated() -> OutDateCellGeneration { return cachedConfiguration.generateOutDates }
-    func referenceSizeForHeaderInSection(_ section: Int) -> CGSize {
-        return calendarViewHeaderSizeForSection(section)
-    }
+    func referenceSizeForHeaderInSection(_ section: Int) -> CGSize {return calendarViewHeaderSizeForSection(section)}
     func rowsAreStatic() -> Bool {
         return cachedConfiguration.generateInDates == true && cachedConfiguration.generateOutDates == .tillEndOfGrid
     }
