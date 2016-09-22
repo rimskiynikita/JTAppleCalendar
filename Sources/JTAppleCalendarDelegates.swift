@@ -152,6 +152,7 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
     /// The collection view calls this method when the user successfully selects an item in the collection view.
     /// It does not call this method when you programmatically set the selection.
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print(indexPath)
         // index paths to be reloaded should be index to the left and right of the selected index
         let indexPathsToBeReloaded = rangeSelectionWillBeUsed ? validForwardAndBackwordSelectedIndexes(forIndexPath: indexPath) : [IndexPath]()
         internalCollectionView(collectionView, didSelectItemAtIndexPath: indexPath, indexPathsToReload: indexPathsToBeReloaded)
