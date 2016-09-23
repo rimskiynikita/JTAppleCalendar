@@ -96,7 +96,10 @@ extension JTAppleCalendarView {
     }
     /// Reloads the data on the calendar view. Scroll delegates are not triggered with this function.
     public func reloadData(withAnchor date: Date? = nil, animation: Bool = false, completionHandler: (() -> Void)? = nil) {
-        if !finalLoadable { return }
+        if !calendarIsAlreadyLoaded {
+            delayedExecutionClosure.append({ self.reloadData(withAnchor: date, animation: animation, completionHandler: completionHandler) })
+            return
+        }
         reloadData(checkDelegateDataSource: true, withAnchorDate: date, withAnimation: animation, completionHandler: completionHandler)
     }
     /// Reload the date of specified date-cells on the calendar-view
@@ -132,6 +135,10 @@ extension JTAppleCalendarView {
     /// - Parameter triggerDidSelectDelegate: Triggers the delegate function only if the value is set to true.
     /// Sometimes it is necessary to setup some dates without triggereing the delegate e.g. For instance, when youre initally setting up data in your viewDidLoad
     public func selectDates(_ dates: [Date], triggerSelectionDelegate: Bool = true, keepSelectionIfMultiSelectionAllowed: Bool = false) {
+        if !calendarIsAlreadyLoaded { // If the calendar is nnot yet fully loaded. Add the task to the delayed queue
+            delayedExecutionClosure.append({ self.selectDates(dates, triggerSelectionDelegate: triggerSelectionDelegate, keepSelectionIfMultiSelectionAllowed: keepSelectionIfMultiSelectionAllowed)})
+            return
+        }
         var allIndexPathsToReload: [IndexPath] = []
         var validDatesToSelect = dates
         // If user is trying to select multiple dates with multiselection disabled, then only select the last object

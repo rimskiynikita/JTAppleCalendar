@@ -17,29 +17,28 @@ class ViewController: UIViewController {
     @IBOutlet var directions: [UIButton]!
     @IBOutlet var outDates: [UIButton]!
     @IBOutlet var inDates: [UIButton]!
+    @IBOutlet var scrollDate: UITextField!
 
-    
-    
-    
-    
     var numberOfRows = 6
     let formatter = DateFormatter()
     var testCalendar: Calendar! = Calendar(identifier: Calendar.Identifier.gregorian)
     var generateInDates = true
     var generateOutDates: OutDateCellGeneration = .tillEndOfGrid
     let firstDayOfWeek: DaysOfWeek = .sunday
+    let disabledColor = UIColor.lightGray
+    let enabledColor = UIColor.blue
     
     @IBAction func changeToRow(_ sender: UIButton) {
         numberOfRows = Int(sender.title(for: .normal)!)!
         
-        for aButton in numbers { aButton.tintColor = UIColor.blue }
-        sender.tintColor = UIColor.red
+        for aButton in numbers { aButton.tintColor = disabledColor }
+        sender.tintColor = enabledColor
         calendarView.reloadData()
     }
     
     @IBAction func changeDirection(_ sender: UIButton) {
-        for aButton in directions { aButton.tintColor = UIColor.blue }
-        sender.tintColor = UIColor.red
+        for aButton in directions { aButton.tintColor = disabledColor }
+        sender.tintColor = enabledColor
         
         if sender.title(for: .normal)! == "HorizontalCalendar" {
             calendarView.direction = .horizontal
@@ -51,8 +50,8 @@ class ViewController: UIViewController {
         calendarView.reloadData()
     }
     @IBAction func headers(_ sender: UIButton) {
-        for aButton in headers { aButton.tintColor = UIColor.blue }
-        sender.tintColor = UIColor.red
+        for aButton in headers { aButton.tintColor = disabledColor }
+        sender.tintColor = enabledColor
         
         if sender.title(for: .normal)! == "HeadersOn" {
             calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"])
@@ -62,8 +61,8 @@ class ViewController: UIViewController {
         calendarView.reloadData()
     }
     @IBAction func outDateGeneration(_ sender: UIButton) {
-        for aButton in outDates { aButton.tintColor = UIColor.blue }
-        sender.tintColor = UIColor.red
+        for aButton in outDates { aButton.tintColor = disabledColor }
+        sender.tintColor = enabledColor
 
         switch sender.title(for: .normal)! {
         case "PostEOR":
@@ -79,8 +78,9 @@ class ViewController: UIViewController {
 
     }
     @IBAction func inDateGeneration(_ sender: UIButton) {
-        for aButton in inDates { aButton.tintColor = UIColor.blue }
-        sender.tintColor = UIColor.red
+        for aButton in inDates { aButton.tintColor = disabledColor }
+        sender.tintColor = enabledColor
+
         switch sender.title(for: .normal)! {
             case "PreOn":
                 generateInDates = true
@@ -125,14 +125,20 @@ class ViewController: UIViewController {
         // or changing the start day of week from sunday etc etc.
 
         // After reloading. Scroll to your selected date, and setup your calendar
-//        calendarView.scrollToDate(Date(), triggerScrollToDateDelegate: false, animateScroll: false) {
+        
+//        calendarView.scrollToDate(scrollDate, triggerScrollToDateDelegate: false, animateScroll: false)
 //            let currentDate = self.calendarView.currentCalendarDateSegment()
 //            self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end, month: currentDate.month)
         
-//        calendarView.selectDates([formatter.date(from: "2016 02 01")!])
-//        }
+        calendarView.selectDates([formatter.date(from: "2016 03 22")!])
+        calendarView.selectDates([formatter.date(from: "2016 03 23")!])
+        
+        calendarView.reloadData(withAnchor: formatter.date(from: "2016 03 22")!, animation: true) {
+            let currentDate = self.calendarView.currentCalendarDateSegment()
+            self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end, month: currentDate.month)
+        }
     }
-    @IBAction func select11(_ sender: AnyObject?) {
+    @IBAction func selectDate(_ sender: AnyObject?) {
 //        numberOfRows = 1
 //        calendarView.reloadData()
 //        calendarView.allowsMultipleSelection = false
@@ -140,10 +146,9 @@ class ViewController: UIViewController {
         self.calendarView.selectDates([date!, Date()], triggerSelectionDelegate: false)
     }
     @IBAction func scrollToDate(_ sender: AnyObject?) {
-//        numberOfRows = 6
-//        calendarView.reloadData()
-        let date = formatter.date(from: "2016 03 11")
-        calendarView.scrollToDate(date!)
+        let text = scrollDate.text!
+        let date = formatter.date(from: text)!
+        calendarView.scrollToDate(date)
     }
     @IBAction func printSelectedDates() {
         print("\nSelected dates --->")

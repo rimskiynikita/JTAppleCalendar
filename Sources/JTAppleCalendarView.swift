@@ -111,6 +111,15 @@ open class JTAppleCalendarView: UIView {
             }
         }
     }
+    
+    var calendarIsAlreadyLoaded: Bool {
+        get {
+            if let alreadyLoaded = finalLoadable, alreadyLoaded {
+                return true
+            }
+            return false
+        }
+    }
     /// Configures the size of your date cells
     open var itemSize: CGFloat?
     /// Enables and disables animations when scrolling to and from date-cells
@@ -166,15 +175,20 @@ open class JTAppleCalendarView: UIView {
     /// The frame rectangle which defines the view's location and size in its superview coordinate system.
     override open var frame: CGRect {
         didSet {
+            
             calendarView.frame = self.frame
-            if calendarView.frame != lastFrame {
+            if calendarView.frame != lastFrame || delegate == nil {
                 invalidateLayout()
                 updateLayoutItemSize(calendarViewLayout)
-                if delegate != nil {
-                    finalLoadable = true
-                    reloadData()
-                }
                 lastFrame = calendarView.frame
+                if delegate != nil {
+                    var anInitialCompletionHandler: (()->Void)?
+                    if finalLoadable == nil { // This will only be set once
+                        finalLoadable = true
+                        anInitialCompletionHandler = { self.executeDelayedTasks() }
+                    }
+                    reloadData(completionHandler: anInitialCompletionHandler)
+                }
             }
         }
     }
@@ -184,7 +198,7 @@ open class JTAppleCalendarView: UIView {
 
     var delayedExecutionClosure: [(() -> Void)] = []
     var lastFrame = CGRect.zero
-    var finalLoadable = false
+    var finalLoadable: Bool?
     var currentSectionPage: Int {
         return calendarViewLayout.sectionFromRectOffset(calendarView.contentOffset)
     }
@@ -478,6 +492,9 @@ open class JTAppleCalendarView: UIView {
                     // This is a scroll done after a layout reset and dev didnt set an anchor date. If a scroll is in progress, then cancel this one and
                     // allow it to take precedent
                     if !self.scrollInProgress {
+                        if let validCompletionHandler = completionHandler {
+                            validCompletionHandler()
+                        }
                         self.calendarView.scrollToItem(at: IndexPath(item: 0, section:0), at: .left, animated: false)
 //                        scrollToDate(self.startOfMonthCache)
                     } else {
