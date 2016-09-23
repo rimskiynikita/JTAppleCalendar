@@ -9,9 +9,20 @@
 import JTAppleCalendar
 
 class ViewController: UIViewController {
-    var numberOfRows = 6
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var monthLabel: UILabel!
+    
+    @IBOutlet var numbers: [UIButton]!
+    @IBOutlet var headers: [UIButton]!
+    @IBOutlet var directions: [UIButton]!
+    @IBOutlet var outDates: [UIButton]!
+    @IBOutlet var inDates: [UIButton]!
+
+    
+    
+    
+    
+    var numberOfRows = 6
     let formatter = DateFormatter()
     var testCalendar: Calendar! = Calendar(identifier: Calendar.Identifier.gregorian)
     var generateInDates = true
@@ -20,11 +31,17 @@ class ViewController: UIViewController {
     
     @IBAction func changeToRow(_ sender: UIButton) {
         numberOfRows = Int(sender.title(for: .normal)!)!
+        
+        for aButton in numbers { aButton.tintColor = UIColor.blue }
+        sender.tintColor = UIColor.red
         calendarView.reloadData()
     }
     
     @IBAction func changeDirection(_ sender: UIButton) {
-        if sender.title(for: .normal)! == "Horizontal" {
+        for aButton in directions { aButton.tintColor = UIColor.blue }
+        sender.tintColor = UIColor.red
+        
+        if sender.title(for: .normal)! == "HorizontalCalendar" {
             calendarView.direction = .horizontal
             calendarView.itemSize = nil
         } else {
@@ -34,6 +51,9 @@ class ViewController: UIViewController {
         calendarView.reloadData()
     }
     @IBAction func headers(_ sender: UIButton) {
+        for aButton in headers { aButton.tintColor = UIColor.blue }
+        sender.tintColor = UIColor.red
+        
         if sender.title(for: .normal)! == "HeadersOn" {
             calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"])
         } else {
@@ -41,19 +61,31 @@ class ViewController: UIViewController {
         }
         calendarView.reloadData()
     }
-    
-    @IBAction func dateGeneration(_ sender: UIButton) {
+    @IBAction func outDateGeneration(_ sender: UIButton) {
+        for aButton in outDates { aButton.tintColor = UIColor.blue }
+        sender.tintColor = UIColor.red
+
+        switch sender.title(for: .normal)! {
+        case "PostEOR":
+            generateOutDates = .tillEndOfRow
+        case "PostEOG":
+            generateOutDates = .tillEndOfGrid
+        case "PostOff":
+            generateOutDates = .off
+        default:
+            break
+        }
+        calendarView.reloadData()
+
+    }
+    @IBAction func inDateGeneration(_ sender: UIButton) {
+        for aButton in inDates { aButton.tintColor = UIColor.blue }
+        sender.tintColor = UIColor.red
         switch sender.title(for: .normal)! {
             case "PreOn":
                 generateInDates = true
             case "PreOff":
                 generateInDates = false
-            case "PostEOR":
-                generateOutDates = .tillEndOfRow
-            case "PostEOG":
-                generateOutDates = .tillEndOfGrid
-            case "PostOff":
-                generateOutDates = .off
         default:
             break
         }
@@ -114,11 +146,10 @@ class ViewController: UIViewController {
         calendarView.scrollToDate(date!)
     }
     @IBAction func printSelectedDates() {
-        print("Selected dates --->")
-        calendarView.reloadData()
-//        for date in calendarView.selectedDates {
-//            print(formatter.string(from: date))
-//        }
+        print("\nSelected dates --->")
+        for date in calendarView.selectedDates {
+            print(formatter.string(from: date))
+        }
     }
     @IBAction func next(_ sender: UIButton) {
         self.calendarView.scrollToNextSegment() {

@@ -73,7 +73,7 @@
                                                             <action selector="changeToRow:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bDV-6L-J94"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XpU-sN-wJM">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="owT-zj-Nux">
                                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                         <state key="normal" title="6"/>
                                                         <userDefinedRuntimeAttributes>
@@ -82,64 +82,11 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                         <connections>
-                                                            <action selector="changeToRow:" destination="BYZ-38-t0r" eventType="touchUpInside" id="pg9-Wf-4h5"/>
+                                                            <action selector="changeToRow:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FlW-wz-LnI"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
                                             </stackView>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="xmS-Wb-nhZ">
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="13p-cR-5Oy">
-                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                <state key="normal" title="ScrollToDate"/>
-                                                <connections>
-                                                    <action selector="changeToSixRows:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YTT-Xm-Hgz"/>
-                                                </connections>
-                                            </button>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ddm-aL-9re">
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="100" id="vLv-Qw-vMG"/>
-                                                </constraints>
-                                                <nil key="textColor"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits"/>
-                                            </textField>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="bqq-bF-6n4">
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WaY-fY-0lz">
-                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                <state key="normal" title="SelectDatesFrom"/>
-                                                <connections>
-                                                    <action selector="select11:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2hr-AE-WhN"/>
-                                                </connections>
-                                            </button>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Dq6-SM-k3s">
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="100" id="Oa9-87-I0S"/>
-                                                </constraints>
-                                                <nil key="textColor"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits"/>
-                                            </textField>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tym-7r-3zr">
-                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                <state key="normal" title="To"/>
-                                                <connections>
-                                                    <action selector="select11:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ATs-jm-SeN"/>
-                                                </connections>
-                                            </button>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2bZ-UQ-yK6">
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="100" id="lVn-OU-uYd"/>
-                                                </constraints>
-                                                <nil key="textColor"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits"/>
-                                            </textField>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="iXK-tz-k0E">
@@ -174,7 +121,7 @@
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UmE-fw-ixS">
                                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                <state key="normal" title="Horizontal"/>
+                                                <state key="normal" title="HorizontalCalendar"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
                                                         <integer key="value" value="1"/>
@@ -186,7 +133,7 @@
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pR5-bT-hSw">
                                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                <state key="normal" title="Vertical"/>
+                                                <state key="normal" title="VerticalCalendar"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
                                                         <integer key="value" value="1"/>
@@ -209,7 +156,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="dateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4ZN-df-Bqq"/>
+                                                    <action selector="inDateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9Vl-us-QH4"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pqT-rR-7vp">
@@ -221,7 +168,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="dateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="jc7-0B-vke"/>
+                                                    <action selector="inDateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aBo-kX-z49"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pY3-9l-obO">
@@ -233,7 +180,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="dateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bsn-Jv-uYp"/>
+                                                    <action selector="outDateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mN9-3x-QXB"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UFs-LS-ELE">
@@ -245,7 +192,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="dateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uLD-xk-yrb"/>
+                                                    <action selector="outDateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="T24-Gw-0LP"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lIg-Y1-ODc">
@@ -257,7 +204,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="dateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Aco-Kl-IRN"/>
+                                                    <action selector="outDateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5cw-j5-dio"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -271,11 +218,11 @@
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="250" id="MpW-6y-Eea"/>
+                                    <constraint firstAttribute="height" constant="200" id="MpW-6y-Eea"/>
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="vbP-Kr-0hG">
-                                <frame key="frameInset" minX="16" minY="119" width="343" height="298"/>
+                                <frame key="frameInset" minX="16" minY="119" width="343" height="349"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="1YD-90-lES">
                                         <subviews>
@@ -401,6 +348,19 @@
                     <connections>
                         <outlet property="calendarView" destination="ZTy-ss-Xhd" id="rKc-Y9-j0p"/>
                         <outlet property="monthLabel" destination="cFX-1e-6ck" id="3QP-nf-lUt"/>
+                        <outletCollection property="numbers" destination="ykE-Ba-EbA" collectionClass="NSMutableArray" id="TnT-YI-HgS"/>
+                        <outletCollection property="numbers" destination="cDl-9c-uWn" collectionClass="NSMutableArray" id="BW9-yx-NGw"/>
+                        <outletCollection property="numbers" destination="Pb9-XQ-mrA" collectionClass="NSMutableArray" id="aTe-0K-A4y"/>
+                        <outletCollection property="numbers" destination="owT-zj-Nux" collectionClass="NSMutableArray" id="ZFg-lf-tvu"/>
+                        <outletCollection property="headers" destination="PyG-Eu-ygd" collectionClass="NSMutableArray" id="grK-Ks-UIE"/>
+                        <outletCollection property="headers" destination="WDx-MY-6vR" collectionClass="NSMutableArray" id="5x8-ay-bLn"/>
+                        <outletCollection property="directions" destination="UmE-fw-ixS" collectionClass="NSMutableArray" id="d3b-88-brI"/>
+                        <outletCollection property="directions" destination="pR5-bT-hSw" collectionClass="NSMutableArray" id="uUa-WH-fak"/>
+                        <outletCollection property="outDates" destination="lIg-Y1-ODc" collectionClass="NSMutableArray" id="ni8-52-JLD"/>
+                        <outletCollection property="outDates" destination="UFs-LS-ELE" collectionClass="NSMutableArray" id="8CL-cf-eXS"/>
+                        <outletCollection property="outDates" destination="pY3-9l-obO" collectionClass="NSMutableArray" id="j8F-yr-DnT"/>
+                        <outletCollection property="inDates" destination="pqT-rR-7vp" collectionClass="NSMutableArray" id="eVP-j0-ayt"/>
+                        <outletCollection property="inDates" destination="vdq-Qe-RXg" collectionClass="NSMutableArray" id="pDr-HZ-B96"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
