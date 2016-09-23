@@ -209,7 +209,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="changeDirection:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5iQ-1A-7YN"/>
+                                                    <action selector="dateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4ZN-df-Bqq"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pqT-rR-7vp">
@@ -221,7 +221,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="changeDirection:" destination="BYZ-38-t0r" eventType="touchUpInside" id="G2w-LT-bJo"/>
+                                                    <action selector="dateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="jc7-0B-vke"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pY3-9l-obO">
@@ -233,7 +233,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="changeDirection:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Dxd-I0-od5"/>
+                                                    <action selector="dateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bsn-Jv-uYp"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UFs-LS-ELE">
@@ -245,7 +245,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="changeDirection:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fTo-wd-gug"/>
+                                                    <action selector="dateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uLD-xk-yrb"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lIg-Y1-ODc">
@@ -257,7 +257,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="changeDirection:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xfw-cy-MYo"/>
+                                                    <action selector="dateGeneration:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Aco-Kl-IRN"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -275,7 +275,7 @@
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="vbP-Kr-0hG">
-                                <frame key="frameInset" minX="16" minY="119" width="343" height="249"/>
+                                <frame key="frameInset" minX="16" minY="119" width="343" height="298"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="1YD-90-lES">
                                         <subviews>
@@ -295,9 +295,6 @@
                                         </subviews>
                                     </stackView>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="249" id="Wee-xd-Phb"/>
-                                </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Ik7-d5-Fp7">
                                 <subviews>
@@ -374,6 +371,7 @@
                             <constraint firstItem="sua-xp-Lel" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="QqV-eD-GsA"/>
                             <constraint firstItem="Ik7-d5-Fp7" firstAttribute="top" secondItem="cFX-1e-6ck" secondAttribute="bottom" constant="1.5" id="R2g-Od-0Bh"/>
                             <constraint firstItem="iQI-Hq-aUc" firstAttribute="top" secondItem="vbP-Kr-0hG" secondAttribute="bottom" constant="75" id="SnB-SU-fZX"/>
+                            <constraint firstItem="iQI-Hq-aUc" firstAttribute="top" secondItem="vbP-Kr-0hG" secondAttribute="bottom" id="Wni-SM-c28"/>
                             <constraint firstAttribute="trailingMargin" secondItem="cFX-1e-6ck" secondAttribute="trailing" id="cP1-5y-E8C"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="iQI-Hq-aUc" secondAttribute="bottom" id="d4a-NY-edR"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Ik7-d5-Fp7" secondAttribute="trailing" id="ilm-o0-e6c"/>
@@ -390,10 +388,10 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="SnB-SU-fZX"/>
-                                <exclude reference="mfW-T7-VVk"/>
                                 <exclude reference="sY6-Sc-fJp"/>
                                 <exclude reference="t2y-ba-MSk"/>
+                                <exclude reference="SnB-SU-fZX"/>
+                                <exclude reference="mfW-T7-VVk"/>
                                 <exclude reference="AMa-yL-cwK"/>
                                 <exclude reference="jXl-ia-jmV"/>
                             </mask>

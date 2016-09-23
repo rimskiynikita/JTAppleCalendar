@@ -14,6 +14,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var monthLabel: UILabel!
     let formatter = DateFormatter()
     var testCalendar: Calendar! = Calendar(identifier: Calendar.Identifier.gregorian)
+    var generateInDates = true
+    var generateOutDates: OutDateCellGeneration = .tillEndOfGrid
+    let firstDayOfWeek: DaysOfWeek = .sunday
     
     @IBAction func changeToRow(_ sender: UIButton) {
         numberOfRows = Int(sender.title(for: .normal)!)!
@@ -36,6 +39,25 @@ class ViewController: UIViewController {
         } else {
             calendarView.unregisterHeaders()
         }
+        calendarView.reloadData()
+    }
+    
+    @IBAction func dateGeneration(_ sender: UIButton) {
+        switch sender.title(for: .normal)! {
+            case "PreOn":
+                generateInDates = true
+            case "PreOff":
+                generateInDates = false
+            case "PostEOR":
+                generateOutDates = .tillEndOfRow
+            case "PostEOG":
+                generateOutDates = .tillEndOfGrid
+            case "PostOff":
+                generateOutDates = .off
+        default:
+            break
+        }
+        
         calendarView.reloadData()
     }
     override func viewDidLoad() {
@@ -124,37 +146,18 @@ class ViewController: UIViewController {
 extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDelegate {
     func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters {
         let startDate = formatter.date(from: "2016 02 01")!
-        let endDate = formatter.date(from: "2020 03 01")!
+        let endDate = formatter.date(from: "2016 03 01")!
         let calendar = Calendar.current
         
-//        let parameters =  ConfigurationParameters(startDate: startDate,
-//                                endDate: endDate,
-//                                numberOfRows: numberOfRows,
-//                                calendar: calendar,
-//                                generateInDates: true,
-//                                generateOutDates: .tillEndOfGrid,
-//                                firstDayOfWeek: .monday)
+
         let parameters = ConfigurationParameters(startDate: startDate,
                                                  endDate: endDate,
                                                  numberOfRows: numberOfRows,
                                                  calendar: calendar,
-                                                 generateInDates: true,
-                                                 generateOutDates: .tillEndOfGrid,
-                                                 firstDayOfWeek: .sunday)
+                                                 generateInDates: generateInDates,
+                                                 generateOutDates: generateOutDates,
+                                                 firstDayOfWeek: firstDayOfWeek)
         return parameters
-        
-        
-        
-//        (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar, generateInDates: Bool, generateOutDates: OutDateCellGeneration) {
-        
-        
-        
-//        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .tillEndOfGrid)
-//        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfGrid)
-//                return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .tillEndOfRow)
-//                return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: false, generateOutDates: .off)
-//        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .off)
-//        return (startDate: firstDate!, endDate: secondDate, numberOfRows: numberOfRows, calendar: aCalendar, generateInDates: true, generateOutDates: .tillEndOfRow)
     }
     func calendar(_ calendar: JTAppleCalendarView, willDisplayCell cell: JTAppleDayCellView, date: Date, cellState: CellState) {
         (cell as? CellView)?.setupCellBeforeDisplay(cellState, date: date)
