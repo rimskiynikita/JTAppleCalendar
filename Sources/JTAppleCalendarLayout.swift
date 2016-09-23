@@ -62,6 +62,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
         }
         var section = 0
         var rowNumber = 0
+        var totalDayCounter = 0
         for aMonth in monthData {
             for numberOfDaysInCurrentSection in aMonth.sections {
                 // Generate and cache the headers
@@ -82,10 +83,15 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                         cellCache[section]!.append(attribute)
                         lastWrittenCellAttribute = attribute
                         xCellOffset += attribute.frame.width
-                        print(attribute.indexPath)
-                        print("\(attribute.frame) \n")
-                        
-                        if weAreAtTheEndOfRow {
+                        totalDayCounter += 1
+//                        print(attribute.indexPath)
+//                        print("\(attribute.frame) \n")
+//                        
+//                        print("\(delegate.totalDays) == \(totalDayCounter)")
+
+                        if totalDayCounter >= delegate.totalDays { // If we are at the last item and we are also ona partial (because we were not at end of row)
+                            contentWidth += lastWrittenCellAttribute!.frame.width * 7
+                        } else if weAreAtTheEndOfRow {
                             xCellOffset = 0
 
                             if rowNumber + 1 == numberOfRows { // If we are at the end of a virtual section
@@ -98,21 +104,6 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                                 yCellOffset += attribute.frame.height
                                 rowNumber += 1
                             }
-                            
-                            
-//                            if (rowNumber + 1) % numberOfRows * maxNumberOfDaysInWeek == 0 { // If we are on the last item in this section, then reset, and increase stride
-//                                yCellOffset = 0
-//                                stride = contentWidth
-//                                contentWidth += lastWrittenCellAttribute!.frame.width * 7
-//                            } else if let lastWrittenCellAttribute = self.lastWrittenCellAttribute, // If we are at the bottom of the screen
-//                                abs(lastWrittenCellAttribute.frame.origin.y + lastWrittenCellAttribute.frame.height - collectionView!.frame.height) < errorDelta {
-//                                stride += contentWidth
-//                                contentWidth += lastWrittenCellAttribute.frame.width * 7
-//                                yCellOffset = 0
-//                            } else {
-//                                yCellOffset += attribute.frame.height
-//                            }
-                            
                         }
                         
                     }
