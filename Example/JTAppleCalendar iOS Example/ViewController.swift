@@ -18,6 +18,8 @@ class ViewController: UIViewController {
     @IBOutlet var outDates: [UIButton]!
     @IBOutlet var inDates: [UIButton]!
     @IBOutlet var scrollDate: UITextField!
+    @IBOutlet var selectFrom: UITextField!
+    @IBOutlet var selectTo: UITextField!
 
     var numberOfRows = 6
     let formatter = DateFormatter()
@@ -142,8 +144,10 @@ class ViewController: UIViewController {
 //        numberOfRows = 1
 //        calendarView.reloadData()
 //        calendarView.allowsMultipleSelection = false
-        let date = formatter.date(from: "2016 02 11")
-        self.calendarView.selectDates([date!, Date()], triggerSelectionDelegate: false)
+        let fromDate = formatter.date(from: selectFrom.text!)!
+        let toDate = formatter.date(from: selectTo.text!)!
+        
+        self.calendarView.selectDates(from: fromDate, to: toDate)
     }
     @IBAction func scrollToDate(_ sender: AnyObject?) {
         let text = scrollDate.text!

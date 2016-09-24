@@ -247,7 +247,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="scrollToDate:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Xg6-pV-iJg"/>
+                                                    <action selector="selectDate:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FIK-YW-nUa"/>
                                                 </connections>
                                             </button>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="2016 02 01" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CdC-g2-fD4">
@@ -263,7 +263,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="2016 02 01" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Zoo-GT-zxO">
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="2016 03 22" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Zoo-GT-zxO">
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="93" id="eST-Kx-Ts1"/>
                                                 </constraints>
@@ -391,10 +391,10 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="sY6-Sc-fJp"/>
-                                <exclude reference="t2y-ba-MSk"/>
                                 <exclude reference="SnB-SU-fZX"/>
                                 <exclude reference="mfW-T7-VVk"/>
+                                <exclude reference="sY6-Sc-fJp"/>
+                                <exclude reference="t2y-ba-MSk"/>
                                 <exclude reference="AMa-yL-cwK"/>
                                 <exclude reference="jXl-ia-jmV"/>
                             </mask>
@@ -405,6 +405,8 @@
                         <outlet property="calendarView" destination="ZTy-ss-Xhd" id="rKc-Y9-j0p"/>
                         <outlet property="monthLabel" destination="cFX-1e-6ck" id="3QP-nf-lUt"/>
                         <outlet property="scrollDate" destination="akC-rU-bus" id="5OQ-Po-G3x"/>
+                        <outlet property="selectFrom" destination="CdC-g2-fD4" id="oem-vO-OCu"/>
+                        <outlet property="selectTo" destination="Zoo-GT-zxO" id="Xbc-JM-LCO"/>
                         <outletCollection property="headers" destination="PyG-Eu-ygd" collectionClass="NSMutableArray" id="grK-Ks-UIE"/>
                         <outletCollection property="headers" destination="WDx-MY-6vR" collectionClass="NSMutableArray" id="5x8-ay-bLn"/>
                         <outletCollection property="directions" destination="UmE-fw-ixS" collectionClass="NSMutableArray" id="d3b-88-brI"/>
