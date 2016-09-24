@@ -127,26 +127,14 @@ class ViewController: UIViewController {
         // or changing the start day of week from sunday etc etc.
 
         // After reloading. Scroll to your selected date, and setup your calendar
-        
-//        calendarView.scrollToDate(scrollDate, triggerScrollToDateDelegate: false, animateScroll: false)
-//            let currentDate = self.calendarView.currentCalendarDateSegment()
-//            self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end, month: currentDate.month)
-        
-        calendarView.selectDates([formatter.date(from: "2016 03 22")!])
-        calendarView.selectDates([formatter.date(from: "2016 03 23")!])
-        
-        calendarView.reloadData(withAnchor: formatter.date(from: "2016 03 22")!, animation: true) {
+        calendarView.reloadData {
             let currentDate = self.calendarView.currentCalendarDateSegment()
             self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end, month: currentDate.month)
         }
     }
     @IBAction func selectDate(_ sender: AnyObject?) {
-//        numberOfRows = 1
-//        calendarView.reloadData()
-//        calendarView.allowsMultipleSelection = false
         let fromDate = formatter.date(from: selectFrom.text!)!
         let toDate = formatter.date(from: selectTo.text!)!
-        
         self.calendarView.selectDates(from: fromDate, to: toDate)
     }
     @IBAction func scrollToDate(_ sender: AnyObject?) {
