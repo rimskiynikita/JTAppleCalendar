@@ -121,7 +121,12 @@ open class JTAppleCalendarView: UIView {
         }
     }
     /// Configures the size of your date cells
-    open var itemSize: CGFloat?
+    open var itemSize: CGFloat? {
+        didSet {
+            updateLayoutItemSize()
+            layoutNeedsUpdating = true
+        }
+    }
     /// Enables and disables animations when scrolling to and from date-cells
     open var animationsEnabled = true
     /// The scroll direction of the sections in JTAppleCalendar.
@@ -129,6 +134,7 @@ open class JTAppleCalendarView: UIView {
         didSet {
             if oldValue == direction { return }
             calendarViewLayout.scrollDirection = direction
+            updateLayoutItemSize()
             layoutNeedsUpdating = true
         }
     }
@@ -175,11 +181,9 @@ open class JTAppleCalendarView: UIView {
     /// The frame rectangle which defines the view's location and size in its superview coordinate system.
     override open var frame: CGRect {
         didSet {
-            
             calendarView.frame = self.frame
             if calendarView.frame != lastFrame || delegate == nil {
-                invalidateLayout()
-                updateLayoutItemSize(calendarViewLayout)
+                updateLayoutItemSize()
                 lastFrame = calendarView.frame
                 if delegate != nil {
                     var anInitialCompletionHandler: (()->Void)?
@@ -317,8 +321,15 @@ open class JTAppleCalendarView: UIView {
         #endif
         return cv
     }()
-    fileprivate func updateLayoutItemSize (_ layout: JTAppleCalendarLayoutProtocol) {
-        if dataSource == nil { return } // If the delegate is not set yet, then return
+    fileprivate func updateLayoutItemSize () {
+        if dataSource == nil { return } // If the delegate is not set yet, then return, becaus edelegate methods will be called on the layout
+        let layout = calendarViewLayout
+        
+        // Invalidate the layout
+        layout.invalidateLayout()
+        layout.clearCache()
+        layoutNeedsUpdating = true
+        
         // Default Item height
         var height: CGFloat = (self.calendarView.bounds.size.height - layout.headerReferenceSize.height) / CGFloat(cachedConfiguration.numberOfRows)
         // Default Item width
@@ -329,12 +340,6 @@ open class JTAppleCalendarView: UIView {
             if direction == .horizontal { width = userSetItemSize }
         }
         layout.itemSize = CGSize(width: width, height: height)
-    }
-    func invalidateLayout() {
-        let layout = calendarViewLayout
-        layout.invalidateLayout()
-        layout.clearCache()
-        layoutNeedsUpdating = true
     }
     /// Initializes and returns a newly allocated view object with the specified frame rectangle.
     public override init(frame: CGRect) {

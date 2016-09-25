@@ -29,6 +29,7 @@ class ViewController: UIViewController {
     let firstDayOfWeek: DaysOfWeek = .sunday
     let disabledColor = UIColor.lightGray
     let enabledColor = UIColor.blue
+    let dateCellSize: CGFloat? = nil
     
     @IBAction func changeToRow(_ sender: UIButton) {
         numberOfRows = Int(sender.title(for: .normal)!)!
@@ -44,7 +45,7 @@ class ViewController: UIViewController {
         
         if sender.title(for: .normal)! == "HorizontalCalendar" {
             calendarView.direction = .horizontal
-            calendarView.itemSize = nil
+            calendarView.itemSize = dateCellSize
         } else {
             calendarView.direction = .vertical
             calendarView.itemSize = 35
@@ -116,7 +117,7 @@ class ViewController: UIViewController {
         //_____________________________________________________________________________________________
 //        calendarView.direction = .vertical                                 // default is horizontal
         calendarView.cellInset = CGPoint(x: 0, y: 0)                         // default is (3,3)
-        calendarView.itemSize = 30
+        calendarView.itemSize = dateCellSize
         calendarView.allowsMultipleSelection = true                         // default is false
         calendarView.scrollEnabled = true                                    // default is true
         calendarView.scrollingMode = .stopAtEachCalendarFrameWidth
