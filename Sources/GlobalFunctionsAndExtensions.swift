@@ -17,9 +17,9 @@ func delayRunOnGlobalThread(_ delay: Double, qos: DispatchQoS.QoSClass, closure:
 }
 
 /// NSDates can be compared with the == and != operators
-public func == (lhs: Date, rhs: Date) -> Bool {
-    return lhs.compare(rhs) == .orderedSame
-}
+//public func == (lhs: Date, rhs: Date) -> Bool {
+//    return lhs.compare(rhs) == .orderedSame
+//}
 
 extension Date {
     static func startOfMonth(for date: Date, using calendar: Calendar) -> Date? {

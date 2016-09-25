@@ -53,13 +53,16 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
         return headerView
     }
     public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard
-            let theCell = cell as? JTAppleDayCell,
-            let cellView = theCell.view else {
-            developerError(string: "Cell view was nil")
+        guard #available(iOS 10, *) else {
+            guard
+                let theCell = cell as? JTAppleDayCell,
+                let cellView = theCell.view else {
+                    developerError(string: "Cell view was nil")
+                    return
+            }
+            self.delegate?.calendar(self, willResetCell: cellView)   
             return
         }
-        self.delegate?.calendar(self, willResetCell: cellView)
     }
     /// Asks your data source object for the cell that corresponds to the specified item in the collection view.
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
