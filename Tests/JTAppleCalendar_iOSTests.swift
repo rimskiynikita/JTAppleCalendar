@@ -11,8 +11,8 @@ import XCTest
 
 class JTAppleCalendar_iOSTests: XCTestCase, JTAppleCalendarViewDataSource {
     let calendarView = JTAppleCalendarView()
-    let formatter = NSDateFormatter()
-    let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
+    let formatter = DateFormatter()
+    let calendar = Calendar(calendarIdentifier: NSCalendarIdentifierGregorian)
     var numberOfRows = 6
     var firstDate = "2016 01 01"
     var secondDate = "2017 12 01"
@@ -107,10 +107,10 @@ class JTAppleCalendar_iOSTests: XCTestCase, JTAppleCalendarViewDataSource {
 ////        }
 //    }
     
-    func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: NSDate, endDate: NSDate, numberOfRows: Int, calendar: NSCalendar) {
+    func configureCalendar(calendar: JTAppleCalendarView) -> (startDate: Date, endDate: Date, numberOfRows: Int, calendar: Calendar) {
         let aFirstDate = formatter.dateFromString(firstDate)
         let aSecondDate = formatter.dateFromString(secondDate)
-        let aCalendar = NSCalendar.currentCalendar() // Properly configure your calendar to your time zone here
+        let aCalendar = Calendar.currentCalendar() // Properly configure your calendar to your time zone here
         return (startDate: aFirstDate!, endDate: aSecondDate!, numberOfRows: numberOfRows, calendar: aCalendar)
     }
     

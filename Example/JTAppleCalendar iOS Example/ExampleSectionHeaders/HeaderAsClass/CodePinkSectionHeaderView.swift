@@ -9,22 +9,16 @@
 import JTAppleCalendar
 
 class CodePinkSectionHeaderView: JTAppleHeaderView {
-    
-     // Only override drawRect: if you perform custom drawing.
-     // An empty implementation adversely affects performance during animation.
-     override func drawRect(rect: CGRect) {
-        let context = UIGraphicsGetCurrentContext();
-        
-        CGContextSetRGBFillColor(context, 1.0, 0.5, 0.0, 1.0);
-        let r1 = CGRectMake(0 , 0, 25, 25);         // Size
-        CGContextAddRect(context,r1);
-        CGContextFillPath(context);
-        
-        CGContextSetRGBStrokeColor(context, 1.0, 1.0, 0.5, 1.0);
-        CGContextAddEllipseInRect(context, CGRectMake(0 , 0, 25, 25));
-        CGContextStrokePath(context);
-     }
-    
-   
-
+    // Only override drawRect: if you perform custom drawing.
+    // An empty implementation adversely affects performance during animation.
+    override func draw(_ rect: CGRect) {
+        let context = UIGraphicsGetCurrentContext()!
+        context.setFillColor(red: 1.0, green: 0.5, blue: 0.0, alpha: 1.0)
+        let r1 = CGRect(x: 0, y: 0, width: 25, height: 25)
+        context.addRect(r1)
+        context.fillPath()
+        context.setStrokeColor(red: 1.0, green: 1.0, blue: 0.5, alpha: 1.0)
+        context.addEllipse(in: CGRect(x: 0, y: 0, width: 25, height: 25))
+        context.strokePath()
+    }
 }
