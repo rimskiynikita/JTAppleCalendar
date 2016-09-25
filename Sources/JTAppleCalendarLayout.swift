@@ -286,29 +286,12 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                 size.width = self.itemSize.width
             } else {
                 size.width = itemSize
-
                 var headerSize =  CGSize.zero
                 if thereAreHeaders {
                     headerSize = cachedHeaderSizeForSection(indexPath.section)
                 }
-                let totalNumberOfRows = monthData[monthMap[indexPath.section]!].rows
-                let monthSection = monthData[monthMap[indexPath.section]!].sectionIndexMaps[indexPath.section]!
-                let numberOfSections = CGFloat(totalNumberOfRows) / CGFloat(numberOfRows)
-                let fullSections =  Int(numberOfSections)
-                let numberOfRowsForSection: Int
-                if scrollDirection == .horizontal {
-                    numberOfRowsForSection = maxNumberOfRowsPerMonth
-                } else if monthSection + 1 <= fullSections {
-                    numberOfRowsForSection = numberOfRows
-                } else {
-                    numberOfRowsForSection = totalNumberOfRows - (monthSection * numberOfRows)
-                }
-                
-                size.height = (collectionView!.frame.height - headerSize.height) / CGFloat(numberOfRowsForSection)
+                size.height = (collectionView!.frame.height - headerSize.height) / CGFloat(maxNumberOfRowsPerMonth)
                 currentCell = (section: indexPath.section, itemSize: size)
-
-                
-                
             }
         } else {
         // Get header size if it alrady cached
@@ -324,10 +307,12 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
             let numberOfRowsForSection: Int
             if scrollDirection == .horizontal {
                 numberOfRowsForSection = maxNumberOfRowsPerMonth
-            } else if monthSection + 1 <= fullSections {
-                numberOfRowsForSection = numberOfRows
             } else {
-                numberOfRowsForSection = totalNumberOfRows - (monthSection * numberOfRows)
+                if monthSection + 1 <= fullSections {
+                    numberOfRowsForSection = numberOfRows
+                } else {
+                    numberOfRowsForSection = totalNumberOfRows - (monthSection * numberOfRows)
+                }
             }
             size        = CGSize(width: currentItemSize.width, height: (collectionView!.frame.height - headerSize.height) / CGFloat(numberOfRowsForSection))
             currentCell = (section: indexPath.section, itemSize: size)

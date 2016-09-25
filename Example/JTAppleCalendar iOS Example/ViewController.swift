@@ -116,7 +116,7 @@ class ViewController: UIViewController {
         //_____________________________________________________________________________________________
 //        calendarView.direction = .vertical                                 // default is horizontal
         calendarView.cellInset = CGPoint(x: 0, y: 0)                         // default is (3,3)
-//        calendarView.itemSize = 30
+        calendarView.itemSize = 30
         calendarView.allowsMultipleSelection = true                         // default is false
         calendarView.scrollEnabled = true                                    // default is true
         calendarView.scrollingMode = .stopAtEachCalendarFrameWidth
@@ -197,6 +197,7 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
         (cell as? CellView)?.cellSelectionChanged(cellState)
 //        printSelectedDates()
     }
+    // NOTICE: this function is not needed for iOS 10. It wil not be called
     func calendar(_ calendar: JTAppleCalendarView, willResetCell cell: JTAppleDayCellView) {
         (cell as? CellView)?.selectedView.isHidden = true
     }
