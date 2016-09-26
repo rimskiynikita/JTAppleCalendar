@@ -73,7 +73,7 @@ The following structure was returned when a cell is about to be displayed.
     public func selectDates(from startDate:NSDate, to endDate:NSDate)
     public func cellStatusForDate(date: NSDate)-> CellState?
     public func cellStatusForDateAtRow(row: Int, column: Int) -> CellState?
-    public func currentCalendarDateSegment() -> (startDate: NSDate, endDate: NSDate)
+    public func dateSegment() -> (startDate: NSDate, endDate: NSDate)
     public func scrollToHeaderForDate(date: NSDate)
 ```
 

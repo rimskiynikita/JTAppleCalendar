@@ -99,39 +99,28 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         formatter.dateFormat = "yyyy MM dd"
         testCalendar.timeZone = TimeZone(abbreviation: "GMT")!
+        
         // Setting up your dataSource and delegate is manditory
         //_____________________________________________________________________________________________
         calendarView.delegate = self
         calendarView.dataSource = self
+        
+        
         //_____________________________________________________________________________________________
         // Registering your cells is manditory
         //_____________________________________________________________________________________________
         calendarView.registerCellViewXib(file: "CellView")
-        // You also can register by class
-//         calendarView.registerCellViewClass(fileName: "JTAppleCalendar_Example.CodeCellView")
-        //_____________________________________________________________________________________________
-        // Enable/disable the following code line to show/hide headers.
-        calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"]) // headers are Optional. You can register multiple if you want.
-        // The following default code can be removed since they are already the default.
-        // They are only included here so that you can know what properties can be configured
-        //_____________________________________________________________________________________________
-//        calendarView.direction = .vertical                                 // default is horizontal
-        calendarView.cellInset = CGPoint(x: 0, y: 0)                         // default is (3,3)
+        calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"])
+        
+        calendarView.cellInset = CGPoint(x: 0, y: 0)
         calendarView.itemSize = dateCellSize
-        calendarView.allowsMultipleSelection = true                         // default is false
-        calendarView.scrollEnabled = true                                    // default is true
-        calendarView.scrollingMode = .stopAtEachCalendarFrameWidth
-        calendarView.rangeSelectionWillBeUsed = false                        // default is false
-    
-        //_____________________________________________________________________________________________
-        // Reloading the data on viewDidLoad() is only necessary if you made LAYOUT changes eg. number of row per month change
-        // or changing the start day of week from sunday etc etc.
+        calendarView.allowsMultipleSelection = true
 
-        // After reloading. Scroll to your selected date, and setup your calendar
-        calendarView.reloadData {
-            let currentDate = self.calendarView.currentCalendarDateSegment()
-            self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end, month: currentDate.month)
-        }
+        calendarView.scrollingMode = .nonStopToCell(withResistance: 0.75)
+    
+        let currentDate = self.calendarView.dateSegment()
+        self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end, month: currentDate.month)
+    
     }
     @IBAction func selectDate(_ sender: AnyObject?) {
         let fromDate = formatter.date(from: selectFrom.text!)!
@@ -151,13 +140,13 @@ class ViewController: UIViewController {
     }
     @IBAction func next(_ sender: UIButton) {
         self.calendarView.scrollToNextSegment() {
-            let currentSegmentDates = self.calendarView.currentCalendarDateSegment()
+            let currentSegmentDates = self.calendarView.dateSegment()
             self.setupViewsOfCalendar(currentSegmentDates.dateRange.start, endDate: currentSegmentDates.dateRange.end, month: currentSegmentDates.month)
         }
     }
     @IBAction func previous(_ sender: UIButton) {
         self.calendarView.scrollToPreviousSegment() {
-            let currentSegmentDates = self.calendarView.currentCalendarDateSegment()
+            let currentSegmentDates = self.calendarView.dateSegment()
             self.setupViewsOfCalendar(currentSegmentDates.dateRange.start, endDate: currentSegmentDates.dateRange.end, month: currentSegmentDates.month)
         }
     }

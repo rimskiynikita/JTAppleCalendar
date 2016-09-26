@@ -155,7 +155,6 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
     /// The collection view calls this method when the user successfully selects an item in the collection view.
     /// It does not call this method when you programmatically set the selection.
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(indexPath)
         // index paths to be reloaded should be index to the left and right of the selected index
         let indexPathsToBeReloaded = rangeSelectionWillBeUsed ? validForwardAndBackwordSelectedIndexes(forIndexPath: indexPath) : [IndexPath]()
         internalCollectionView(collectionView, didSelectItemAtIndexPath: indexPath, indexPathsToReload: indexPathsToBeReloaded)
@@ -182,6 +181,9 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
                 }
             }
             delegate.calendar(self, didSelectDate: infoOfDateSelectedByUser.date, cell: selectedCell?.view, cellState: cellState)
+            
+            
+            print("columns: \(cellStateFromIndexPath(indexPath).column()) row: \(cellStateFromIndexPath(indexPath).row())")
         }
     }
 }
@@ -364,7 +366,7 @@ extension JTAppleCalendarView: UIScrollViewDelegate {
     }
     /// Tells the delegate that the scroll view has ended decelerating the scrolling movement.
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let currentSegmentDates = currentCalendarDateSegment()
+        let currentSegmentDates = dateSegment()
         self.delegate?.calendar(self,
                                 didScrollToDateSegmentFor: (start: currentSegmentDates.dateRange.start, end: currentSegmentDates.dateRange.end),
                                 belongingTo: currentSegmentDates.month)

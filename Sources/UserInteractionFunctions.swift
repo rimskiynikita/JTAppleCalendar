@@ -38,10 +38,11 @@ extension JTAppleCalendarView {
     /// - returns:
     ///     - startDate: The start date of the current section
     ///     - endDate: The end date of the current section
-    public func currentCalendarDateSegment() -> (dateRange:(start: Date, end: Date), month: Int) {
-        guard let dateSegment = dateFromSection(currentSectionPage) else {
-            assert(false, "Error in currentCalendarDateSegment method. Report this issue to Jay on github.")
-            return ((Date(), Date()), 0)
+    public func dateSegment() -> (dateRange:(start: Date, end: Date), month: Int) {
+        guard
+            dataSource != nil, let dateSegment = dateFromSection(currentSectionPage) else {
+            if dataSource == nil { print("Error: DataSource not yet set") }
+            return (dateRange:(start: Date(), end: Date()), month: 0)
         }
         return dateSegment
     }
@@ -129,6 +130,10 @@ extension JTAppleCalendarView {
         selectDates(generateDateRange(from: startDate, to: endDate),
                     triggerSelectionDelegate: triggerSelectionDelegate,
                     keepSelectionIfMultiSelectionAllowed: keepSelectionIfMultiSelectionAllowed)
+    }
+    
+    public func deselectAllDates(triggerSelectionDelegate: Bool = true) {
+        selectDates(selectedDates, triggerSelectionDelegate: triggerSelectionDelegate)
     }
     /// Select a date-cells
     /// - Parameter date: The date-cell with this date will be selected
