@@ -24,7 +24,7 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
             case let .fromType(classType): reuseIdentifier = classType.description()
             }
         } else {
-            reuseIdentifier = delegate!.calendar(self, sectionHeaderIdentifierFor: validDate.dateRange, belongingTo: validDate.month)
+            reuseIdentifier = delegate!.calendar(self, sectionHeaderIdentifierFor: validDate.range, belongingTo: validDate.month)
             for item in registeredHeaderViews {
                 switch item {
                 case let .fromXib(xibName) where xibName == reuseIdentifier:
@@ -49,7 +49,7 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
         }
         headerView.setupView(source)
         headerView.update()
-        self.delegate?.calendar(self, willDisplaySectionHeader: headerView.view!, dateRange: validDate.dateRange, identifier: reuseIdentifier)
+        self.delegate?.calendar(self, willDisplaySectionHeader: headerView.view!, range: validDate.range, identifier: reuseIdentifier)
         return headerView
     }
     public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -368,7 +368,7 @@ extension JTAppleCalendarView: UIScrollViewDelegate {
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let currentSegmentDates = dateSegment()
         self.delegate?.calendar(self,
-                                didScrollToDateSegmentFor: (start: currentSegmentDates.dateRange.start, end: currentSegmentDates.dateRange.end),
+                                didScrollToDateSegmentFor: (start: currentSegmentDates.range.start, end: currentSegmentDates.range.end),
                                 belongingTo: currentSegmentDates.month)
     }
 }

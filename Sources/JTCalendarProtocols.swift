@@ -62,12 +62,12 @@ public extension JTAppleCalendarViewDelegate {
     func calendar(_ calendar: JTAppleCalendarView, canDeselectDate date: Date, cell: JTAppleDayCellView, cellState: CellState) -> Bool {return true}
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {}
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {}
-    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor dateRange: (start: Date, end: Date), belongingTo month: Int) {}
+    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor range: (start: Date, end: Date), belongingTo month: Int) {}
     func calendar(_ calendar: JTAppleCalendarView, willDisplayCell cell: JTAppleDayCellView, date: Date, cellState: CellState) {}
     func calendar(_ calendar: JTAppleCalendarView, willResetCell cell: JTAppleDayCellView) {}
-    func calendar(_ calendar: JTAppleCalendarView, willDisplaySectionHeader header: JTAppleHeaderView, dateRange: (start: Date, end: Date), identifier: String) {}
-    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderIdentifierFor dateRange: (start: Date, end: Date), belongingTo month: Int) -> String {return ""}
-    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderSizeFor dateRange:(start: Date, end: Date), belongingTo month: Int) -> CGSize {return CGSize.zero}
+    func calendar(_ calendar: JTAppleCalendarView, willDisplaySectionHeader header: JTAppleHeaderView, range: (start: Date, end: Date), identifier: String) {}
+    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderIdentifierFor range: (start: Date, end: Date), belongingTo month: Int) -> String {return ""}
+    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderSizeFor range: (start: Date, end: Date), belongingTo month: Int) -> CGSize {return CGSize.zero}
 }
 
 /// The JTAppleCalendarViewDataSource protocol is adopted by an object that mediates the application’s data model for a JTAppleCalendarViewDataSource object.
@@ -123,7 +123,7 @@ public protocol JTAppleCalendarViewDelegate: class {
     ///     - calendar: The JTAppleCalendar view giving this information.
     ///     - startDate: The date at the start of the segment.
     ///     - endDate: The date at the end of the segment.
-    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor dateRange: (start: Date, end: Date), belongingTo month: Int)
+    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor range: (start: Date, end: Date), belongingTo month: Int)
     /// Tells the delegate that the JTAppleCalendar is about to display a date-cell. This is the point of customization for your date cells
     /// - Parameters:
     ///     - calendar: The JTAppleCalendar view giving this information.
@@ -140,20 +140,20 @@ public protocol JTAppleCalendarViewDelegate: class {
     ///     - date: Contains the startDate and endDate for the header that is about to be displayed
     /// - Returns:
     ///   String: Provide the registered header you wish to show for this date
-    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderIdentifierFor dateRange: (start: Date, end: Date), belongingTo month: Int) -> String
+    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderIdentifierFor range: (start: Date, end: Date), belongingTo month: Int) -> String
     /// Implement this function to use headers in your project. Return the size for the header you wish to present
     /// - Parameters:
     ///     - date: Contains the startDate and endDate for the header that is about to be displayed
     /// - Returns:
     ///   CGSize: Provide the size for the header you wish to show for this date
-    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderSizeFor dateRange: (start: Date, end: Date), belongingTo month: Int) -> CGSize
+    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderSizeFor range: (start: Date, end: Date), belongingTo month: Int) -> CGSize
     /// Tells the delegate that the JTAppleCalendar is about to display a header. This is the point of customization for your headers
     /// - Parameters:
     ///     - calendar: The JTAppleCalendar view giving this information.
     ///     - header: The header view that is about to be displayed.
     ///     - date: The date attached to the header.
     ///     - identifier: The identifier you provided for the header
-    func calendar(_ calendar: JTAppleCalendarView, willDisplaySectionHeader header: JTAppleHeaderView, dateRange: (start: Date, end: Date), identifier: String)
+    func calendar(_ calendar: JTAppleCalendarView, willDisplaySectionHeader header: JTAppleHeaderView, range: (start: Date, end: Date), identifier: String)
 }
 
 protocol JTAppleCalendarLayoutProtocol: class {

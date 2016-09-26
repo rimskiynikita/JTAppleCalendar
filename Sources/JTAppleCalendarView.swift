@@ -69,7 +69,7 @@ public struct CellState {
     /// returns the column in which the date cell appears visually
     public let column: () -> Int
     /// returns the section the date cell belongs to
-    public let dateSection: ()->(dateRange:(start: Date, end: Date), month: Int)
+    public let dateSection: ()->(range: (start: Date, end: Date), month: Int)
     /// returns the position of a selection in the event you wish to do range selection
     public let selectedPosition: () -> SelectionRangePosition
     /// returns the cell frame. Useful if you wish to display something at the cell's frame/position
@@ -573,7 +573,7 @@ open class JTAppleCalendarView: UIView {
         if registeredHeaderViews.count > 0 {
             if let
                 validDate = dateFromSection(section),
-                let size = delegate?.calendar(self, sectionHeaderSizeFor: validDate.dateRange, belongingTo: validDate.month) {retval = size }
+                let size = delegate?.calendar(self, sectionHeaderSizeFor: validDate.range, belongingTo: validDate.month) {retval = size }
         }
         return retval
     }
@@ -723,7 +723,7 @@ extension JTAppleCalendarView {
                                  day: .sunday,
                                  row: {return 0},
                                  column: {return 0},
-                                 dateSection: {return (dateRange: (Date(), Date()), month: 0)},
+                                 dateSection: {return (range: (Date(), Date()), month: 0)},
                                  selectedPosition: {return .left},
                                  cell: {return nil})
             }
@@ -810,7 +810,7 @@ extension JTAppleCalendarView {
         }
         return nil
     }
-    func dateFromSection(_ section: Int) -> (dateRange:(start: Date, end: Date), month: Int)? {
+    func dateFromSection(_ section: Int) -> (range: (start: Date, end: Date), month: Int)? {
         let monthIndex = monthMap[section]!
         let monthData = monthInfo[monthIndex]
         let startIndex = monthData.preDates

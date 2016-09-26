@@ -119,7 +119,7 @@ class ViewController: UIViewController {
         calendarView.scrollingMode = .nonStopToCell(withResistance: 0.75)
     
         let currentDate = self.calendarView.dateSegment()
-        self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end, month: currentDate.month)
+        self.setupViewsOfCalendar(currentDate.range.start, endDate: currentDate.range.end, month: currentDate.month)
     
     }
     @IBAction func selectDate(_ sender: AnyObject?) {
@@ -141,13 +141,13 @@ class ViewController: UIViewController {
     @IBAction func next(_ sender: UIButton) {
         self.calendarView.scrollToNextSegment() {
             let currentSegmentDates = self.calendarView.dateSegment()
-            self.setupViewsOfCalendar(currentSegmentDates.dateRange.start, endDate: currentSegmentDates.dateRange.end, month: currentSegmentDates.month)
+            self.setupViewsOfCalendar(currentSegmentDates.range.start, endDate: currentSegmentDates.range.end, month: currentSegmentDates.month)
         }
     }
     @IBAction func previous(_ sender: UIButton) {
         self.calendarView.scrollToPreviousSegment() {
             let currentSegmentDates = self.calendarView.dateSegment()
-            self.setupViewsOfCalendar(currentSegmentDates.dateRange.start, endDate: currentSegmentDates.dateRange.end, month: currentSegmentDates.month)
+            self.setupViewsOfCalendar(currentSegmentDates.range.start, endDate: currentSegmentDates.range.end, month: currentSegmentDates.month)
         }
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -191,23 +191,23 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
     func calendar(_ calendar: JTAppleCalendarView, willResetCell cell: JTAppleDayCellView) {
         (cell as? CellView)?.selectedView.isHidden = true
     }
-    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor dateRange: (start: Date, end: Date), belongingTo month: Int) {
-        setupViewsOfCalendar(dateRange.start, endDate: dateRange.end, month: month)
+    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor range: (start: Date, end: Date), belongingTo month: Int) {
+        setupViewsOfCalendar(range.start, endDate: range.end, month: month)
     }
-    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderIdentifierFor dateRange: (start: Date, end: Date), belongingTo month: Int) -> String {
+    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderIdentifierFor range: (start: Date, end: Date), belongingTo month: Int) -> String {
         if month % 2 > 0 {
             return "WhiteSectionHeaderView"
         }
         return "PinkSectionHeaderView"
     }
-    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderSizeFor dateRange: (start: Date, end: Date), belongingTo month: Int) -> CGSize {
+    func calendar(_ calendar: JTAppleCalendarView, sectionHeaderSizeFor range: (start: Date, end: Date), belongingTo month: Int) -> CGSize {
         if month % 2 > 0 {
             return CGSize(width: 200, height: 50)
         } else {
             return CGSize(width: 200, height: 100) // Yes you can have different size headers
         }
     }
-    func calendar(_ calendar: JTAppleCalendarView, willDisplaySectionHeader header: JTAppleHeaderView, dateRange: (start: Date, end: Date), identifier: String) {
+    func calendar(_ calendar: JTAppleCalendarView, willDisplaySectionHeader header: JTAppleHeaderView, range: (start: Date, end: Date), identifier: String) {
         switch identifier {
         case "WhiteSectionHeaderView":
             let headerCell = (header as? WhiteSectionHeaderView)

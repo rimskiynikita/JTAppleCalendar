@@ -38,11 +38,11 @@ extension JTAppleCalendarView {
     /// - returns:
     ///     - startDate: The start date of the current section
     ///     - endDate: The end date of the current section
-    public func dateSegment() -> (dateRange:(start: Date, end: Date), month: Int) {
+    public func dateSegment() -> (range: (start: Date, end: Date), month: Int) {
         guard
             dataSource != nil, let dateSegment = dateFromSection(currentSectionPage) else {
             if dataSource == nil { print("Error: DataSource not yet set") }
-            return (dateRange:(start: Date(), end: Date()), month: 0)
+                return (range: (start: Date(), end: Date()), month: 0)
         }
         return dateSegment
     }
