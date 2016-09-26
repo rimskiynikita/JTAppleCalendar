@@ -262,6 +262,15 @@ extension JTAppleCalendarView {
                              animateScroll: Bool = true,
                              preferredScrollPosition: UICollectionViewScrollPosition? = nil,
                              completionHandler:(() -> Void)? = nil) {
+        if !calendarIsAlreadyLoaded {
+            delayedExecutionClosure.append({ self.scrollToDate(date,
+                                                               triggerScrollToDateDelegate: triggerScrollToDateDelegate,
+                                                               animateScroll: animateScroll,
+                                                               preferredScrollPosition: preferredScrollPosition,
+                                                               completionHandler: completionHandler) })
+            return
+        }
+        
         self.triggerScrollToDateDelegate = triggerScrollToDateDelegate
         let components = calendar.dateComponents([.year, .month, .day], from: date)
         let firstDayOfDate = calendar.date(from: components)!
