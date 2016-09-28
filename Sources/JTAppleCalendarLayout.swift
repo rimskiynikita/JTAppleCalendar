@@ -51,7 +51,8 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
         var weAreAtTheEndOfRow: Bool {
             get {
                 guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }
-                return self.xCellOffset >= lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek)
+                let numbersAreTheSame = abs(self.xCellOffset - lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek)) < errorDelta
+                return numbersAreTheSame || (self.xCellOffset >= lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek))
             }
         }
         let weAreAtTheLastItemInRow = {(numberOfDaysInCurrentSection: Int, item: Int) -> Bool in
@@ -123,12 +124,14 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
         var weAreAtTheEndOfRow: Bool {
             get {
                 guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }
-                return self.xCellOffset >= lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek)
+                let numbersAreTheSame = abs(self.xCellOffset - lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek)) < errorDelta
+                return numbersAreTheSame || (self.xCellOffset >= lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek))
             }
         }
         let weAreAtTheLastItemInRow = {(numberOfDaysInCurrentSection: Int, item: Int) -> Bool in
             guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }
-            return numberOfDaysInCurrentSection - 1 == item && self.xCellOffset <= lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek)
+            let numbersAreTheSame = abs(self.xCellOffset - lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek)) < self.errorDelta
+            return numberOfDaysInCurrentSection - 1 == item && (numbersAreTheSame || (self.xCellOffset <= lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek)))
         }
         var section = 0
         for aMonth in monthData {
