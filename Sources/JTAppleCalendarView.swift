@@ -181,7 +181,7 @@ open class JTAppleCalendarView: UIView {
     /// The frame rectangle which defines the view's location and size in its superview coordinate system.
     override open var frame: CGRect {
         didSet {
-            calendarView.frame = self.frame
+            calendarView.frame = CGRect(x: 0, y:0, width: self.frame.width, height: self.frame.height)
             if calendarView.frame != lastFrame || delegate == nil {
                 updateLayoutItemSize()
                 lastFrame = calendarView.frame
