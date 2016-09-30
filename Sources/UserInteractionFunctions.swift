@@ -47,10 +47,15 @@ extension JTAppleCalendarView {
         return dateSegment
     }
     
-    /// Let's the calendar know which cell xib to use for the displaying of it's date-cells.
+    /// Let's the calendar know which cell xib to use for the displaying of it's date-cells loaded from the Main Bundle.
     /// - Parameter name: The name of the xib of your cell design
-    public func registerCellViewXib(fileName name: String) { cellViewSource = JTAppleCalendarViewSource.fromXib(name) }
-    
+    public func registerCellViewXib(fileName name: String) { cellViewSource = JTAppleCalendarViewSource.fromXib(name, nil) }
+
+    /// Let's the calendar know which cell xib to use for the displaying of it's date-cells.
+    /// - Parameter name:   The name of the xib of your cell design
+    /// - Parameter bundle: The bunlde where the xib of your cell design is stored
+    public func registerCellViewXib(fileName name: String, bundle: Bundle) { cellViewSource = JTAppleCalendarViewSource.fromXib(name, bundle) }
+
     /// Let's the calendar know which cell class to use for the displaying of it's date-cells.
     /// - Parameter name: The class name of your cell design
     public func registerCellViewClass(fileName name: String) { cellViewSource = JTAppleCalendarViewSource.fromClassName(name) }
@@ -64,10 +69,23 @@ extension JTAppleCalendarView {
     public func registerHeaderViewXibs(fileNames headerViewXibNames: [String]) {
         registeredHeaderViews.removeAll() // remove the already registered xib files if the user re-registers again.
         for headerViewXibName in headerViewXibNames {
-            registeredHeaderViews.append(JTAppleCalendarViewSource.fromXib(headerViewXibName))
+            registeredHeaderViews.append(JTAppleCalendarViewSource.fromXib(headerViewXibName, nil))
             self.calendarView.register(JTAppleCollectionReusableView.self,
                                             forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
                                             withReuseIdentifier: headerViewXibName)
+        }
+    }
+    
+    /// Register header views with the calender. This needs to be done before the view can be displayed
+    /// - Parameter fileNames: A dictionary containing [headerViewNames:HeaderviewSizes]
+    /// - Parameter bundle: The bunlde where the xib of your dictionary are stored
+    public func registerHeaderViewXibs(fileNames headerViewXibNames: [String], bundle: Bundle) {
+        registeredHeaderViews.removeAll() // remove the already registered xib files if the user re-registers again.
+        for headerViewXibName in headerViewXibNames {
+            registeredHeaderViews.append(JTAppleCalendarViewSource.fromXib(headerViewXibName, bundle))
+            self.calendarView.register(JTAppleCollectionReusableView.self,
+                                       forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
+                                       withReuseIdentifier: headerViewXibName)
         }
     }
     /// Register header views with the calender. This needs to be done before the view can be displayed

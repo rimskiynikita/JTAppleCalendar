@@ -21,7 +21,7 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
         // Get the reuse identifier and index
         if registeredHeaderViews.count == 1 {
             switch registeredHeaderViews[0] {
-            case let .fromXib(xibName): reuseIdentifier = xibName
+            case let .fromXib(xibName, _): reuseIdentifier = xibName
             case let .fromClassName(className): reuseIdentifier = className
             case let .fromType(classType): reuseIdentifier = classType.description()
             }
@@ -29,7 +29,7 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
             reuseIdentifier = delegate!.calendar(self, sectionHeaderIdentifierForDate: validDate.dateRange, belongingTo: validDate.month)
             for item in registeredHeaderViews {
                 switch item {
-                case let .fromXib(xibName) where xibName == reuseIdentifier:
+                case let .fromXib(xibName, _) where xibName == reuseIdentifier:
                     source = item
                     break
                 case let .fromClassName(className) where className == reuseIdentifier:
@@ -252,7 +252,7 @@ extension JTAppleCalendarView: UIScrollViewDelegate {
             setTargetContentOffset(calculatedOffset)
         case .stopAtEachCalendarFrameWidth:
             #if os(tvOS)
-                let interval = self.direction == .Horizontal ? scrollView.frame.width : scrollView.frame.height
+                let interval = self.direction == .horizontal ? scrollView.frame.width : scrollView.frame.height
                 let calculatedOffset = calculatedCurrentFixedContentOffsetFrom(interval)
                 setTargetContentOffset(calculatedOffset)
             #endif
