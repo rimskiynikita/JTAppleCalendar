@@ -114,7 +114,7 @@ class CellView: JTAppleDayCellView {
 
 class AnimationView: UIView {
     func animateWithFlipEffect(withCompletionHandler completionHandler:(() -> Void)?) {
-        AnimationClass.flipAnimation(view: self, completion: completionHandler)
+        AnimationClass.flipAnimation(self, completion: completionHandler)
     }
     func animateWithBounceEffect(withCompletionHandler completionHandler:(() -> Void)?) {
         let viewAnimation = AnimationClass.BounceEffect()

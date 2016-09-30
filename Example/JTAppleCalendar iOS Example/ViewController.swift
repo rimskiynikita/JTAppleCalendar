@@ -16,12 +16,12 @@ class ViewController: UIViewController {
     let formatter = DateFormatter()
     var testCalendar: Calendar! = Calendar(identifier: .gregorian)
     
-    @IBAction func changeToThreeRows(sender: UIButton) {
+    @IBAction func changeToThreeRows(_ sender: UIButton) {
         numberOfRows = 3
         calendarView.reloadData()
     }
     
-    @IBAction func changeToSixRows(sender: UIButton) {
+    @IBAction func changeToSixRows(_ sender: UIButton) {
         numberOfRows = 6
         calendarView.reloadData()
     }
@@ -72,17 +72,17 @@ class ViewController: UIViewController {
         // After reloading. Scroll to your selected date, and setup your calendar
         calendarView.scrollToDate(Date(), triggerScrollToDateDelegate: false, animateScroll: false) {
             let currentDate = self.calendarView.currentCalendarDateSegment()
-            self.setupViewsOfCalendar(startDate: currentDate.dateRange.start, endDate: currentDate.dateRange.end)
+            self.setupViewsOfCalendar(currentDate.dateRange.start, endDate: currentDate.dateRange.end)
         }
     }
     
-    @IBAction func select11(sender: AnyObject?) {
+    @IBAction func select11(_ sender: AnyObject?) {
         calendarView.allowsMultipleSelection = false
         let date = formatter.date(from: "2016 02 11")
         self.calendarView.selectDates([date!], triggerSelectionDelegate: false)
     }
     
-    @IBAction func scrollToDate(sender: AnyObject?) {
+    @IBAction func scrollToDate(_ sender: AnyObject?) {
         let date = formatter.date(from: "2016 03 11")
         calendarView.scrollToDate(date!)
     }
@@ -94,17 +94,17 @@ class ViewController: UIViewController {
         }
     }
     
-    @IBAction func next(sender: UIButton) {
+    @IBAction func next(_ sender: UIButton) {
         self.calendarView.scrollToNextSegment() {
             let currentSegmentDates = self.calendarView.currentCalendarDateSegment()
-            self.setupViewsOfCalendar(startDate: currentSegmentDates.dateRange.start, endDate: currentSegmentDates.dateRange.end)
+            self.setupViewsOfCalendar(currentSegmentDates.dateRange.start, endDate: currentSegmentDates.dateRange.end)
         }
     }
     
-    @IBAction func previous(sender: UIButton) {
+    @IBAction func previous(_ sender: UIButton) {
         self.calendarView.scrollToPreviousSegment() {
             let currentSegmentDates = self.calendarView.currentCalendarDateSegment()
-            self.setupViewsOfCalendar(startDate: currentSegmentDates.dateRange.start, endDate: currentSegmentDates.dateRange.end)
+            self.setupViewsOfCalendar(currentSegmentDates.dateRange.start, endDate: currentSegmentDates.dateRange.end)
         }
     }
     
@@ -112,7 +112,7 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
     }
     
-    func setupViewsOfCalendar(startDate: Date, endDate: Date) {
+    func setupViewsOfCalendar(_ startDate: Date, endDate: Date) {
         let month = testCalendar.component(.month, from: startDate)
         let monthName = DateFormatter().monthSymbols[(month-1) % 12] // 0 indexed array
         let year = Calendar.current.component(.year, from: startDate)
@@ -144,7 +144,7 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
     }
     
     func calendar(_ calendar : JTAppleCalendarView, didScrollToDateSegmentStartingWithdate startDate: Date, endingWithDate endDate: Date) {
-        setupViewsOfCalendar(startDate: startDate, endDate: endDate)
+        setupViewsOfCalendar(startDate, endDate: endDate)
     }
     
     func calendar(_ calendar : JTAppleCalendarView, sectionHeaderIdentifierForDate dateRange: (start: Date, end: Date), belongingTo month: Int) -> String {
