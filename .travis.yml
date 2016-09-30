@@ -12,17 +12,13 @@ env:
   - EXAMPLE_SCHEME_IOS="JTAppleCalendar iOS Example"
   matrix:
     - DESTINATION="OS=10.0,name=iPhone 7 Plus"     SCHEME="$IOS_FRAMEWORK_SCHEME"     SDK="$IOS_SDK"     RUN_TESTS="YES" BUILD_EXAMPLE="YES"  EXAMPLE_SCHEME="$EXAMPLE_SCHEME_IOS"  POD_LINT="NO"
-    - DESTINATION="OS=10.0,name=Apple TV 1080p"    SCHEME="$TVOS_FRAMEWORK_SCHEME"    SDK="$TVOS_SDK"    RUN_TESTS="YES" BUILD_EXAMPLE="NO"  POD_LINT="NO" SLEEP_TIMER="YES"
+    - DESTINATION="OS=10.0,name=Apple TV 1080p"    SCHEME="$TVOS_FRAMEWORK_SCHEME"    SDK="$TVOS_SDK"    RUN_TESTS="YES" BUILD_EXAMPLE="NO"  POD_LINT="NO"
 script:
+  - travis settings maximum_number_of_builds --set 1
   - set -o pipefail
   - xcodebuild -version
   - xcodebuild -showsdks
  
-  # Sleep before building, because since we are running UITesting we can have only one Simulator running at a time. it can be avoided by removing the UITest on AppleTV or iOS Waits 120 seconds so normally iOS should be done
-  - if [ $SLEEP_TIMER == "YES" ]; then
-      sleep 120
-    fi
-
   # Build Framework in Debug and Run Tests if specified
   - if [ $RUN_TESTS == "YES" ]; then
       xcodebuild -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES test | xcpretty -c;
