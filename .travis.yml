@@ -17,12 +17,12 @@ script:
   - set -o pipefail
   - xcodebuild -version
   - xcodebuild -showsdks
-  
-  # Sleep before building, because since we are running UITesting we can have only one Simulator running at a time (it can be avoided by removing the UITest on AppleTV or iOS
+ 
+  # Sleep before building, because since we are running UITesting we can have only one Simulator running at a time. it can be avoided by removing the UITest on AppleTV or iOS Waits 120 seconds so normally iOS should be done
   - if [ $SLEEP_TIMER == "YES" ]; then
-      sleep 120  # Waits 120 seconds so normally iOS should be done
+      sleep 120
     fi
-    
+
   # Build Framework in Debug and Run Tests if specified
   - if [ $RUN_TESTS == "YES" ]; then
       xcodebuild -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES test | xcpretty -c;
