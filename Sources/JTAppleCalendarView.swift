@@ -182,9 +182,9 @@ open class JTAppleCalendarView: UIView {
     override open var frame: CGRect {
         didSet {
             calendarView.frame = CGRect(x: 0, y:0, width: self.frame.width, height: self.frame.height)
-            if calendarView.frame != lastFrame || delegate == nil {
-                updateLayoutItemSize()
-                lastFrame = calendarView.frame
+            updateLayoutItemSize()
+            if calendarViewLayout.itemSize != lastSize {
+                lastSize = calendarViewLayout.itemSize
                 if delegate != nil {
                     var anInitialCompletionHandler: (()->Void)?
                     if finalLoadable == nil { // This will only be set once
@@ -201,7 +201,7 @@ open class JTAppleCalendarView: UIView {
     weak open var delegate: JTAppleCalendarViewDelegate?
 
     var delayedExecutionClosure: [(() -> Void)] = []
-    var lastFrame = CGRect.zero
+    var lastSize = CGSize.zero
     var finalLoadable: Bool?
     var currentSectionPage: Int {
         return calendarViewLayout.sectionFromRectOffset(calendarView.contentOffset)
@@ -326,9 +326,6 @@ open class JTAppleCalendarView: UIView {
         let layout = calendarViewLayout
         
         // Invalidate the layout
-        layout.invalidateLayout()
-        layout.clearCache()
-        layoutNeedsUpdating = true
         
         // Default Item height
         var height: CGFloat = (self.calendarView.bounds.size.height - layout.headerReferenceSize.height) / CGFloat(cachedConfiguration.numberOfRows)
@@ -338,7 +335,16 @@ open class JTAppleCalendarView: UIView {
         if let userSetItemSize = self.itemSize {
             if direction == .vertical { height = userSetItemSize } else { width = userSetItemSize }
         }
-        layout.itemSize = CGSize(width: width, height: height)
+        let size = CGSize(width: width, height: height)
+        
+        if lastSize != size {
+            layout.invalidateLayout()
+            layout.clearCache()
+            layoutNeedsUpdating = true
+            layout.itemSize = size
+        }
+        
+        
     }
     /// Initializes and returns a newly allocated view object with the specified frame rectangle.
     public override init(frame: CGRect) {
