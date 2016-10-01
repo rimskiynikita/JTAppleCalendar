@@ -78,7 +78,8 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                         
                         if thereAreHeaders {
                             headerGuide += 1
-                            if (numberOfDaysInCurrentSection - 1 == item && totalDayCounter % 7 == 0) || headerGuide % 7 == 0 { // We are at the last item in the section && if we have headers
+                            if numberOfDaysInCurrentSection - 1 == item || headerGuide % 7 == 0 { // We are at the last item in the section && if we have headers
+                                headerGuide = 0
                                 xCellOffset = 0
                                 yCellOffset += attribute.frame.height
                             }
@@ -105,28 +106,14 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                 sectionSize.append(contentWidth)
                 if thereAreHeaders {
                     stride = sectionSize[section]
-                    headerGuide = 0
                 }
                 section += 1
-                
             }
         }
         contentHeight = self.collectionView!.bounds.size.height
     }
     
     func verticalStuff () {
-        var weAreAtTheEndOfRow: Bool {
-            get {
-                guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }
-                let numbersAreTheSame = abs(self.xCellOffset - lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek)) < errorDelta
-                return numbersAreTheSame || (self.xCellOffset >= lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek))
-            }
-        }
-        let weAreAtTheLastItemInRow = {(numberOfDaysInCurrentSection: Int, item: Int) -> Bool in
-            guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }
-            let numbersAreTheSame = abs(self.xCellOffset - lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek)) < self.errorDelta
-            return numberOfDaysInCurrentSection - 1 == item && (numbersAreTheSame || (self.xCellOffset <= lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek)))
-        }
         var section = 0
         var totalDayCounter = 0
         var headerGuide = 0
@@ -152,20 +139,23 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                         cellCache[section]!.append(attribute)
                         lastWrittenCellAttribute = attribute
                         xCellOffset += attribute.frame.width
-                        if (weAreAtTheLastItemInRow(numberOfDaysInCurrentSection, item)) { // We are at the last item in the section && if we have headers
-                            if thereAreHeaders {
+                        if thereAreHeaders {
+                            headerGuide += 1
+                            if headerGuide % 7 == 0 || numberOfDaysInCurrentSection - 1 == item { // We are at the last item in the section && if we have headers
+                                headerGuide = 0 
                                 xCellOffset = 0
                                 yCellOffset += attribute.frame.height
                                 contentHeight += attribute.frame.height
-                            } else {
-                                if monthData.last?.sectionIndexMaps[indexPath.section] != nil { // If we are on the last section on a partially filled row
-                                    contentHeight += attribute.frame.height
-                                }
                             }
-                        } else if weAreAtTheEndOfRow {
-                            xCellOffset   = 0
-                            yCellOffset   += attribute.frame.height
-                            contentHeight += attribute.frame.height
+                            
+                        } else {
+                            totalDayCounter += 1
+                            if totalDayCounter % 7 == 0 {
+                                xCellOffset = 0
+                                yCellOffset += attribute.frame.height
+                                contentHeight += attribute.frame.height
+                            }
+                            
                         }
                     }
                 }
@@ -351,9 +341,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
     func sectionFromOffset(_ theOffSet: CGFloat) -> Int {
         var val: Int = 0
         for (index, sectionSizeValue) in sectionSize.enumerated() {
-            if abs(theOffSet - sectionSizeValue) < errorDelta {
-                continue
-            }
+            if abs(theOffSet - sectionSizeValue) < errorDelta { continue }
             if theOffSet < sectionSizeValue {
                 val = index
                 break
