@@ -336,8 +336,7 @@ open class JTAppleCalendarView: UIView {
         var width: CGFloat = self.calendarView.bounds.size.width / CGFloat(maxNumberOfDaysInWeek)
 
         if let userSetItemSize = self.itemSize {
-            if direction == .vertical { height = userSetItemSize }
-            if direction == .horizontal { width = userSetItemSize }
+            if direction == .vertical { height = userSetItemSize } else { width = userSetItemSize }
         }
         layout.itemSize = CGSize(width: width, height: height)
     }
