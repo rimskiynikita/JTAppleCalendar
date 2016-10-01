@@ -84,8 +84,8 @@ class CellView: JTAppleDayCellView {
         if cellState.isSelected == true {
             if selectedView.isHidden == true {
                 configueViewIntoBubbleView(cellState)
-                selectedView.animateWithBounceEffect(withCompletionHandler: {
-                })
+//                selectedView.animateWithBounceEffect(withCompletionHandler: {
+//                })
             }
         } else {
             configueViewIntoBubbleView(cellState, animateDeselection: true)
@@ -93,22 +93,31 @@ class CellView: JTAppleDayCellView {
     }
     fileprivate func configueViewIntoBubbleView(_ cellState: CellState, animateDeselection: Bool = false) {
         if cellState.isSelected {
-            self.selectedView.layer.cornerRadius =  self.selectedView.frame.width  / 2
+//            self.selectedView.layer.cornerRadius =  self.selectedView.frame.width  / 2
             self.selectedView.isHidden = false
             configureTextColor(cellState)
         } else {
             if animateDeselection {
                 configureTextColor(cellState)
                 if selectedView.isHidden == false {
-                    selectedView.animateWithFadeEffect(withCompletionHandler: { () -> Void in
+//                    selectedView.animateWithFadeEffect(withCompletionHandler: { () -> Void in
                         self.selectedView.isHidden = true
-                        self.selectedView.alpha = 1
-                    })
+//                        self.selectedView.alpha = 1
+//                    })
                 }
             } else {
                 selectedView.isHidden = true
             }
         }
+        
+        
+        
+        if cellState.selectedPosition() == .middle {
+            selectedView.backgroundColor = UIColor.yellow
+        } else {
+            selectedView.backgroundColor = UIColor(colorWithHexValue: 0xEAA263)
+        }
+        
     }
 }
 
@@ -127,5 +136,16 @@ class AnimationView: UIView {
         viewAnimation(self) { _ in
             completionHandler?()
         }
+    }
+}
+
+extension UIColor {
+    convenience init(colorWithHexValue value: Int, alpha:CGFloat = 1.0){
+        self.init(
+            red: CGFloat((value & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((value & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(value & 0x0000FF) / 255.0,
+            alpha: alpha
+        )
     }
 }

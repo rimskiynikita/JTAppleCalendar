@@ -113,10 +113,9 @@ class ViewController: UIViewController {
         calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"])
         
         calendarView.cellInset = CGPoint(x: 0, y: 0)
-        calendarView.itemSize = dateCellSize
         calendarView.allowsMultipleSelection = true
 
-        calendarView.scrollingMode = .nonStopToCell(withResistance: 0.75)
+//        calendarView.scrollingMode = .nonStopToCell(withResistance: 0.75)
     
         let currentDate = self.calendarView.dateSegment()
         self.setupViewsOfCalendar(currentDate.range.start, endDate: currentDate.range.end, month: currentDate.month)
@@ -137,6 +136,13 @@ class ViewController: UIViewController {
         for date in calendarView.selectedDates {
             print(formatter.string(from: date))
         }
+    }
+    @IBAction func resize(_ sender: UIButton) {
+        calendarView.frame = CGRect(x: calendarView.frame.origin.x, y: calendarView.frame.origin.y, width: calendarView.frame.width, height: calendarView.frame.height - 50)
+        
+    }
+    @IBAction func reloadCalendar(_ sender: UIButton) {
+        calendarView.reloadData()
     }
     @IBAction func next(_ sender: UIButton) {
         self.calendarView.scrollToNextSegment() {
