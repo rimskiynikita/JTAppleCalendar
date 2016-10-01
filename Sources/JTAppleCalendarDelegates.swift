@@ -19,18 +19,18 @@ extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDeleg
         // Get the reuse identifier and index
         if registeredHeaderViews.count == 1 {
             switch registeredHeaderViews[0] {
-            case let .fromXib(xibName): reuseIdentifier = xibName
-            case let .fromClassName(className): reuseIdentifier = className
+            case let .fromXib(xibName, _): reuseIdentifier = xibName
+            case let .fromClassName(className, _): reuseIdentifier = className
             case let .fromType(classType): reuseIdentifier = classType.description()
             }
         } else {
             reuseIdentifier = delegate!.calendar(self, sectionHeaderIdentifierFor: validDate.range, belongingTo: validDate.month)
             for item in registeredHeaderViews {
                 switch item {
-                case let .fromXib(xibName) where xibName == reuseIdentifier:
+                case let .fromXib(xibName, _) where xibName == reuseIdentifier:
                     source = item
                     break
-                case let .fromClassName(className) where className == reuseIdentifier:
+                case let .fromClassName(className, _) where className == reuseIdentifier:
                     source = item
                     break
                 case let .fromType(type) where type.description() == reuseIdentifier:
