@@ -216,7 +216,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
     /// Returns the layout attributes for the item at the specified index path. A layout attributes object containing the information to apply to the item’s cell.
     override open func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         // If this index is already cached, then return it else, apply a new layout attribut to it
-        if let alreadyCachedCellAttrib = cellCache[indexPath.section], indexPath.item < alreadyCachedCellAttrib.count {
+        if let alreadyCachedCellAttrib = cellCache[indexPath.section], indexPath.item < alreadyCachedCellAttrib.count, indexPath.item >= 0 {
             return alreadyCachedCellAttrib[indexPath.item]
         }
         return deterimeToApplyAttribs(at: indexPath)
@@ -256,8 +256,8 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
     func applyLayoutAttributes(_ attributes: UICollectionViewLayoutAttributes) {
         if attributes.representedElementKind != nil { return }
         // Calculate the item size
-        itemSize = sizeForitemAtIndexPath(attributes.indexPath)
-        attributes.frame = CGRect(x: xCellOffset + stride, y: yCellOffset, width: self.itemSize.width, height: self.itemSize.height)
+        let size = sizeForitemAtIndexPath(attributes.indexPath)
+        attributes.frame = CGRect(x: xCellOffset + stride, y: yCellOffset, width: size.width, height: size.height)
     }
     func numberOfDaysInSection(_ index: Int) -> Int {
         if let days = daysInSection[index] { return days }
@@ -283,12 +283,13 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
         }
         
         var size: CGSize = CGSize.zero
-        if let itemSize = delegate!.itemSize {
+//        let xxx = itemSize.height * 6
+        
+        if let _ = delegate!.itemSize {
             if scrollDirection == .vertical {
-                size.height = itemSize
-                size.width = self.itemSize.width
+                size = itemSize
             } else {
-                size.width = itemSize
+                size.width = itemSize.width
                 var headerSize =  CGSize.zero
                 if thereAreHeaders {
                     headerSize = cachedHeaderSizeForSection(indexPath.section)
@@ -302,6 +303,8 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
             if thereAreHeaders {
                 headerSize = cachedHeaderSizeForSection(indexPath.section)
             }
+            var height: CGFloat = 0
+
             let currentItemSize = itemSize
             let totalNumberOfRows = monthData[monthMap[indexPath.section]!].rows
             let monthSection = monthData[monthMap[indexPath.section]!].sectionIndexMaps[indexPath.section]!
@@ -309,15 +312,17 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
             let fullSections =  Int(numberOfSections)
             let numberOfRowsForSection: Int
             if scrollDirection == .horizontal {
-                numberOfRowsForSection = maxNumberOfRowsPerMonth
+                numberOfRowsForSection = delegate!.numberOfRows()
+                height = (collectionView!.frame.height - headerSize.height) / CGFloat(numberOfRowsForSection)
             } else {
                 if monthSection + 1 <= fullSections {
                     numberOfRowsForSection = numberOfRows
                 } else {
                     numberOfRowsForSection = totalNumberOfRows - (monthSection * numberOfRows)
                 }
+                height = (collectionView!.frame.height - headerSize.height) / CGFloat(numberOfRowsForSection)
             }
-            size        = CGSize(width: currentItemSize.width, height: (collectionView!.frame.height - headerSize.height) / CGFloat(numberOfRowsForSection))
+            size        = CGSize(width: currentItemSize.width, height: height)
             currentCell = (section: indexPath.section, itemSize: size)
             
         }
