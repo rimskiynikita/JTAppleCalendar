@@ -39,7 +39,9 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
     }
     /// Tells the layout object to update the current layout.
     open override func prepare() {
+        print("Prepare was called")
         if !cellCache.isEmpty { return }
+        print("All was recreated!! ")
         maxMissCount = scrollDirection == .horizontal ? maxNumberOfRowsPerMonth : maxNumberOfDaysInWeek
         if scrollDirection == .vertical { verticalStuff() } else { horizontalStuff() }
         
@@ -48,21 +50,10 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
         daysInSection.removeAll() // Clear chache
     }
     func horizontalStuff() {
-        var weAreAtTheEndOfRow: Bool {
-            get {
-                guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }
-                let numbersAreTheSame = abs(self.xCellOffset - lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek)) < errorDelta
-                return numbersAreTheSame || (self.xCellOffset >= lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek))
-            }
-        }
-        let weAreAtTheLastItemInRow = {(numberOfDaysInCurrentSection: Int, item: Int) -> Bool in
-            guard let lastWrittenCellAttribute = self.lastWrittenCellAttribute  else { return false }
-            return numberOfDaysInCurrentSection - 1 == item && self.xCellOffset < lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek)
-        }
-        
         var section = 0
         var rowNumber = 0
         var totalDayCounter = 0
+        var headerGuide = 0
         for aMonth in monthData {
             for numberOfDaysInCurrentSection in aMonth.sections {
                 // Generate and cache the headers
@@ -86,7 +77,8 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                         xCellOffset += attribute.frame.width
                         
                         if thereAreHeaders {
-                            if weAreAtTheLastItemInRow(numberOfDaysInCurrentSection, item) || weAreAtTheEndOfRow { // We are at the last item in the section && if we have headers
+                            headerGuide += 1
+                            if (numberOfDaysInCurrentSection - 1 == item && totalDayCounter % 7 == 0) || headerGuide % 7 == 0 { // We are at the last item in the section && if we have headers
                                 xCellOffset = 0
                                 yCellOffset += attribute.frame.height
                             }
@@ -94,7 +86,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                             totalDayCounter += 1
                             if totalDayCounter >= delegate.totalDays { // If we are at the last item and we are also ona partial (because we were not at end of row)
                                 contentWidth += lastWrittenCellAttribute!.frame.width * 7
-                            } else if weAreAtTheEndOfRow {
+                            } else if totalDayCounter % 7 == 0 {
                                 xCellOffset = 0
                                 if rowNumber + 1 == numberOfRows { // If we are at the end of a virtual section
                                     yCellOffset = 0
@@ -113,8 +105,10 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                 sectionSize.append(contentWidth)
                 if thereAreHeaders {
                     stride = sectionSize[section]
+                    headerGuide = 0
                 }
                 section += 1
+                
             }
         }
         contentHeight = self.collectionView!.bounds.size.height
@@ -134,6 +128,8 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
             return numberOfDaysInCurrentSection - 1 == item && (numbersAreTheSame || (self.xCellOffset <= lastWrittenCellAttribute.frame.width * CGFloat(maxNumberOfDaysInWeek)))
         }
         var section = 0
+        var totalDayCounter = 0
+        var headerGuide = 0
         for aMonth in monthData {
             for numberOfDaysInCurrentSection in aMonth.sections {
                 // Generate and cache the headers
