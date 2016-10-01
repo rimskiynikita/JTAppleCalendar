@@ -35,15 +35,15 @@ class AnimationClass {
                            completion: completion)
         }
     }
-    private class func get3DTransformation(angle: Double) -> CATransform3D {
+    fileprivate class func get3DTransformation(_ angle: Double) -> CATransform3D {
         var transform = CATransform3DIdentity
         transform.m34 = -1.0 / 500.0
         transform = CATransform3DRotate(transform, CGFloat(angle * M_PI / 180.0), 0, 1, 0.0)
         return transform
     }
-    class func flipAnimation(view: UIView, completion: (() -> Void)?) {
+    class func flipAnimation(_ view: UIView, completion: (() -> Void)?) {
         let angle = 180.0
-        view.layer.transform = get3DTransformation(angle: angle)
+        view.layer.transform = get3DTransformation(angle)
         UIView.animate(withDuration: 1,
                        delay: 0,
                        usingSpringWithDamping: 0.5,

@@ -69,6 +69,7 @@ class CellView: JTAppleDayCellView {
             self.isHidden = false
         } else {
             self.isHidden = false
+            
         }
     }
     func configureTextColor(_ cellState: CellState) {
@@ -110,8 +111,6 @@ class CellView: JTAppleDayCellView {
             }
         }
         
-        
-        
         if cellState.selectedPosition() == .middle {
             selectedView.backgroundColor = UIColor.yellow
         } else {
@@ -123,7 +122,7 @@ class CellView: JTAppleDayCellView {
 
 class AnimationView: UIView {
     func animateWithFlipEffect(withCompletionHandler completionHandler:(() -> Void)?) {
-        AnimationClass.flipAnimation(view: self, completion: completionHandler)
+        AnimationClass.flipAnimation(self, completion: completionHandler)
     }
     func animateWithBounceEffect(withCompletionHandler completionHandler:(() -> Void)?) {
         let viewAnimation = AnimationClass.BounceEffect()
