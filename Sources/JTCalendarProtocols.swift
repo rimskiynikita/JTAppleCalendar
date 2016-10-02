@@ -49,24 +49,33 @@ struct Month {
     }
     
     // Return the number of rows for a section in the month
-    func numberOfRows(for section: Int, developerSetRows: Int) -> Int? {
-        var retval: Int?
-        guard let  theSection = sectionIndexMaps[section] else {
-            return nil
-        }
+//    func numberOfRows(for section: Int, developerSetRows: Int) -> Int? {
+//        var retval: Int?
+//        guard let  theSection = sectionIndexMaps[section] else {
+//            return nil
+//        }
+//        let fullRows = rows / developerSetRows
+//        let partial = sections.count - fullRows
+//        
+//        if theSection + 1 <= fullRows {
+//            retval = developerSetRows
+//        } else if fullRows == 0 && partial > 0 {
+//            retval = rows
+//        } else {
+//            retval = 1
+//        }
+//        return retval
+//    }
+    // Returns the maximum number of a rows for a completely full section
+    func maxNumberOfRowsForFull(developerSetRows: Int) -> Int {
+        var retval: Int
         let fullRows = rows / developerSetRows
-        let partial = sections.count - fullRows
-        
-        if theSection + 1 <= fullRows {
-            retval = developerSetRows
-        } else if fullRows == 0 && partial > 0 {
+        if fullRows < 1 {
             retval = rows
         } else {
-            retval = 1
+            retval = developerSetRows
         }
         return retval
-        
-        
     }
 }
 
