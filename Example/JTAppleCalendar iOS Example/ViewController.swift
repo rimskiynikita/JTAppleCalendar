@@ -193,11 +193,11 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
         (cell as? CellView)?.cellSelectionChanged(cellState)
 //        printSelectedDates()
     }
-    // NOTICE: this function is not needed for iOS 10. It wil not be called
+    // NOTICE: this function is not needed for iOS 10. It will not be called
     func calendar(_ calendar: JTAppleCalendarView, willResetCell cell: JTAppleDayCellView) {
         (cell as? CellView)?.selectedView.isHidden = true
     }
-    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor range: (start: Date, end: Date), belongingTo month: Int) {
+    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor range: (start: Date, end: Date), belongingTo month: Int, rows: Int) {
         setupViewsOfCalendar(range.start, endDate: range.end, month: month)
     }
     func calendar(_ calendar: JTAppleCalendarView, sectionHeaderIdentifierFor range: (start: Date, end: Date), belongingTo month: Int) -> String {

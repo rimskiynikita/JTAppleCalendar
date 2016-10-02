@@ -10,7 +10,7 @@
 extension JTAppleCalendarView: UICollectionViewDataSource, UICollectionViewDelegate {
     /// Asks your data source object to provide a supplementary view to display in the collection view.
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let validDate = dateFromSection(indexPath.section) else {
+        guard let validDate = monthInfoFromSection(indexPath.section) else {
             assert(false, "Date could not be generated fro section. This is a bug. Contact the developer")
             return UICollectionReusableView()
         }
@@ -369,6 +369,7 @@ extension JTAppleCalendarView: UIScrollViewDelegate {
         let currentSegmentDates = dateSegment()
         self.delegate?.calendar(self,
                                 didScrollToDateSegmentFor: (start: currentSegmentDates.range.start, end: currentSegmentDates.range.end),
-                                belongingTo: currentSegmentDates.month)
+                                belongingTo: currentSegmentDates.month,
+                                rows: currentSegmentDates.rowsForSection)
     }
 }

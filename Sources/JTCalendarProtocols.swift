@@ -49,23 +49,23 @@ struct Month {
     }
     
     // Return the number of rows for a section in the month
-//    func numberOfRows(for section: Int, developerSetRows: Int) -> Int? {
-//        var retval: Int?
-//        guard let  theSection = sectionIndexMaps[section] else {
-//            return nil
-//        }
-//        let fullRows = rows / developerSetRows
-//        let partial = sections.count - fullRows
-//        
-//        if theSection + 1 <= fullRows {
-//            retval = developerSetRows
-//        } else if fullRows == 0 && partial > 0 {
-//            retval = rows
-//        } else {
-//            retval = 1
-//        }
-//        return retval
-//    }
+    func numberOfRows(for section: Int, developerSetRows: Int) -> Int {
+        var retval: Int
+        guard let  theSection = sectionIndexMaps[section] else {
+            return 0
+        }
+        let fullRows = rows / developerSetRows
+        let partial = sections.count - fullRows
+        
+        if theSection + 1 <= fullRows {
+            retval = developerSetRows
+        } else if fullRows == 0 && partial > 0 {
+            retval = rows
+        } else {
+            retval = 1
+        }
+        return retval
+    }
     // Returns the maximum number of a rows for a completely full section
     func maxNumberOfRowsForFull(developerSetRows: Int) -> Int {
         var retval: Int
@@ -92,7 +92,7 @@ public extension JTAppleCalendarViewDelegate {
     func calendar(_ calendar: JTAppleCalendarView, canDeselectDate date: Date, cell: JTAppleDayCellView, cellState: CellState) -> Bool {return true}
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {}
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleDayCellView?, cellState: CellState) {}
-    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor range: (start: Date, end: Date), belongingTo month: Int) {}
+    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor range: (start: Date, end: Date), belongingTo month: Int, rows: Int) {}
     func calendar(_ calendar: JTAppleCalendarView, willDisplayCell cell: JTAppleDayCellView, date: Date, cellState: CellState) {}
     func calendar(_ calendar: JTAppleCalendarView, willResetCell cell: JTAppleDayCellView) {}
     func calendar(_ calendar: JTAppleCalendarView, willDisplaySectionHeader header: JTAppleHeaderView, range: (start: Date, end: Date), identifier: String) {}
@@ -153,7 +153,7 @@ public protocol JTAppleCalendarViewDelegate: class {
     ///     - calendar: The JTAppleCalendar view giving this information.
     ///     - startDate: The date at the start of the segment.
     ///     - endDate: The date at the end of the segment.
-    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor range: (start: Date, end: Date), belongingTo month: Int)
+    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor range: (start: Date, end: Date), belongingTo month: Int, rows: Int)
     /// Tells the delegate that the JTAppleCalendar is about to display a date-cell. This is the point of customization for your date cells
     /// - Parameters:
     ///     - calendar: The JTAppleCalendar view giving this information.

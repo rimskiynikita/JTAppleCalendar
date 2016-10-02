@@ -69,7 +69,7 @@ public struct CellState {
     /// returns the column in which the date cell appears visually
     public let column: () -> Int
     /// returns the section the date cell belongs to
-    public let dateSection: ()->(range: (start: Date, end: Date), month: Int)
+    public let dateSection: ()->(range: (start: Date, end: Date), month: Int, rowsForSection: Int)
     /// returns the position of a selection in the event you wish to do range selection
     public let selectedPosition: () -> SelectionRangePosition
     /// returns the cell frame. Useful if you wish to display something at the cell's frame/position
@@ -505,7 +505,7 @@ open class JTAppleCalendarView: UIView {
                         if let validCompletionHandler = completionHandler {
                             validCompletionHandler()
                         }
-                        self.calendarView.scrollToItem(at: IndexPath(item: 0, section:0), at: .left, animated: false)
+//                        self.calendarView.scrollToItem(at: IndexPath(item: 0, section:0), at: .left, animated: false)
 //                        scrollToDate(self.startOfMonthCache)
                     } else {
                         if let validCompletionHandler = completionHandler { self.delayedExecutionClosure.append(validCompletionHandler) }
@@ -577,7 +577,7 @@ open class JTAppleCalendarView: UIView {
         var retval = CGSize.zero
         if registeredHeaderViews.count > 0 {
             if let
-                validDate = dateFromSection(section),
+                validDate = monthInfoFromSection(section),
                 let size = delegate?.calendar(self, sectionHeaderSizeFor: validDate.range, belongingTo: validDate.month) {retval = size }
         }
         return retval
@@ -728,7 +728,7 @@ extension JTAppleCalendarView {
                                  day: .sunday,
                                  row: {return 0},
                                  column: {return 0},
-                                 dateSection: {return (range: (Date(), Date()), month: 0)},
+                                 dateSection: {return (range: (Date(), Date()), month: 0, rowsForSection: 0)},
                                  selectedPosition: {return .left},
                                  cell: {return nil})
             }
@@ -761,7 +761,7 @@ extension JTAppleCalendarView {
             day: dayOfWeek,
             row: { return indexPath.item / maxNumberOfDaysInWeek },
             column: { return indexPath.item % maxNumberOfDaysInWeek },
-            dateSection: { return self.dateFromSection(indexPath.section)! },
+            dateSection: { return self.monthInfoFromSection(indexPath.section)! },
             selectedPosition: rangePosition,
             cell: {return cell}
         )
@@ -815,11 +815,12 @@ extension JTAppleCalendarView {
         }
         return nil
     }
-    func dateFromSection(_ section: Int) -> (range: (start: Date, end: Date), month: Int)? {
+    func monthInfoFromSection(_ section: Int) -> (range: (start: Date, end: Date), month: Int, rowsForSection: Int)? {
         let monthIndex = monthMap[section]!
         let monthData = monthInfo[monthIndex]
         
-        let numberOfRowsForSection  = monthData.numberOfRows(for: section, developerSetRows: numberOfRows())
+        
+        
         
         let startIndex = monthData.preDates
         let endIndex = monthData.numberOfDaysInMonth + startIndex - 1
@@ -832,7 +833,8 @@ extension JTAppleCalendarView {
         }
         if let monthDate = calendar.date(byAdding: .month, value: monthIndex, to: startDateCache) {
             let monthNumber = calendar.dateComponents([.month], from: monthDate)
-            return ((startDate, endDate), monthNumber.month!)
+            let numberOfRowsForSection  = monthData.numberOfRows(for: section, developerSetRows: numberOfRows())
+            return ((startDate, endDate), monthNumber.month!, numberOfRowsForSection)
         }
         return nil
     }

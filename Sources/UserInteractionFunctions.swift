@@ -38,11 +38,11 @@ extension JTAppleCalendarView {
     /// - returns:
     ///     - range: A range containing the startDate and the endDaye for the current date segment
     ///     - month: The month that the date range belongs to. If you have pre/post dates, this value can be useful to know which month it belongs to.
-    public func dateSegment() -> (range: (start: Date, end: Date), month: Int) {
+    public func dateSegment() -> (range: (start: Date, end: Date), month: Int, rowsForSection: Int) {
         guard
-            dataSource != nil, let dateSegment = dateFromSection(currentSectionPage) else {
+            dataSource != nil, let dateSegment = monthInfoFromSection(currentSectionPage) else {
             if dataSource == nil { print("Error: DataSource not yet set") }
-                return (range: (start: Date(), end: Date()), month: 0)
+                return (range: (start: Date(), end: Date()), month: 0, rowsForSection: 0)
         }
         return dateSegment
     }
