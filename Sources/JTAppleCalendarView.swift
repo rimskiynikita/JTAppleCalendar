@@ -818,6 +818,9 @@ extension JTAppleCalendarView {
     func dateFromSection(_ section: Int) -> (range: (start: Date, end: Date), month: Int)? {
         let monthIndex = monthMap[section]!
         let monthData = monthInfo[monthIndex]
+        
+        let numberOfRowsForSection  = monthData.numberOfRows(for: section, developerSetRows: numberOfRows())
+        
         let startIndex = monthData.preDates
         let endIndex = monthData.numberOfDaysInMonth + startIndex - 1
         let startIndexPath = IndexPath(item: startIndex, section: section)

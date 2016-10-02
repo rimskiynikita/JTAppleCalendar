@@ -269,8 +269,6 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
         }
         
         var size: CGSize = CGSize.zero
-//        let xxx = itemSize.height * 6
-        
         if let _ = delegate!.itemSize {
             if scrollDirection == .vertical {
                 size = itemSize
@@ -280,7 +278,9 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                 if thereAreHeaders {
                     headerSize = cachedHeaderSizeForSection(indexPath.section)
                 }
-                size.height = (collectionView!.frame.height - headerSize.height) / CGFloat(maxNumberOfRowsPerMonth)
+                
+                let currentMonth = monthData[monthMap[indexPath.section]!]
+                size.height = (collectionView!.frame.height - headerSize.height) / CGFloat(currentMonth.numberOfRows(for: indexPath.section, developerSetRows: numberOfRows)!)
                 currentCell = (section: indexPath.section, itemSize: size)
             }
         } else {
@@ -291,14 +291,14 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
             }
             var height: CGFloat = 0
 
-            let currentItemSize = itemSize
             let totalNumberOfRows = monthData[monthMap[indexPath.section]!].rows
-            let monthSection = monthData[monthMap[indexPath.section]!].sectionIndexMaps[indexPath.section]!
+            let currentMonth = monthData[monthMap[indexPath.section]!]
+            let monthSection = currentMonth.sectionIndexMaps[indexPath.section]!
             let numberOfSections = CGFloat(totalNumberOfRows) / CGFloat(numberOfRows)
             let fullSections =  Int(numberOfSections)
             let numberOfRowsForSection: Int
             if scrollDirection == .horizontal {
-                numberOfRowsForSection = delegate!.numberOfRows()
+                numberOfRowsForSection = thereAreHeaders ? currentMonth.numberOfRows(for: indexPath.section, developerSetRows: numberOfRows)! : delegate!.numberOfRows()
                 height = (collectionView!.frame.height - headerSize.height) / CGFloat(numberOfRowsForSection)
             } else {
                 if monthSection + 1 <= fullSections {
@@ -308,7 +308,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                 }
                 height = (collectionView!.frame.height - headerSize.height) / CGFloat(numberOfRowsForSection)
             }
-            size        = CGSize(width: currentItemSize.width, height: height)
+            size        = CGSize(width: itemSize.width, height: height)
             currentCell = (section: indexPath.section, itemSize: size)
             
         }
