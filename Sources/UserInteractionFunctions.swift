@@ -23,7 +23,7 @@ extension JTAppleCalendarView {
         return nil
     }
     /// Returns the cell status for a given date
-    /// - Parameter: date Date of the cell you which to find
+    /// - Parameter: date Date of the cell you want to find
     /// - returns:
     ///     - CellState: The state of the found cell
     public func cellStatus(for date: Date) -> CellState? {
@@ -36,8 +36,8 @@ extension JTAppleCalendarView {
     }
     /// Returns the calendar view's current section boundary dates.
     /// - returns:
-    ///     - startDate: The start date of the current section
-    ///     - endDate: The end date of the current section
+    ///     - range: A range containing the startDate and the endDaye for the current date segment
+    ///     - month: The month that the date range belongs to. If you have pre/post dates, this value can be useful to know which month it belongs to.
     public func dateSegment() -> (range: (start: Date, end: Date), month: Int) {
         guard
             dataSource != nil, let dateSegment = dateFromSection(currentSectionPage) else {
@@ -48,15 +48,18 @@ extension JTAppleCalendarView {
     }
     /// Let's the calendar know which cell xib to use for the displaying of it's date-cells.
     /// - Parameter name: The name of the xib of your cell design
+    /// - Parameter bundle: The bundle where the xib can be found. If left nil, the library will search the main bundle
     public func registerCellViewXib(file name: String, bundle: Bundle? = nil) { cellViewSource = JTAppleCalendarViewSource.fromXib(name, bundle) }
     /// Let's the calendar know which cell class to use for the displaying of it's date-cells.
     /// - Parameter name: The class name of your cell design
+    /// - Parameter bundle: The bundle where the xib can be found. If left nil, the library will search the main bundle
     public func registerCellViewClass(file name: String, bundle: Bundle? = nil) { cellViewSource = JTAppleCalendarViewSource.fromClassName(name, bundle) }
     /// Let's the calendar know which cell class to use for the displaying of it's date-cells.
     /// - Parameter name: The type of your cell design
     public func registerCellViewClass(type: AnyClass) { cellViewSource = JTAppleCalendarViewSource.fromType(type) }
     /// Register header views with the calender. This needs to be done before the view can be displayed
     /// - Parameter fileNames: A dictionary containing [headerViewNames:HeaderviewSizes]
+    /// - Parameter bundle: The bundle where the xibs can be found. If left nil, the library will search the main bundle
     public func registerHeaderView(xibFileNames: [String], bundle: Bundle? = nil) {
         if xibFileNames.count < 1 { return }
         unregisterHeaders()
@@ -67,8 +70,9 @@ extension JTAppleCalendarView {
                                             withReuseIdentifier: headerViewXibName)
         }
     }
-    /// Register header views with the calender. This needs to be done before the view can be displayed
+    /// Register header views with the calender. This needs to be done before header views can be displayed
     /// - Parameter fileNames: A dictionary containing [headerViewNames:HeaderviewSizes]
+    /// - Parameter bundle: The bundle where the xibs can be found. If left nil, the library will search the main bundle
     public func registerHeaderView(classStringNames: [String], bundle: Bundle? = nil) {
         if classStringNames.count < 1 { return }
         unregisterHeaders()
@@ -79,7 +83,7 @@ extension JTAppleCalendarView {
                                             withReuseIdentifier: headerViewClassName)
         }
     }
-    /// Register header views with the calender. This needs to be done before the view can be displayed
+    /// Register header views with the calender. This needs to be done before header views can be displayed
     /// - Parameter fileNames: A dictionary containing [headerViewNames:HeaderviewSizes]
     public func registerHeaderView(classTypeNames: [AnyClass]) {
         if classTypeNames.count < 1 { return }
@@ -91,11 +95,15 @@ extension JTAppleCalendarView {
                                             withReuseIdentifier: aClass.description())
         }
     }
+    /// Unregister previously registered headers
     public func unregisterHeaders() {
         registeredHeaderViews.removeAll() // remove the already registered xib files if the user re-registers again.
         layoutNeedsUpdating = true
     }
     /// Reloads the data on the calendar view. Scroll delegates are not triggered with this function.
+    /// - Parameter date: An anchordate that the calendar will scroll to after reload completes
+    /// - Parameter animation: Scroll is animated if this is set to true
+    /// - Parameter completionHandler: This closure will run after the reload is complete
     public func reloadData(withAnchor date: Date? = nil, animation: Bool = false, completionHandler: (() -> Void)? = nil) {
         if !calendarIsAlreadyLoaded {
             return
