@@ -48,7 +48,7 @@ class ViewController: UIViewController {
             calendarView.itemSize = dateCellSize
         } else {
             calendarView.direction = .vertical
-            calendarView.itemSize = 35
+            calendarView.itemSize = 30
         }
         calendarView.reloadData()
     }
@@ -105,13 +105,14 @@ class ViewController: UIViewController {
         calendarView.delegate = self
         calendarView.dataSource = self
         
-        
+//        calendarView.direction = .vertical
         //_____________________________________________________________________________________________
         // Registering your cells is manditory
         //_____________________________________________________________________________________________
         calendarView.registerCellViewXib(file: "CellView")
         calendarView.registerHeaderView(xibFileNames: ["PinkSectionHeaderView", "WhiteSectionHeaderView"])
         
+//        calendarView.itemSize = 25
         calendarView.cellInset = CGPoint(x: 0, y: 0)
         calendarView.allowsMultipleSelection = true
 
@@ -170,7 +171,7 @@ class ViewController: UIViewController {
 extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDelegate {
     func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters {
         let startDate = formatter.date(from: "2016 02 01")!
-        let endDate = formatter.date(from: "2016 03 01")!
+        let endDate = formatter.date(from: "2016 10 01")!
         let calendar = Calendar.current
         
 
@@ -198,7 +199,7 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
         (cell as? CellView)?.selectedView.isHidden = true
     }
     func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor range: (start: Date, end: Date), belongingTo month: Int, rows: Int) {
-        setupViewsOfCalendar(range.start, endDate: range.end, month: month)
+//        setupViewsOfCalendar(range.start, endDate: range.end, month: month)
     }
     func calendar(_ calendar: JTAppleCalendarView, sectionHeaderIdentifierFor range: (start: Date, end: Date), belongingTo month: Int) -> String {
         if month % 2 > 0 {

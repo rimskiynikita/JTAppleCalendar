@@ -6,86 +6,6 @@
 //
 //
 
-struct CalendarData {
-    var months: [Month]
-    var totalSections: Int
-    var monthMap: [Int:Int]
-    var totalDays: Int
-}
-
-struct Month {
-    let startDayIndex: Int      // Start index day for the month. The start is total number of days of previous months
-    let startCellIndex: Int     // Start cell index for the month. The start is total number of cells of previous months
-    let sections: [Int]         // The total number of items in this array are the total number of sections. The actual number is the number of items in each section
-    let preDates: Int
-    let postDates: Int
-    let sectionIndexMaps: [Int:Int] // Maps a section to the index in the total number of sections
-    let rows: Int                   // Number of rows for the month
-    // Return the total number of days for the represented month
-    var numberOfDaysInMonth: Int {
-        get { return numberOfDaysInMonthGrid - preDates - postDates }
-    }
-    // Return the total number of day cells to generate for the represented month
-    var numberOfDaysInMonthGrid: Int {
-        get { return sections.reduce(0, +) }
-    }
-    var startSection: Int {
-        return sectionIndexMaps.keys.min()!
-    }
-    // Return the section in which a day is contained
-    func indexPath(forDay number: Int) -> IndexPath? {
-        var variableNumber = number
-        let possibleSection = sections.index {
-            let retval = variableNumber + preDates <= $0
-            variableNumber -= $0
-            return retval
-        }!
-        let theSection = sectionIndexMaps.key(for: possibleSection)!
-
-        let dateOfStartIndex = sections[0..<possibleSection].reduce(0, +) - preDates + 1
-        let itemIndex = number - dateOfStartIndex
-
-        return IndexPath(item: itemIndex, section: theSection)
-    }
-    
-    // Return the number of rows for a section in the month
-    func numberOfRows(for section: Int, developerSetRows: Int) -> Int {
-        var retval: Int
-        guard let  theSection = sectionIndexMaps[section] else {
-            return 0
-        }
-        let fullRows = rows / developerSetRows
-        let partial = sections.count - fullRows
-        
-        if theSection + 1 <= fullRows {
-            retval = developerSetRows
-        } else if fullRows == 0 && partial > 0 {
-            retval = rows
-        } else {
-            retval = 1
-        }
-        return retval
-    }
-    // Returns the maximum number of a rows for a completely full section
-    func maxNumberOfRowsForFull(developerSetRows: Int) -> Int {
-        var retval: Int
-        let fullRows = rows / developerSetRows
-        if fullRows < 1 {
-            retval = rows
-        } else {
-            retval = developerSetRows
-        }
-        return retval
-    }
-}
-
-enum JTAppleCalendarViewSource {
-    case fromXib(String, Bundle?)
-    case fromType(AnyClass)
-    case fromClassName(String, Bundle?)
-}
-
-
 /// Default delegate functions
 public extension JTAppleCalendarViewDelegate {
     func calendar(_ calendar: JTAppleCalendarView, canSelectDate date: Date, cell: JTAppleDayCellView, cellState: CellState) -> Bool { return true }
@@ -107,13 +27,9 @@ public protocol JTAppleCalendarViewDataSource: class {
     /// - Parameters:
     ///     - calendar: The JTAppleCalendar view requesting this information.
     /// - returns:
-    ///     - startDate: The *start* boundary date for your calendarView.
-    ///     - endDate: The *end* boundary date for your calendarView.
-    ///     - numberOfRows: The number of rows to be displayed per month
-    ///     - calendar: The *calendar* to be used by the calendarView.
+    ///     - ConfigurationParameters instance:
     func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters
 }
-
 
 /// The delegate of a JTAppleCalendarView object must adopt the JTAppleCalendarViewDelegate protocol.
 /// Optional methods of the protocol allow the delegate to manage selections, and configure the cells.
@@ -184,92 +100,4 @@ public protocol JTAppleCalendarViewDelegate: class {
     ///     - date: The date attached to the header.
     ///     - identifier: The identifier you provided for the header
     func calendar(_ calendar: JTAppleCalendarView, willDisplaySectionHeader header: JTAppleHeaderView, range: (start: Date, end: Date), identifier: String)
-}
-
-protocol JTAppleCalendarLayoutProtocol: class {
-    var itemSize: CGSize {get set}
-    var headerReferenceSize: CGSize {get set}
-    var scrollDirection: UICollectionViewScrollDirection {get set}
-    var cellCache: [Int:[UICollectionViewLayoutAttributes]] {get set}
-    var headerCache: [Int: UICollectionViewLayoutAttributes] {get set}
-    var sectionSize: [CGFloat] {get set}
-    func targetContentOffsetForProposedContentOffset(_ proposedContentOffset: CGPoint) -> CGPoint
-    func sectionFromRectOffset(_ offset: CGPoint) -> Int
-    func sectionFromOffset(_ theOffSet: CGFloat) -> Int
-    func sizeOfContentForSection(_ section: Int) -> CGFloat
-    func clearCache()
-    func prepare()
-}
-
-protocol JTAppleCalendarDelegateProtocol: class {
-    var itemSize: CGFloat? {get set}
-    var registeredHeaderViews: [JTAppleCalendarViewSource] {get set}
-    var cachedConfiguration: ConfigurationParameters {get set}
-    var monthInfo: [Month] {get set}
-    var monthMap: [Int:Int] {get set}
-    var totalMonthSections: Int {get}
-    var totalDays: Int {get}
-    
-    func numberOfRows() -> Int
-    func cachedDate() -> (start: Date, end: Date, calendar: Calendar)
-    func numberOfsections(forMonth section: Int) -> Int
-    func numberOfMonthsInCalendar() -> Int
-    func numberOfPreDatesForMonth(_ month: Date) -> Int
-    
-    func referenceSizeForHeaderInSection(_ section: Int) -> CGSize
-    func firstDayIndexForMonth(_ date: Date) -> Int
-    func rowsAreStatic() -> Bool
-    func preDatesAreGenerated() -> Bool
-    func postDatesAreGenerated() -> OutDateCellGeneration
-}
-
-internal protocol JTAppleReusableViewProtocolTrait: class {
-    associatedtype ViewType: UIView
-    func setupView(_ cellSource: JTAppleCalendarViewSource)
-    var view: ViewType? {get set}
-}
-
-extension JTAppleReusableViewProtocolTrait {
-    func setupView(_ cellSource: JTAppleCalendarViewSource) {
-        if view != nil { return}
-        switch cellSource {
-        case let .fromXib(xibName, bundle):
-            let bundleToUse = bundle ?? Bundle.main
-            let viewObject = bundleToUse.loadNibNamed(xibName, owner: self, options: [:])
-            guard let view = viewObject?[0] as? ViewType else {
-                print("xib: \(xibName),  file class does not conform to the JTAppleViewProtocol")
-                assert(false)
-                return
-            }
-            self.view = view
-            break
-        case let .fromClassName(className, bundle):
-            let bundleToUse = bundle ?? Bundle.main
-            guard let theCellClass = bundleToUse.classNamed(className) as? ViewType.Type else {
-                print("Error loading registered class: '\(className)'")
-                print("Make sure that: \n\n(1) It is a subclass of: 'UIView' and conforms to 'JTAppleViewProtocol'")
-                print("(2) You registered your class using the fully qualified name like so -->  'theNameOfYourProject.theNameOfYourClass'\n")
-                assert(false)
-                return
-            }
-            self.view = theCellClass.init()
-            break
-        case let .fromType(cellType):
-            guard let theCellClass = cellType as? ViewType.Type else {
-                print("Error loading registered class: '\(cellType)'")
-                print("Make sure that: \n\n(1) It is a subclass of: 'UIiew' and conforms to 'JTAppleViewProtocol'\n")
-                assert(false)
-                return
-            }
-            self.view = theCellClass.init()
-            break
-        }
-        guard
-            let validSelf = self as? UIView,
-            let validView = view else {
-                print("Error setting up views. \(developerErrorMessage)")
-                return
-        }
-        validSelf.addSubview(validView)
-    }
 }

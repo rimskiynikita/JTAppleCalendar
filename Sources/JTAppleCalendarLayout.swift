@@ -23,7 +23,6 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
     var monthData: [Month] { get { return delegate.monthInfo } }
     var monthMap: [Int:Int] { get { return delegate.monthMap } }
     var numberOfRows: Int {get { return delegate.numberOfRows()} }
-    var totalSections: Int { get { return delegate.totalMonthSections } }
     var stride: CGFloat = 0
     weak var delegate: JTAppleCalendarDelegateProtocol!
     var currentHeader: (section: Int, size: CGSize)? // Tracks the current header size
@@ -298,7 +297,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
             let fullSections =  Int(numberOfSections)
             let numberOfRowsForSection: Int
             if scrollDirection == .horizontal {
-                numberOfRowsForSection = thereAreHeaders ? currentMonth.maxNumberOfRowsForFull(developerSetRows: numberOfRows) : delegate!.numberOfRows()
+                numberOfRowsForSection = thereAreHeaders ? currentMonth.maxNumberOfRowsForFull(developerSetRows: numberOfRows) : numberOfRows
                 height = (collectionView!.frame.height - headerSize.height) / CGFloat(numberOfRowsForSection)
             } else {
                 if monthSection + 1 <= fullSections {
