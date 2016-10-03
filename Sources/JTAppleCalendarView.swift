@@ -265,8 +265,6 @@ open class JTAppleCalendarView: UIView {
             layoutNeedsUpdating = true
             layout.itemSize = size
         }
-        
-        
     }
     /// Initializes and returns a newly allocated view object with the specified frame rectangle.
     public override init(frame: CGRect) {
@@ -351,9 +349,6 @@ open class JTAppleCalendarView: UIView {
         case .thursday: firstDayCalValue = 10 case .friday: firstDayCalValue = 9
         case .saturday: firstDayCalValue = 8 default: firstDayCalValue = 7
         }
-        
-//        print(firstDayCalValue)
-//        print(date)
         var firstWeekdayOfMonthIndex = calendar.component(.weekday, from: date)
         firstWeekdayOfMonthIndex -= 1 // firstWeekdayOfMonthIndex should be 0-Indexed
         // push it modularly so that we take it back one day so that the first day is Monday instead of Sunday which is the default
