@@ -297,7 +297,7 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
             let fullSections =  Int(numberOfSections)
             let numberOfRowsForSection: Int
             if scrollDirection == .horizontal {
-                numberOfRowsForSection = thereAreHeaders ? currentMonth.maxNumberOfRowsForFull(developerSetRows: numberOfRows) : numberOfRows
+                numberOfRowsForSection = currentMonth.maxNumberOfRowsForFull(developerSetRows: numberOfRows)
                 height = (collectionView!.frame.height - headerSize.height) / CGFloat(numberOfRowsForSection)
             } else {
                 if monthSection + 1 <= fullSections {
