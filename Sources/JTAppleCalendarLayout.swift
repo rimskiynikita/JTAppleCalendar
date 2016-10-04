@@ -93,6 +93,12 @@ open class JTAppleCalendarLayout: UICollectionViewLayout, JTAppleCalendarLayoutP
                                     contentWidth += lastWrittenCellAttribute!.frame.width * 7
                                     stride = contentWidth
                                     rowNumber = 0
+                                } else if numberOfDaysInCurrentSection - 1 == item {
+                                    xCellOffset = 0
+                                    yCellOffset = 0
+                                    contentWidth += lastWrittenCellAttribute!.frame.width * 7
+                                    stride = contentWidth
+                                    rowNumber = 0
                                 } else { // We we are simply only at the end of a row
                                     yCellOffset += attribute.frame.height
                                     rowNumber += 1
