@@ -48,6 +48,7 @@ open class JTAppleCalendarView: UIView {
     /// Configures the size of your date cells
     open var itemSize: CGFloat? {
         didSet {
+            lastSize = CGSize.zero
             updateLayoutItemSize()
             layoutNeedsUpdating = true
         }
