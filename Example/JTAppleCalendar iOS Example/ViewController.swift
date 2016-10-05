@@ -45,7 +45,7 @@ class ViewController: UIViewController {
         
         if sender.title(for: .normal)! == "HorizontalCalendar" {
             calendarView.direction = .horizontal
-            calendarView.itemSize = dateCellSize
+            calendarView.itemSize = nil
         } else {
             calendarView.direction = .vertical
             calendarView.itemSize = 30
@@ -199,7 +199,7 @@ extension ViewController: JTAppleCalendarViewDataSource, JTAppleCalendarViewDele
         (cell as? CellView)?.selectedView.isHidden = true
     }
     func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentFor range: (start: Date, end: Date), belongingTo month: Int, rows: Int) {
-//        setupViewsOfCalendar(range.start, endDate: range.end, month: month)
+        setupViewsOfCalendar(range.start, endDate: range.end, month: month)
     }
     func calendar(_ calendar: JTAppleCalendarView, sectionHeaderIdentifierFor range: (start: Date, end: Date), belongingTo month: Int) -> String {
         if month % 2 > 0 {
