@@ -532,7 +532,7 @@ open class JTAppleCalendarView: UIView {
                 self.calendarView.setContentOffset(topOfHeader,
                                                    animated: animation)
                 if  !animation {
-                    self.scrollViewDidEndScrollingAnimation(self.calendarView)
+                    self.didEndScrollAnimation(self.calendarView)
                     self.scrollInProgress = false
                 } else {
                     // If the scroll is set to animate, and the target
@@ -544,8 +544,7 @@ open class JTAppleCalendarView: UIView {
                             .calendarOffsetIsAlreadyAtScrollPosition(
                                 forOffset: topOfHeader), check == true {
 
-                        self.scrollViewDidEndScrollingAnimation(
-                                                        self.calendarView)
+                        self.didEndScrollAnimation(self.calendarView)
                         self.scrollInProgress = false
                     }
                 }
