@@ -544,7 +544,7 @@ extension JTAppleCalendarView {
                         if let check = self
                             .calendarOffsetIsAlreadyAtScrollPosition(
                                 forIndexPath: iPath), check == true {
-                                    self.scrollViewDidEndScrollingAnimation(
+                                    self.didEndScrollAnimation(
                                         self.calendarView
                                     )
                                     self.scrollInProgress = false
@@ -604,9 +604,7 @@ extension JTAppleCalendarView {
                 // this and the scroll to header function
                 delayRunOnMainThread(0.0, closure: {
                     if  !animateScroll {
-                        self.scrollViewDidEndScrollingAnimation(
-                            self.calendarView
-                        )
+                        self.didEndScrollAnimation(self.calendarView)
                         self.scrollInProgress = false
                     }
                 })

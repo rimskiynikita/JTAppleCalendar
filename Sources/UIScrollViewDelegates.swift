@@ -10,12 +10,12 @@ extension JTAppleCalendarView: UIScrollViewDelegate {
 
     /// Inform the scrollViewDidEndDecelerating
     /// function that scrolling just occurred
-    public func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
-        self.scrollViewDidEndDecelerating(calendarView)
+    public func didScrollToTop(_ scrollView: UIScrollView) {
+        self.didEndDecelerating(calendarView)
     }
 
     /// Tells the delegate when the user finishes scrolling the content.
-    public func scrollViewWillEndDragging(_ scrollView: UIScrollView,
+    public func willEndDragging(_ scrollView: UIScrollView,
         withVelocity velocity: CGPoint,
         targetContentOffset: UnsafeMutablePointer<CGPoint>) {
             let saveLastContentOffset = {
@@ -259,7 +259,7 @@ extension JTAppleCalendarView: UIScrollViewDelegate {
                 // was done. User scrolled and stopped and lifted finger.
                 // Thus update the label.
                 delayRunOnMainThread(0.0) {
-                    self.scrollViewDidEndDecelerating(self.calendarView)
+                    self.didEndDecelerating(self.calendarView)
                 }
             }
             saveLastContentOffset()
@@ -270,12 +270,12 @@ extension JTAppleCalendarView: UIScrollViewDelegate {
 
     /// Tells the delegate when a scrolling
     /// animation in the scroll view concludes.
-    public func scrollViewDidEndScrollingAnimation(
+    public func didEndScrollAnimation(
         _ scrollView: UIScrollView) {
             if
                 let shouldTrigger = triggerScrollToDateDelegate,
                 shouldTrigger == true {
-                scrollViewDidEndDecelerating(scrollView)
+                didEndDecelerating(scrollView)
                 triggerScrollToDateDelegate = nil
             }
             executeDelayedTasks()
@@ -285,7 +285,7 @@ extension JTAppleCalendarView: UIScrollViewDelegate {
 
     /// Tells the delegate that the scroll view has
     /// ended decelerating the scrolling movement.
-    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    public func didEndDecelerating(_ scrollView: UIScrollView) {
         let currentSegmentDates = dateSegment()
         self.delegate?.calendar(
             self,
