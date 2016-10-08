@@ -603,7 +603,7 @@ extension JTAppleCalendarView {
                 // Jt101 put this into a function to reduce code between
                 // this and the scroll to header function
                 delayRunOnMainThread(0.0, closure: {
-                    if  !animateScroll {
+                    if !animateScroll {
                         self.scrollViewDidEndScrollingAnimation(
                             self.calendarView
                         )
@@ -644,7 +644,6 @@ extension JTAppleCalendarView {
     /// Parameter endDate: End date to generate dates to
     /// returns:
     ///     - An array of the successfully generated dates
-
     public func generateDateRange(from startDate: Date,
                                   to endDate: Date) -> [Date] {
         if startDate > endDate {
