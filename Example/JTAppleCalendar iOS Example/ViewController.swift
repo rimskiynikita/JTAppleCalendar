@@ -214,8 +214,8 @@ extension ViewController: JTAppleCalendarViewDelegate,
 
     func configureCalendar(_ calendar: JTAppleCalendarView) ->
         ConfigurationParameters {
-            let startDate = formatter.date(from: "2016 02 01")!
-            let endDate = formatter.date(from: "2016 10 01")!
+            let startDate = formatter.date(from: "2016 12 01")!
+            let endDate = formatter.date(from: "2016 12 20")!
             let calendar = Calendar.current
 
 
