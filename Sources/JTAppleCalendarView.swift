@@ -192,7 +192,7 @@ open class JTAppleCalendarView: UIView {
                 endDate: Date(),
                 numberOfRows: 0,
                 calendar: Calendar(identifier: .gregorian),
-                generateInDates: false,
+                generateInDates: .off,
                 generateOutDates: .off,
                 firstDayOfWeek: .sunday
             )
@@ -722,7 +722,8 @@ extension JTAppleCalendarView {
     func indexPathOfdateCellCounterPart(_ date: Date,
                                         indexPath: IndexPath,
                                         dateOwner: DateOwner) -> IndexPath? {
-        if cachedConfiguration.generateInDates == false &&
+        if (cachedConfiguration.generateInDates == .off ||
+            cachedConfiguration.generateInDates == .forFirstMonthOnly) &&
             cachedConfiguration.generateOutDates == .off {
             return nil
         }

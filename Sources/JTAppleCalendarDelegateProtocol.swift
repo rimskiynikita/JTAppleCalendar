@@ -22,7 +22,7 @@ protocol JTAppleCalendarDelegateProtocol: class {
     func referenceSizeForHeaderInSection(_ section: Int) -> CGSize
     func firstDayIndexForMonth(_ date: Date) -> Int
     func rowsAreStatic() -> Bool
-    func preDatesAreGenerated() -> Bool
+    func preDatesAreGenerated() -> InDateCellGeneration
     func postDatesAreGenerated() -> OutDateCellGeneration
 }
 
@@ -46,7 +46,7 @@ extension JTAppleCalendarView: JTAppleCalendarDelegateProtocol {
         return firstDayIndexForMonth(month)
     }
 
-    func preDatesAreGenerated() -> Bool {
+    func preDatesAreGenerated() -> InDateCellGeneration {
         return cachedConfiguration.generateInDates
     }
 
@@ -59,7 +59,8 @@ extension JTAppleCalendarView: JTAppleCalendarDelegateProtocol {
     }
 
     func rowsAreStatic() -> Bool {
-        return cachedConfiguration.generateInDates == true &&
+        // jt101 is the inDateCellGeneration check needed? because tillEndOfGrid will always compenste
+        return cachedConfiguration.generateInDates != .off &&
             cachedConfiguration.generateOutDates == .tillEndOfGrid
     }
 

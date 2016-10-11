@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     var numberOfRows = 6
     let formatter = DateFormatter()
     var testCalendar = Calendar(identifier: Calendar.Identifier.gregorian)
-    var generateInDates = true
+    var generateInDates: InDateCellGeneration = .forAllMonths
     var generateOutDates: OutDateCellGeneration = .tillEndOfGrid
     let firstDayOfWeek: DaysOfWeek = .sunday
     let disabledColor = UIColor.lightGray
@@ -80,11 +80,11 @@ class ViewController: UIViewController {
         sender.tintColor = enabledColor
 
         switch sender.title(for: .normal)! {
-        case "PostEOR":
+        case "EOR":
             generateOutDates = .tillEndOfRow
-        case "PostEOG":
+        case "EOG":
             generateOutDates = .tillEndOfGrid
-        case "PostOff":
+        case "OFF":
             generateOutDates = .off
         default:
             break
@@ -100,10 +100,12 @@ class ViewController: UIViewController {
         sender.tintColor = enabledColor
 
         switch sender.title(for: .normal)! {
-            case "PreOn":
-                generateInDates = true
-            case "PreOff":
-                generateInDates = false
+            case "First":
+                generateInDates = .forFirstMonthOnly
+            case "All":
+                generateInDates = .forAllMonths
+            case "Off":
+                generateInDates = .off
         default:
             break
         }
@@ -214,10 +216,9 @@ extension ViewController: JTAppleCalendarViewDelegate,
 
     func configureCalendar(_ calendar: JTAppleCalendarView) ->
         ConfigurationParameters {
-            let startDate = formatter.date(from: "2016 12 01")!
-            let endDate = formatter.date(from: "2016 12 20")!
+            let startDate = formatter.date(from: "2016 01 01")!
+            let endDate = formatter.date(from: "2016 09 20")!
             let calendar = Calendar.current
-
 
             let parameters = ConfigurationParameters(
                 startDate: startDate,

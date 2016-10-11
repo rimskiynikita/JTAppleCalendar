@@ -61,13 +61,13 @@ public struct ConfigurationParameters {
     var endDate: Date
     var numberOfRows: Int
     var calendar: Calendar
-    var generateInDates: Bool
+    var generateInDates: InDateCellGeneration
     var generateOutDates: OutDateCellGeneration
     var firstDayOfWeek: DaysOfWeek
     public init(startDate: Date,
                 endDate: Date,
                 numberOfRows: Int, calendar: Calendar,
-                generateInDates: Bool,
+                generateInDates: InDateCellGeneration,
                 generateOutDates: OutDateCellGeneration,
                 firstDayOfWeek: DaysOfWeek) {
         self.startDate = startDate
@@ -181,7 +181,7 @@ struct Month {
 }
 
 struct DateConfigParameters {
-    var inCellGeneration = true
+    var inCellGeneration: InDateCellGeneration = .forAllMonths
     var outCellGeneration: OutDateCellGeneration = .tillEndOfGrid
     var numberOfRows = 6
     var startOfMonthCache: Date?
@@ -226,13 +226,6 @@ struct JTAppleDateConfigGenerator {
             var totalDays = 0
             let numberOfRowsPerSectionThatUserWants =
                 validParameters.numberOfRows
-            // Number of sections in each month
-//            let numberOfSectionsPerMonth = Int(
-//                ceil(
-//                    Float(maxNumberOfRowsPerMonth)  /
-//                        Float(validParameters.numberOfRows)
-//                )
-//            )
             // Section represents # of months. section is used as an offset
             // to determine which month to calculate
             for monthIndex in 0 ..< numberOfMonths {
@@ -244,12 +237,19 @@ struct JTAppleDateConfigGenerator {
                     let numberOfDaysInMonthFixed = numberOfDaysInMonthVariable
                     var numberOfRowsToGenerateForCurrentMonth = 0
                     var numberOfPreDatesForThisMonth = 0
-                    if delegate.preDatesAreGenerated() {
+                    let predatesGeneration = delegate.preDatesAreGenerated()
+                    if predatesGeneration != .off {
                         numberOfPreDatesForThisMonth =
                             delegate.numberOfPreDatesForMonth(currentMonth)
                         numberOfDaysInMonthVariable +=
                         numberOfPreDatesForThisMonth
+                        
+                        if predatesGeneration == .forFirstMonthOnly && monthIndex != 0 {
+                            numberOfDaysInMonthVariable -= numberOfPreDatesForThisMonth
+                            numberOfPreDatesForThisMonth = 0
+                        }
                     }
+                    
                     if // validParameters.inCellGeneration == true &&
                         validParameters.outCellGeneration == .tillEndOfGrid {
                             numberOfRowsToGenerateForCurrentMonth =
@@ -275,8 +275,6 @@ struct JTAppleDateConfigGenerator {
                     default:
                         break
                     }
-                    // let numberOfDaysInMonthFixed =
-                    //     numberOfDaysInMonthVariable
                     var sectionsForTheMonth: [Int] = []
                     var sectionIndexMaps: [Int: Int] = [:]
                     for index in 0..<6 {

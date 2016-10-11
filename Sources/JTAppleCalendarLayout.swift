@@ -90,6 +90,10 @@ open class JTAppleCalendarLayout: UICollectionViewLayout,
         var rowNumber = 0
         var totalDayCounter = 0
         var headerGuide = 0
+        
+        var stillInPreviousVirtualSection = false
+        var offsetCOUNTER = 0
+        
         for aMonth in monthData {
             for numberOfDaysInCurrentSection in aMonth.sections {
                 // Generate and cache the headers
@@ -126,6 +130,11 @@ open class JTAppleCalendarLayout: UICollectionViewLayout,
                             }
                         } else {
                             totalDayCounter += 1
+
+                            if stillInPreviousVirtualSection == true {
+                                offsetCOUNTER += 1
+                            }
+                            
                             if totalDayCounter >= delegate.totalDays {
                                 // If we are at the last item and we are
                                 // also ona partial (because we were not
@@ -141,8 +150,9 @@ open class JTAppleCalendarLayout: UICollectionViewLayout,
                                     contentWidth += lastWrittenCellAttribute!
                                         .frame.width * 7
                                     stride = contentWidth
+                                    stillInPreviousVirtualSection = false
                                     rowNumber = 0
-                                } else if numberOfDaysInCurrentSection - 1 ==
+                                } else if numberOfDaysInCurrentSection + offsetCOUNTER - 1 ==
                                     item {
                                         xCellOffset = 0
                                         yCellOffset = 0
@@ -151,12 +161,17 @@ open class JTAppleCalendarLayout: UICollectionViewLayout,
                                                 .frame.width * 7
                                         stride = contentWidth
                                         rowNumber = 0
+                                        stillInPreviousVirtualSection = false
                                 } else {
                                     // We we are simply only at
                                     // the end of a row
                                     yCellOffset += attribute.frame.height
                                     rowNumber += 1
                                 }
+                            } else if numberOfDaysInCurrentSection + offsetCOUNTER - 1 ==
+                                item { // Here we are at the end of a section.
+                                stillInPreviousVirtualSection = true
+                                offsetCOUNTER = 0
                             }
                         }
                     }
@@ -387,10 +402,16 @@ open class JTAppleCalendarLayout: UICollectionViewLayout,
     }
 
     func sizeForitemAtIndexPath(_ indexPath: IndexPath) -> CGSize {
-        // Return the size if the cell size is already cached
         if let cachedCell  = currentCell,
             cachedCell.section == indexPath.section {
+            
+            if !thereAreHeaders,
+                scrollDirection == .horizontal,
+                cellCache.count > 0 {
+                return cellCache[0]?[0].size ?? CGSize.zero
+            } else {
                 return cachedCell.itemSize
+            }
         }
 
         var size: CGSize = CGSize.zero
@@ -446,7 +467,6 @@ open class JTAppleCalendarLayout: UICollectionViewLayout,
             }
             size        = CGSize(width: itemSize.width, height: height)
             currentCell = (section: indexPath.section, itemSize: size)
-
         }
         return size
     }

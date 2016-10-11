@@ -14,6 +14,12 @@ public enum OutDateCellGeneration {
     case tillEndOfRow, tillEndOfGrid, off
 }
 
+/// Describes the types of out-date cells to be generated.
+public enum InDateCellGeneration {
+    /// self explanatory
+    case forFirstMonthOnly, forAllMonths, off
+}
+
 /// Describes which month owns the date
 public enum DateOwner: Int {
     /// Describes which month owns the date
