@@ -87,13 +87,13 @@ public struct ConfigurationParameters {
             case 1, 2, 3:
                 self.numberOfRows = validNumberOfRows
             default:
-                self.numberOfRows = 6
+                self.numberOfRows = 4
             }
         } else {
-            self.numberOfRows = 6
+            self.numberOfRows = 4
         }
         
-        self.numberOfRows = numberOfRows ?? 6
+        self.numberOfRows = numberOfRows ?? 4
         self.calendar = calendar ?? Calendar.current
         self.generateInDates = generateInDates ?? .forAllMonths
         self.generateOutDates = generateOutDates ?? .tillEndOfGrid
@@ -275,7 +275,7 @@ struct JTAppleDateConfigGenerator {
                     }
                     var sectionsForTheMonth: [Int] = []
                     var sectionIndexMaps: [Int: Int] = [:]
-                    for index in 0..<6 {
+                    for index in 0..<4 {
                         // Max number of sections in the month
                         if numberOfDaysInMonthVariable < 1 {
                             break
